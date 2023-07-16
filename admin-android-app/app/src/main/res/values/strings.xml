@@ -19,4 +19,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="nic">NIC</string>
+    <string name="preference_file_key">Smart Attendance Admin Pref</string>
+    <string name="username">Username</string>
+    <string name="ok">OK</string>
+    <string name="wait">Please wait....</string>
 </resources>
