@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dialog_bg_color">
+
+        <LinearLayout
+            android:id="@+id/dialogMainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_content_border_bg"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dialog_horizontal_padding"
+            android:paddingTop="@dimen/dialog_top_padding"
+            android:paddingRight="@dimen/dialog_horizontal_padding"
+            android:paddingBottom="@dimen/dialog_top_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/cancel" />
+
+            <TextView
+                android:id="@+id/tvMessage"
+                style="@style/dialog_title_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/vertical_margin"
+                android:paddingBottom="@dimen/vertical_margin" />
+            <Button
+                android:id="@+id/button"
+                style="@style/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                android:text="@string/ok"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

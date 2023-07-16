@@ -1,59 +1,86 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.login
 
-import android.app.Activity
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
-import androidx.annotation.StringRes
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.saveObjectInSharedPref
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
+    private var dialog: Dialog? = null
+    private lateinit var username: TextInputEditText
+    private lateinit var usernameInputText: TextInputLayout
+    private lateinit var password: TextInputEditText
+    private lateinit var passwordInputText: TextInputLayout
+    private lateinit var login: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        initiateDataBinding()
+        initiateView()
+        initiateProgressDialog()
+        viewModelObservers()
+    }
 
-        val nic = binding.nic
-        val nicInputText = binding.nicInputText
-        val password = binding.etPassword
-        val passwordInputText = binding.passwordInputText
-        val login = binding.login
-        val loading = binding.loading
+    private fun initiateDataBinding() {
+        binding =
+            DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        //Data binding
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        binding.vm = loginViewModel
+        binding.lifecycleOwner = this
+    }
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+    private fun initiateView() {
+
+        username = binding.username
+        usernameInputText = binding.usernameInputText
+        password = binding.etPassword
+        passwordInputText = binding.passwordInputText
+        login = binding.login
+
+        username.setText("eve.holt@reqres.in")
+        password.setText("cityslicka")
 
         //UI initiation
-        inputTextInitiateMethod(nicInputText,nic, object : InputTextListener {
+        inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    nic?.text.toString(),
+                    username?.text.toString(),
                     password?.text.toString()
                 )
             }
         })
 
-        inputTextInitiateMethod(passwordInputText,password, object : InputTextListener {
+        inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    nic?.text.toString(),
+                    username?.text.toString(),
                     password?.text.toString()
                 )
             }
@@ -61,27 +88,32 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
-                nic?.text.toString(),
+                username?.text.toString(),
                 password?.text.toString()
             )
         }
+    }
 
+    private fun viewModelObservers() {
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
             if (loginState.nicError != null) {
-                nicInputText?.error = getString(loginState.nicError)
+                usernameInputText?.error = getString(loginState.nicError)
             } else
-                validState(nicInputText, R.drawable.ic_check)
+                validState(usernameInputText, R.drawable.ic_check)
 
 
             if (loginState.passwordError != null) {
                 passwordInputText?.error = getString(loginState.passwordError)
             }
-
+            /* Need to enter above data to successful login
+               "email": "eve.holt@reqres.in",
+               "password": "cityslicka"
+            */
             if (loginState.isDataValid) {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(nic?.text.toString(), password?.text.toString())
+                dialog?.show()
+                loginViewModel.login(username?.text.toString(), password?.text.toString())
             }
         })
 
@@ -89,33 +121,31 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
+            dialog?.dismiss()
 
-            //Complete and destroy login activity once successful
-            finish()
+            if (loginResult.token != null) {
+                saveObjectInSharedPref(
+                    this,
+                    ACCESS_TOKEN,
+                    loginResult.token
+                ) { navigateToAnotherActivity(this, MainActivity::class.java) }
+            } else if (loginResult.error != null) {
+                showErrorDialog(this, loginResult.error, object : ErrorDialogButtonClickListener {
+                    override fun onButtonClick() {
+
+                    }
+                })
+
+            }
+
         })
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    /**
+     * Progress Dialog Initiation
+     */
+    private fun initiateProgressDialog() {
+        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 }
 
