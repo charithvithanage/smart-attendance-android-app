@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_users">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:id="@+id/nav_users"
+        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.users.UsersFragment"
+        android:label="@string/menu_users"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:id="@+id/nav_pending_approvals"
+        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalsFragment"
+        android:label="@string/menu_pending_approval"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:id="@+id/nav_settings"
+        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

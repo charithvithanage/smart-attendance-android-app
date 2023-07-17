@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.slideshow
+package lnbti.charithgtp01.smartattendanceadminapp.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSlideshowBinding
 
-class SlideshowFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSlideshowBinding? = null
 
@@ -23,7 +23,7 @@ class SlideshowFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val slideshowViewModel =
-            ViewModelProvider(this).get(SlideshowViewModel::class.java)
+            ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         val root: View = binding.root
