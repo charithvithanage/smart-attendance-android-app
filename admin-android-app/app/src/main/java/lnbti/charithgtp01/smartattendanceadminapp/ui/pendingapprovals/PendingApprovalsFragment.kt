@@ -7,11 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 class PendingApprovalsFragment : Fragment() {
     private var binding: FragmentPendingApprovalsBinding? = null
@@ -90,7 +96,14 @@ class PendingApprovalsFragment : Fragment() {
         pendingApprovalListAdapter =
             PendingApprovalListAdapter(object : PendingApprovalListAdapter.OnItemClickListener {
                 override fun itemClick(item: User) {
-//                gotoRepositoryFragment(item)
+                    val gson = Gson()
+                    val prefMap = HashMap<String, String>()
+                    prefMap[OBJECT_STRING] = gson.toJson(item)
+                    navigateToAnotherActivityWithExtras(
+                        requireActivity(),
+                        PendingApprovalDetailsActivity::class.java,
+                        prefMap
+                    )
                 }
             })
 

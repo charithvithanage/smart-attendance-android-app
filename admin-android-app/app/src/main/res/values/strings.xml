@@ -26,4 +26,6 @@
     <string name="wait">Please wait....</string>
     <string name="search_input_text_hint">Search User</string>
     <string name="no_internet">No Internet</string>
+    <string name="action_approve">Approve</string>
+    <string name="action_reject">Reject</string>
 </resources>

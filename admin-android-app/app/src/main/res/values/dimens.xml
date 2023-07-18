@@ -30,4 +30,6 @@
     <dimen name="content_card_view_corner_radius">20dp</dimen>
     <dimen name="content_card_view_elevation">10dp</dimen>
     <dimen name="list_card_view_corner_radius">12dp</dimen>
+    <dimen name="avatar_margin">16dp</dimen>
+    <dimen name="button_margin_top">16dp</dimen>
 </resources>
