@@ -46,7 +46,7 @@
                     android:hint="@string/search_input_text_hint"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:onEditorAction="@{(view,actionId,event) -> vm.onEditorAction(view,actionId)}"
+                    android:onTextChanged="@{(text, start, before, count) -> vm.onSearchViewTextChanged(text)}"
                     android:textSize="@dimen/search_view_text_size" />
 
             </com.google.android.material.textfield.TextInputLayout>

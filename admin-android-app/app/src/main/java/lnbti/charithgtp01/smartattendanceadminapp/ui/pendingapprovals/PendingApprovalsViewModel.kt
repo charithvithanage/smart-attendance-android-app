@@ -15,12 +15,15 @@ import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import javax.inject.Inject
 
+/**
+ * Pending Approval View Model
+ */
 @HiltViewModel
 class PendingApprovalsViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
 
-    private val _gitHubRepoList = MutableLiveData<List<User>>()
-    val gitHubRepoList: LiveData<List<User>> get() = _gitHubRepoList
+    private val _pendingApprovalList = MutableLiveData<List<User>>()
+    val pendingApprovalList: LiveData<List<User>> get() = _pendingApprovalList
 
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
@@ -30,6 +33,8 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
+    lateinit var allUsersList: List<User>
+
     /**
      * This will call when the View Model Created
      */
@@ -38,23 +43,16 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
     }
 
     /**
-     * Search View Submit Button Click Event
+     * Search View on text change listener
+     * @param searchString Entering value
      */
-    fun onEditorAction(editeText: TextView?, actionId: Int): Boolean {
-        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-
-            val enteredValue = editeText?.text.toString()
-
-            if (enteredValue.isNullOrBlank()) {
-                //Empty value error Alert
-                _errorMessage.value = userRepository.context.getString(R.string.no_internet)
-            } else {
-                filterApprovalList(editeText?.text.toString())
-            }
-
-            return true
+    fun onSearchViewTextChanged(searchString: CharSequence?) {
+        val value = searchString.toString()
+        if (value.isNullOrBlank()) {
+            _pendingApprovalList.value = allUsersList
+        } else {
+            _pendingApprovalList.value = filterApprovalList(value)
         }
-        return false
     }
 
     /**
@@ -74,7 +72,8 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
                 val resource = userRepository.getPendingApprovalsFromDataSource()
 
                 if (resource?.data != null) {
-                    _gitHubRepoList.value = resource.data.data
+                     allUsersList = resource.data.data
+                    _pendingApprovalList.value = allUsersList
                 } else
                     _errorMessage.value = resource?.error?.error
 
@@ -89,7 +88,16 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
 
     }
 
-    private fun filterApprovalList(searchString: String) {
-
+    /**
+     * @param searchString Search View entered value
+     * @return Data list filtered by user's full name
+     */
+    private fun filterApprovalList(searchString: String): List<User>? {
+        // to get the result as list
+        return allUsersList?.filter { s ->
+            (s.first_name + " " + s.last_name).contains(
+                searchString
+            )
+        }
     }
 }

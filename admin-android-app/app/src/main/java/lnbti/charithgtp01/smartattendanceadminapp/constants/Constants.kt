@@ -13,10 +13,20 @@ object Constants {
 
     //Login endpoint
     const val LOGIN_ENDPOINT = "login"
-
     //Get Pending Approval endpoint
     const val GET_PENDING_APPROVALS_ENDPOINT = "users"
+    //Get Users endpoint
+    const val GET_USERS_ENDPOINT = "users"
 
-    //Preference Keys
+    /**
+     * Preference Keys
+     */
     const val ACCESS_TOKEN = "access_token"
+
+    /**
+     * Pass Intent keys
+     */
+    const val OBJECT_STRING = "object_string"
+
+
 }
