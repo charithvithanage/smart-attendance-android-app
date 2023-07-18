@@ -1,16 +1,68 @@
 package lnbti.charithgtp01.smartattendanceadminapp.utils
 
 import android.R
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.view.View
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
 
+/**
+ * A Utils class containing UI related Methods
+ */
 class UIUtils {
 
     companion object {
+
+        /**
+         * Convert dp values to px
+         */
+        private fun convertDpToPixel(dp: Float, context: Context?): Float {
+            if (context != null)
+                return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+            return 0.0f
+        }
+
+        /**
+         * Change Element with according to the screen size
+         * @param context Context of the View
+         * @param view layout element
+         * @param widthRatio View width according to widthRatio*(display/width)
+         * @param width Screen divide in to (display/width)
+         * Ex: width=4 and widthRatio=3 means Actual element width= (Screen Width/4)*3
+         * @param margin Horizontal Margin
+         */
+        fun changeUiSize(context: Context?, view: View, widthRatio: Int, width: Int, margin: Int) {
+            if (context != null) {
+                val display = context.resources.displayMetrics
+                val params = view.layoutParams
+                params.width = (display.widthPixels * widthRatio / width - convertDpToPixel(
+                    margin.toFloat(),
+                    context
+                ) * 2).toInt()
+                view.layoutParams = params
+            }
+        }
+
+        /**
+         * Change Element with according to the screen size
+         * Element has no margin
+         * @param context Context of the View
+         * @param view layout element
+         * @param widthRatio View width according to widthRatio*(display/width)
+         * @param width Screen divide in to (display/width)
+         * Ex: width=4 and widthRatio=3 means Actual element width= (Screen Width/4)*3
+         */
+        fun changeUiSize(context: Context, view: View, widthRatio: Int, width: Int) {
+            val display = context.resources.displayMetrics
+            val params = view.layoutParams
+            params.width = display.widthPixels * widthRatio / width
+            view.layoutParams = params
+        }
+
         fun normalState(inputLayout: TextInputLayout?) {
             inputLayout?.isHelperTextEnabled = false
             inputLayout?.isErrorEnabled = false
