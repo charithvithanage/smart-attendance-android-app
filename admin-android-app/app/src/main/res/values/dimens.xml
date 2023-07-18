@@ -19,4 +19,15 @@
     <dimen name="dialog_bottom_padding">40dp</dimen>
     <dimen name="shadowBorderRadius">5dp</dimen>
     <dimen name="dialog_icon_size">100dp</dimen>
+
+    /* Search View Dimensions */
+    <dimen name="search_view_margin">12dp</dimen>
+    <dimen name="search_view_corner_radius">30dp</dimen>
+    <dimen name="search_view_card_elevation">8dp</dimen>
+    <dimen name="search_view_text_size">12sp</dimen>
+
+    /* Card Views Dimensions */
+    <dimen name="content_card_view_corner_radius">20dp</dimen>
+    <dimen name="content_card_view_elevation">10dp</dimen>
+    <dimen name="list_card_view_corner_radius">12dp</dimen>
 </resources>

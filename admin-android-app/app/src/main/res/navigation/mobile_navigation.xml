@@ -9,13 +9,13 @@
         android:id="@+id/nav_users"
         android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.users.UsersFragment"
         android:label="@string/menu_users"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_users" />
 
     <fragment
         android:id="@+id/nav_pending_approvals"
         android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalsFragment"
         android:label="@string/menu_pending_approval"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_pending_approvals" />
 
     <fragment
         android:id="@+id/nav_settings"

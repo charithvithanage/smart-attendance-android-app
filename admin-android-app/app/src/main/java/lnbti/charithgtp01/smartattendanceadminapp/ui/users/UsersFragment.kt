@@ -1,42 +1,38 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.users
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentHomeBinding
+import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentUsersBinding
 
+/**
+ * Users Fragment
+ */
 class UsersFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var binding: FragmentUsersBinding? = null
+    private lateinit var viewModel: UsersViewModel
+    private lateinit var pendingApprovalListAdapter: PendingApprovalListAdapter
+    private var dialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(UsersViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+    ): View? {
+        /*
+         * Initiate Data Binding and View Model
+        */
+        binding = FragmentUsersBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[UsersViewModel::class.java]
+        binding?.vm = viewModel
+        binding?.lifecycleOwner = this
+        return binding?.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

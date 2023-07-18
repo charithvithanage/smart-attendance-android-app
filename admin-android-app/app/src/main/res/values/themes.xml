@@ -40,6 +40,20 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
+    //Search View Style
+    <style name="TextInputLayoutNoBorder" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorIconTint">@null</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxBackgroundMode">none</item>
+    </style>
+
+    //Rounded User Image Style
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
