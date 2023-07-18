@@ -1,10 +1,10 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.slideshow
+package lnbti.charithgtp01.smartattendanceadminapp.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SlideshowViewModel : ViewModel() {
+class SettingsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is slideshow Fragment"
