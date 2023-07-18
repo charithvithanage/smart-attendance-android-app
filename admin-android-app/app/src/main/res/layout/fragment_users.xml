@@ -40,16 +40,16 @@
                 app:startIconDrawable="@android:drawable/ic_menu_search"
                 app:startIconTint="@android:color/darker_gray">
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/searchInputText"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:hint="@string/search_input_text_hint"-->
-<!--                    android:imeOptions="actionSearch"-->
-<!--                    android:inputType="text"-->
-<!--                    android:onEditorAction="@{(view,actionId,event) -> vm.onEditorAction(view,actionId)}"-->
-<!--                    android:textSize="@dimen/search_view_text_size" />-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/search_input_text_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:onTextChanged="@{(text, start, before, count) -> vm.onSearchViewTextChanged(text)}"
+                    android:textSize="@dimen/search_view_text_size" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

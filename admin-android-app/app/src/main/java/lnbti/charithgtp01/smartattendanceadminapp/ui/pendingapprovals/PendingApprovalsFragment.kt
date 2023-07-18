@@ -11,7 +11,6 @@ import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
-import lnbti.charithgtp01.smartattendanceadminapp.ui.users.PendingApprovalListAdapter
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 
 class PendingApprovalsFragment : Fragment() {
@@ -71,7 +70,7 @@ class PendingApprovalsFragment : Fragment() {
         /* Observer to catch list data
         * Update Recycle View Items using Diff Utils
         */
-        viewModel.gitHubRepoList.observe(requireActivity()) {
+        viewModel.pendingApprovalList.observe(requireActivity()) {
             pendingApprovalListAdapter.submitList(it)
         }
     }

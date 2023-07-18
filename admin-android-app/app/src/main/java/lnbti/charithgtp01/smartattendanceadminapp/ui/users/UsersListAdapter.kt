@@ -6,20 +6,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.LayoutPendingApprovalsListBinding
+import lnbti.charithgtp01.smartattendanceadminapp.databinding.LayoutUserListBinding
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import javax.inject.Inject
 
 /**
- * Main Activity List Adapter
+ * User Fragment List Adapter
  */
-class PendingApprovalListAdapter @Inject constructor(
+class UsersListAdapter @Inject constructor(
     private val itemClickListener: OnItemClickListener
-) : ListAdapter<User, PendingApprovalListAdapter.UsersListViewHolder>(diffUtil) {
+) : ListAdapter<User, UsersListAdapter.UsersListViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = LayoutPendingApprovalsListBinding.inflate(inflater, parent, false)
+        val binding = LayoutUserListBinding.inflate(inflater, parent, false)
         return UsersListViewHolder(binding)
     }
 
@@ -42,7 +42,7 @@ class PendingApprovalListAdapter @Inject constructor(
         fun itemClick(item: User)
     }
 
-    inner class UsersListViewHolder(val binding: LayoutPendingApprovalsListBinding) :
+    inner class UsersListViewHolder(val binding: LayoutUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
     }
 }

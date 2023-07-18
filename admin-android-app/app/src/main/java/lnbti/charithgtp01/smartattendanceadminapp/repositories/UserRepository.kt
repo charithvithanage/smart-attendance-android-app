@@ -17,6 +17,9 @@ import lnbti.charithgtp01.smartattendanceadminapp.model.Resource
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
+/**
+ * User Repository
+ */
 class UserRepository @Inject constructor(
     context: Context,
     private val userService: UserService
@@ -69,6 +72,35 @@ class UserRepository @Inject constructor(
      * @return ServerResponse Object
      */
     private suspend fun getPendingApprovalsFromRemoteService(): Resource {
+
+        /* Get Server Response */
+        val response = userService.getPendingApprovals()
+        return if (response.isSuccessful) {
+            Resource.Success(data = response.body()!!)
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            Resource.Error(
+                ErrorResponse(
+                    errorObject.error,
+                    response.code()
+                )
+            )
+        }
+    }
+
+    /**
+     * Get Users from the server
+     */
+    suspend fun getUsersFromDataSource(): Resource {
+        return withContext(Dispatchers.IO) {
+            return@withContext getUsersFromRemoteService()
+        }
+    }
+
+    /**
+     * @return ServerResponse Object
+     */
+    private suspend fun getUsersFromRemoteService(): Resource {
 
         /* Get Server Response */
         val response = userService.getPendingApprovals()

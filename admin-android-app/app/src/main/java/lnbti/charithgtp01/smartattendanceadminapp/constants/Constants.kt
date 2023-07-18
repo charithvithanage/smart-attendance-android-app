@@ -17,6 +17,9 @@ object Constants {
     //Get Pending Approval endpoint
     const val GET_PENDING_APPROVALS_ENDPOINT = "users"
 
+    //Get Users endpoint
+    const val GET_USERS_ENDPOINT = "users"
+
     //Preference Keys
     const val ACCESS_TOKEN = "access_token"
 }
