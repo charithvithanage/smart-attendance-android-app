@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentUsersBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 /**
  * Users Fragment
@@ -95,7 +100,14 @@ class UsersFragment : Fragment() {
         usersListAdapter =
             UsersListAdapter(object : UsersListAdapter.OnItemClickListener {
                 override fun itemClick(item: User) {
-//                gotoRepositoryFragment(item)
+                    val gson = Gson()
+                    val prefMap = HashMap<String, String>()
+                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                    navigateToAnotherActivityWithExtras(
+                        requireActivity(),
+                        UserDetailsActivity::class.java,
+                        prefMap
+                    )
                 }
             })
 

@@ -41,6 +41,7 @@
     </style>
 
     //Search View Style
+
     <style name="TextInputLayoutNoBorder" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="errorIconDrawable">@null</item>
         <item name="errorIconTint">@null</item>
@@ -49,10 +50,18 @@
     </style>
 
     //Rounded User Image Style
+
     <style name="roundedImageViewRounded">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    //Action Bar Title Style
+    <style name="action_bar_title_text_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+
 
     <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
