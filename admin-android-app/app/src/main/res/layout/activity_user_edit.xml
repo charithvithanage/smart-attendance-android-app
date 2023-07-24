@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsViewModel" />
+            type="lnbti.charithgtp01.smartattendanceadminapp.ui.users.UserDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/text_view_layout"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
@@ -47,7 +47,7 @@
 
         <include
             android:id="@+id/include2"
-            layout="@layout/text_view_layout"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
@@ -61,7 +61,7 @@
 
         <include
             android:id="@+id/include3"
-            layout="@layout/text_view_layout"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
@@ -75,7 +75,7 @@
 
         <include
             android:id="@+id/include4"
-            layout="@layout/text_view_layout"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
@@ -89,7 +89,7 @@
 
         <include
             android:id="@+id/include5"
-            layout="@layout/text_view_layout"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
@@ -101,31 +101,18 @@
             bind:label='@{"User Role"}'
             bind:value='@{vm.pendingApprovalUser.user_role}' />
 
-        <Button
-            android:id="@+id/btnApprove"
+        <include
+            android:id="@+id/include6"
+            layout="@layout/input_text_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
             android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/button_margin_top"
+            android:layout_marginTop="@dimen/content_margin_top"
             android:layout_marginEnd="@dimen/content_horizontal_margin"
-            android:text="@string/action_approve"
-            android:backgroundTint="@color/green_button_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include5" />
-
-        <Button
-            android:id="@+id/btnReject"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            android:text="@string/action_reject"
-            android:backgroundTint="@color/red_button_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnApprove" />
+            app:layout_constraintTop_toBottomOf="@+id/include5"
+            bind:label='@{"Status"}'
+            bind:value='@{vm.pendingApprovalUser.status}' />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

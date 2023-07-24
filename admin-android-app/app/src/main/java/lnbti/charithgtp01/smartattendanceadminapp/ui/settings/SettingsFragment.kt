@@ -4,39 +4,81 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSlideshowBinding
+import com.google.gson.Gson
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBinding
+import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
+import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsActivity
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 
 class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentSlideshowBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var binding: FragmentSettingsBinding? = null
+    private lateinit var viewModel: SettingsListViewModel
+    private lateinit var settingsAdapterListAdapter: SettingsAdapterListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val slideshowViewModel =
-            ViewModelProvider(this).get(SettingsViewModel::class.java)
+    ): View? {
+        /*
+        * Initiate Data Binding and View Model
+       */
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[SettingsListViewModel::class.java]
+        binding?.vm = viewModel
+        binding?.lifecycleOwner = this
+        return binding?.root
+    }
 
-        _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initiateAdapter()
+        viewModelObservers()
+    }
 
-        val textView: TextView = binding.textSlideshow
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    /**
+     * Live Data Updates
+     */
+    private fun viewModelObservers() {
+        /* Observer to catch list data
+      * Update Recycle View Items using Diff Utils
+      */
+        viewModel.settingsList.observe(requireActivity()) {
+            settingsAdapterListAdapter.submitList(it)
         }
-        return root
+    }
+
+    /**
+     * Recycle View data configuration
+     */
+    private fun initiateAdapter() {
+        /* Initiate Adapter */
+        settingsAdapterListAdapter =
+            SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
+                override fun itemClick(item: SettingsObject) {
+                    val gson = Gson()
+                    val prefMap = HashMap<String, String>()
+                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                    Utils.navigateToAnotherActivityWithExtras(
+                        requireActivity(),
+                        PendingApprovalDetailsActivity::class.java,
+                        prefMap
+                    )
+                }
+            })
+
+        /* Set Adapter to Recycle View */
+        binding?.recyclerView.also { it2 ->
+            it2?.adapter = settingsAdapterListAdapter
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        binding = null
     }
 }
