@@ -13,6 +13,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBi
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsActivity
+import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
 
@@ -66,7 +67,7 @@ class SettingsFragment : Fragment() {
                     when (item.name) {
                         getString(R.string.get_device_id) -> navigateToAnotherActivity(
                             requireActivity(),
-                            OtherSettingsActivity::class.java
+                            DeviceIDQRActivity::class.java
                         )
                         getString(R.string.other_settings) -> {
                             navigateToAnotherActivity(
