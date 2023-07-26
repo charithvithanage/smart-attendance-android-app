@@ -33,4 +33,5 @@
     <dimen name="avatar_margin">16dp</dimen>
     <dimen name="button_margin_top">16dp</dimen>
     <dimen name="action_button_size">60dp</dimen>
+    <dimen name="settings_item_padding">8dp</dimen>
 </resources>

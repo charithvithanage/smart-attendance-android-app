@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
 
@@ -14,6 +15,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
  */
 class Utils {
     companion object {
+
 
         /**
          * Check Internet Status
@@ -38,6 +40,26 @@ class Utils {
                 }
             }
             return false
+        }
+
+        /**
+         * Navigate to Home Activity with Clearing all top activities
+         */
+        fun goToHomeActivity(context: Context) {
+            navigateWithoutHistory(context, MainActivity::class.java)
+        }
+
+
+        /**
+         * Navigate to another activity without navigation history
+         *
+         * @param context  Context of the current activity
+         * @param activity Context of the second activity
+         */
+        fun navigateWithoutHistory(context: Context, activity: Class<*>?) {
+            val intent = Intent(context, activity)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
         }
 
         /**

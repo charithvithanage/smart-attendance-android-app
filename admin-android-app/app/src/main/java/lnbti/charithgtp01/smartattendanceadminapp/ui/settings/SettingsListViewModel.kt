@@ -50,9 +50,18 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
     private fun getSettingsList() {
 
         allUsersList = listOf(
-            SettingsObject(R.drawable.ic_menu_camera, "GET DEVICE ID"),
-            SettingsObject(R.drawable.ic_menu_camera, "OTHER SETTINGS"),
-            SettingsObject(R.drawable.ic_menu_camera, "CHANGE PASSWORD")
+            SettingsObject(
+                R.drawable.ic_menu_camera,
+                userRepository.context.getString(R.string.get_device_id)
+            ),
+            SettingsObject(
+                R.drawable.ic_menu_camera,
+                userRepository.context.getString(R.string.other_settings)
+            ),
+            SettingsObject(
+                R.drawable.ic_menu_camera,
+                userRepository.context.getString(R.string.change_password)
+            )
         )
         _settingsList.value = allUsersList
 
