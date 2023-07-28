@@ -11,7 +11,7 @@ import com.google.gson.Gson
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -53,7 +53,7 @@ class PendingApprovalsFragment : Fragment() {
             DialogUtils.showErrorDialog(
                 requireContext(),
                 it,
-                object : ErrorDialogButtonClickListener {
+                object : DialogButtonClickListener {
                     override fun onButtonClick() {
 
                     }

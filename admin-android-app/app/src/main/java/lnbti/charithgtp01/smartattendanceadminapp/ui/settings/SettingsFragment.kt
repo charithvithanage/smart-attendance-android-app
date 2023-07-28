@@ -11,6 +11,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
+import lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword.ChangePasswordActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRActivity
@@ -78,7 +79,7 @@ class SettingsFragment : Fragment() {
                         getString(R.string.change_password) -> {
                             navigateToAnotherActivity(
                                 requireActivity(),
-                                OtherSettingsActivity::class.java
+                                ChangePasswordActivity::class.java
                             )
                         }
                     }

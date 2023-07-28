@@ -17,6 +17,8 @@ object Constants {
     const val GET_PENDING_APPROVALS_ENDPOINT = "users"
     //Get Users endpoint
     const val GET_USERS_ENDPOINT = "users"
+    //Change Password endpoint
+    const val CHANGE_PASSWORD_ENDPOINT = "users/2"
 
     /**
      * Preference Keys

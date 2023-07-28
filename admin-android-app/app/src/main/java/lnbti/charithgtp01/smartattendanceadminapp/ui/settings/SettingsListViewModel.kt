@@ -51,15 +51,15 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
 
         allUsersList = listOf(
             SettingsObject(
-                R.drawable.ic_menu_camera,
+                R.mipmap.device_id,
                 userRepository.context.getString(R.string.get_device_id)
             ),
             SettingsObject(
-                R.drawable.ic_menu_camera,
+                R.mipmap.other_settings,
                 userRepository.context.getString(R.string.other_settings)
             ),
             SettingsObject(
-                R.drawable.ic_menu_camera,
+                R.mipmap.change_password,
                 userRepository.context.getString(R.string.change_password)
             )
         )

@@ -12,6 +12,12 @@
     <dimen name="recycle_view_margin">8dp</dimen>
     <dimen name="forward_arrow_size">15dp</dimen>
     <dimen name="round_icon_stroke_width">0.5dp</dimen>
+    <dimen name="button_margin_top">16dp</dimen>
+    <dimen name="action_button_size">60dp</dimen>
+    <dimen name="settings_item_padding">8dp</dimen>
+    <dimen name="qr_code_size">250dp</dimen>
+    <dimen name="page_padding">30dp</dimen>
+    <dimen name="page_top_margin">30dp</dimen>
 
     /* Dialog View Dimensions */
     <dimen name="dialog_horizontal_padding">16dp</dimen>
@@ -31,9 +37,5 @@
     <dimen name="content_card_view_elevation">10dp</dimen>
     <dimen name="list_card_view_corner_radius">12dp</dimen>
     <dimen name="avatar_margin">16dp</dimen>
-    <dimen name="button_margin_top">16dp</dimen>
-    <dimen name="action_button_size">60dp</dimen>
-    <dimen name="settings_item_padding">8dp</dimen>
-    <dimen name="qr_code_size">250dp</dimen>
-    <dimen name="page_padding">30dp</dimen>
+
 </resources>
