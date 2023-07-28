@@ -6,9 +6,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Window
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ErrorDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.changeUiSize
 
 /**
@@ -16,14 +17,15 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.change
  */
 class DialogUtils {
     companion object {
+
         /**
-         * Error Dialog with icon
-         * @param error Error Message
+         * Custom Alert Dialog with icon
+         * @param message Message body
          */
-        fun showErrorDialog(
+        fun showAlertDialog(
             context: Context,
-            error: String?,
-            errorDialogButtonClickListener: ErrorDialogButtonClickListener
+            message: String?,
+            dialogButtonClickListener: DialogButtonClickListener
         ) {
             Handler(Looper.getMainLooper()).post {
                 Dialog(context, R.style.DialogNoActionBar).apply {
@@ -33,6 +35,40 @@ class DialogUtils {
                     changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
                     changeUiSize(context, findViewById(R.id.icon), 1, 3)
                     val tvMessage = findViewById<TextView>(R.id.tvMessage)
+                    val icon = findViewById<ImageView>(R.id.icon)
+                    val button =
+                        findViewById<Button>(R.id.button)
+
+                    button.setOnClickListener {
+                        dismiss()
+                        dialogButtonClickListener.onButtonClick()
+                    }
+                    tvMessage.text = message
+                    icon.setImageResource(R.mipmap.done)
+
+                    show()
+                }
+            }
+        }
+
+        /**
+         * Error Dialog with icon
+         * @param error Error Message
+         */
+        fun showErrorDialog(
+            context: Context,
+            error: String?,
+            errorDialogButtonClickListener: DialogButtonClickListener
+        ) {
+            Handler(Looper.getMainLooper()).post {
+                Dialog(context, R.style.DialogNoActionBar).apply {
+                    requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    setCancelable(false)
+                    setContentView(R.layout.alert_dialog_layout)
+                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
+                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
+                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
+                    val icon = findViewById<ImageView>(R.id.icon)
                     val button =
                         findViewById<Button>(R.id.button)
 
@@ -41,6 +77,7 @@ class DialogUtils {
                         errorDialogButtonClickListener.onButtonClick()
                     }
                     tvMessage.text = error
+                    icon.setImageResource(R.mipmap.cancel)
                     show()
                 }
             }

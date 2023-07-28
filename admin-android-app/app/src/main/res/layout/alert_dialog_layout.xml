@@ -28,8 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/cancel" />
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/tvMessage"

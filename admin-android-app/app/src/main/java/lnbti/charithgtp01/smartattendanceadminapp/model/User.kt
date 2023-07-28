@@ -15,6 +15,7 @@ data class User(
     private val nullable_gender: String?,
     private val nullable_user_role: String?,
     private val nullable_dob: String?,
+    private val nullable_status: String?,
     val avatar: String
 ) : Parcelable {
     val gender: String
@@ -25,4 +26,7 @@ data class User(
 
     val dob: String
         get() = nullable_gender ?: "1991/05/03"
+
+    val status: String
+        get() = nullable_status ?: "Active"
 }

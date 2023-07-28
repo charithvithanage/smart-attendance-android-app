@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails
+package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals
 
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
