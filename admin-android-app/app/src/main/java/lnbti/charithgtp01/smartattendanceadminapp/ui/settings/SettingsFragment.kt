@@ -7,11 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
+import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
+import lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword.ChangePasswordActivity
+import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsActivity
+import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
 
 class SettingsFragment : Fragment() {
 
@@ -60,14 +65,24 @@ class SettingsFragment : Fragment() {
         settingsAdapterListAdapter =
             SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
                 override fun itemClick(item: SettingsObject) {
-                    val gson = Gson()
-                    val prefMap = HashMap<String, String>()
-                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
-                    Utils.navigateToAnotherActivityWithExtras(
-                        requireActivity(),
-                        PendingApprovalDetailsActivity::class.java,
-                        prefMap
-                    )
+                    when (item.name) {
+                        getString(R.string.get_device_id) -> navigateToAnotherActivity(
+                            requireActivity(),
+                            DeviceIDQRActivity::class.java
+                        )
+                        getString(R.string.other_settings) -> {
+                            navigateToAnotherActivity(
+                                requireActivity(),
+                                OtherSettingsActivity::class.java
+                            )
+                        }
+                        getString(R.string.change_password) -> {
+                            navigateToAnotherActivity(
+                                requireActivity(),
+                                ChangePasswordActivity::class.java
+                            )
+                        }
+                    }
                 }
             })
 

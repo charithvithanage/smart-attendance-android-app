@@ -7,6 +7,17 @@ class Validations {
     companion object {
 
         /**
+         * Password validation
+         */
+        fun isPasswordValid(password: String?): Boolean {
+
+            if (password.isNullOrBlank())
+                return false
+
+            return password.length > 5
+        }
+
+        /**
          * Username validation
          */
         fun isUserNameValid(userName: String): Boolean {
@@ -45,14 +56,6 @@ class Validations {
             }
             return valid
 
-        }
-
-
-        /**
-         * Password validation
-         */
-        fun isPasswordValid(password: String): Boolean {
-            return password.length > 5
         }
     }
 }

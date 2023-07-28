@@ -28,6 +28,20 @@
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
+            android:name=".ui.othersettings.OtherSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
+        <activity
+            android:name=".ui.qr.DeviceIDQRActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.changepassword.ChangePasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
+
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">

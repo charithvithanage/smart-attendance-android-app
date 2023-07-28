@@ -39,6 +39,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
@@ -72,4 +73,8 @@ dependencies {
 
     // lifecycle & ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+
+    //QR Generate Library
+    implementation 'com.google.zxing:core:3.4.1'
+
 }
