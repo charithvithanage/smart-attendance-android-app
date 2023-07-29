@@ -1,15 +1,20 @@
 package lnbti.charithgtp01.smartattendanceadminapp.utils
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 
 /**
@@ -17,6 +22,46 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeU
  */
 class DialogUtils {
     companion object {
+
+
+        /**
+         * Enter value and get the value to out side from dialog
+         * @param context Activity
+         * @param title Title of the dialog
+         * @param hint Hint of the Input Text
+         * @param valueSubmitDialogListener Dialog value listener
+         */
+        fun valueSubmitDialog(
+            context: Activity,
+            title: String,
+            hint: String,
+            valueSubmitDialogListener: ValueSubmitDialogListener
+        ) {
+            val dialog = Dialog(context, R.style.Theme_SmartAttendanceAdminApp_DialogNoActionBar)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.value_submit_dialog_layout)
+            changeUiSize(context, dialog.findViewById(R.id.dialogMainLayout), 1, 1, 30)
+            dialog.setCancelable(false)
+            val tvTitle = dialog.findViewById<TextView>(R.id.tvTitle)
+            val inputText = dialog.findViewById<TextInputLayout>(R.id.inputText)
+            val editText = dialog.findViewById<TextInputEditText>(R.id.editText)
+            val btnOK = dialog.findViewById<Button>(R.id.btnOK)
+            val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
+
+            tvTitle.text = title
+            inputText.hint = hint
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            btnCancel.setOnClickListener { dialog.dismiss() }
+            btnOK.setOnClickListener {
+                dialog.dismiss()
+                valueSubmitDialogListener.onPositiveButtonClicked(
+                    editText.text.toString()
+                )
+            }
+            dialog.show()
+        }
+
 
         /**
          * Custom Alert Dialog with icon

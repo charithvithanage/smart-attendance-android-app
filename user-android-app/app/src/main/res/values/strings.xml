@@ -39,4 +39,7 @@
     <string name="invalid_confirm_password">Password Not Matching</string>
     <string name="menu_about">About</string>
     <string name="sign_up">Sign Up</string>
+    <string name="cancel">CANCEL</string>
+    <string name="empoyee_id">Employee ID</string>
+    <string name="employee_dialog_title">Enter Employee ID</string>
 </resources>

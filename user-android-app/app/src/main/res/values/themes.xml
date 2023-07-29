@@ -87,6 +87,13 @@
         <item name="alpha">0.8</item>
     </style>
 
+    //Dialog without action bar
+    <style name="Theme.SmartAttendanceAdminApp.DialogNoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/dialog_bg_color</item>
+    </style>
+
     <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
