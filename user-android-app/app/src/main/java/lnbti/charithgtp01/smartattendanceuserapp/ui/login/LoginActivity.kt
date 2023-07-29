@@ -28,6 +28,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -102,16 +103,19 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
+        //After 4 click on the logo navigate to Device ID qr activity
         binding.appLogo.setOnClickListener {
             i = atomicInteger.getAndIncrement();
-
-            //After 4 click on the logo navigate to Device ID qr activity
             if (i >= 4) {
                 atomicInteger = AtomicInteger(0)
                 i = 0
                 val androidID = getAndroidId(this)
                 goToQRActivity(androidID)
             }
+        }
+
+        binding.btnSignUp.setOnClickListener {
+            navigateWithoutHistory(this, MainActivity::class.java)
         }
     }
 

@@ -81,6 +81,12 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="label_text_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="alpha">0.8</item>
+    </style>
+
     <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

@@ -41,11 +41,7 @@ class DeviceIDQRActivity : AppCompatActivity() {
         initiateActionBarWithoutHomeButton(
             binding?.actionBar?.mainLayout!!,
             getString(R.string.device_id),
-            object : ActionBarWithoutHomeListener {
-                override fun backPressed() {
-                    onBackPressed()
-                }
-            })
+            ActionBarWithoutHomeListener { onBackPressed() })
     }
 
     private fun initiateDataBinding() {

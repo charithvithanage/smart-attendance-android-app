@@ -64,7 +64,7 @@ class Utils {
          * @param context  Context of the current activity
          * @param activity Context of the second activity
          */
-        private fun navigateWithoutHistory(context: Context, activity: Class<*>?) {
+        fun navigateWithoutHistory(context: Context, activity: Class<*>?) {
             val intent = Intent(context, activity)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
