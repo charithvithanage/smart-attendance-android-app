@@ -2,8 +2,7 @@ package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.provider.Settings
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -17,13 +16,20 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity_GeneratedInjector
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
+import java.util.concurrent.atomic.AtomicInteger
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -37,6 +43,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInputText: TextInputLayout
     private lateinit var login: Button
 
+    //This counter is using for catch the app logo click event counter
+    private var atomicInteger = AtomicInteger(0)
+    private var i = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,6 +100,18 @@ class LoginActivity : AppCompatActivity() {
                 username?.text.toString(),
                 password?.text.toString()
             )
+        }
+
+        binding.appLogo.setOnClickListener {
+            i = atomicInteger.getAndIncrement();
+
+            //After 4 click on the logo navigate to Device ID qr activity
+            if (i >= 4) {
+                atomicInteger = AtomicInteger(0)
+                i = 0
+                val androidID = getAndroidId(this)
+                goToQRActivity(androidID)
+            }
         }
     }
 
@@ -147,19 +168,17 @@ class LoginActivity : AppCompatActivity() {
     private fun initiateProgressDialog() {
         dialog = showProgressDialog(this, getString(R.string.wait))
     }
+
+    /**
+     * Navigate to QR activity with generated Device ID
+     */
+    private fun goToQRActivity(data: String) {
+        val navigationPathMap = HashMap<String, String>()
+        navigationPathMap[OBJECT_STRING] = data
+        navigateToAnotherActivityWithExtras(
+            this@LoginActivity,
+            DeviceIDQRActivity::class.java, navigationPathMap
+        )
+    }
 }
 
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
-}

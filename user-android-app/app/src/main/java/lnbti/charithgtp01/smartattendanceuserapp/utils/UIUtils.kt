@@ -12,7 +12,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarLayoutBinding
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarWithoutHomeLayoutBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import java.util.Locale
 
 /**
@@ -21,6 +23,30 @@ import java.util.Locale
 class UIUtils {
 
     companion object {
+
+        /**
+         * Action Bar Initiation without Home Button
+         * @param parent Parent layout of the action bar layout
+         * @param activityTitle Action Bar Title String
+         * @param actionBarListener Action Bar image button listener
+         */
+        fun initiateActionBarWithoutHomeButton(
+            parent: ViewGroup,
+            activityTitle: String,
+            actionBarListener: ActionBarWithoutHomeListener
+        ) {
+            // Inflate the layout using DataBindingUtil
+            val binding =
+                ActionBarWithoutHomeLayoutBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    true
+                )
+            binding.tvTitle.text = activityTitle.uppercase(Locale.getDefault())
+            binding.backBtn.setOnClickListener {
+                actionBarListener.backPressed()
+            }
+        }
 
         /**
          * Action Bar Initiation

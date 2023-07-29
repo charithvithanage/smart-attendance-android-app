@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.qr
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -12,6 +13,7 @@ import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import javax.inject.Inject
 
 /**
@@ -29,15 +31,12 @@ class DeviceIDQRViewModel @Inject constructor(private val context: Context) : Vi
         get() = _deviceID
 
     init {
-        val androidID = getAndroidId()
+        val androidID = getAndroidId(context)
         _deviceID.value = androidID
         generateQRCode(androidID)
     }
 
     // ViewModel logic and data manipulation can be defined here
-    private fun getAndroidId(): String {
-        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-    }
 
     private fun generateQRCode(text: String) {
         // Implement your QR code generation logic here and set the result in _generatedQRCodeData

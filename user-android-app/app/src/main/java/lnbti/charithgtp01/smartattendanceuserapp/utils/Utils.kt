@@ -1,10 +1,12 @@
 package lnbti.charithgtp01.smartattendanceuserapp.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.provider.Settings
 import android.util.Log
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
@@ -15,7 +17,13 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
  */
 class Utils {
     companion object {
-
+        /**
+         * Generate Device Unique Identifier
+         */
+        @SuppressLint("HardwareIds")
+        fun getAndroidId(context: Context): String {
+            return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        }
 
         /**
          * Check Internet Status

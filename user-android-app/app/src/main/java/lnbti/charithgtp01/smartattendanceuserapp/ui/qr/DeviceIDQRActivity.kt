@@ -11,6 +11,8 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeA
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityDeviceIdQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 
 @AndroidEntryPoint
 class DeviceIDQRActivity : AppCompatActivity() {
@@ -36,16 +38,12 @@ class DeviceIDQRActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        initiateActionBar(
+        initiateActionBarWithoutHomeButton(
             binding?.actionBar?.mainLayout!!,
             getString(R.string.device_id),
-            object : ActionBarListener {
+            object : ActionBarWithoutHomeListener {
                 override fun backPressed() {
                     onBackPressed()
-                }
-
-                override fun homePressed() {
-                    goToHomeActivity(this@DeviceIDQRActivity)
                 }
             })
     }
