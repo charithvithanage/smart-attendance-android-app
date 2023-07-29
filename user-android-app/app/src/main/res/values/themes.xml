@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.SmartAttendanceUserApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.SmartAttendanceAdminApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -14,12 +14,89 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.SmartAttendanceUserApp.NoActionBar">
+    <style name="Theme.SmartAttendanceAdminApp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.SmartAttendanceUserApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="DialogNoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/dialog_bg_color</item>
+    </style>
 
-    <style name="Theme.SmartAttendanceUserApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="dialog_title_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="buttonStyle" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="progressBarStyle" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+    //Search View Style
+
+    <style name="TextInputLayoutNoBorder" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorIconTint">@null</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxBackgroundMode">none</item>
+    </style>
+
+    //Rounded User Image Style
+
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    //Action Bar Title Style
+
+    <style name="action_bar_title_text_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">bold</item>
+    </style>
+
+    //Content Style
+
+    <style name="content_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">bold</item>
+    </style>
+
+    //Settings Content Style
+
+    <style name="settings_item_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">bold</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="label_text_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="alpha">0.8</item>
+    </style>
+
+    //Dialog without action bar
+    <style name="Theme.SmartAttendanceAdminApp.DialogNoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/dialog_bg_color</item>
+    </style>
+
+    <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <color name="dialog_bg_color">#50e3e3e3</color>
 </resources>
