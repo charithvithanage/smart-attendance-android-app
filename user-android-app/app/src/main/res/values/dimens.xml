@@ -49,5 +49,6 @@
     <dimen name="edittext_shadow_border_radius">4dp</dimen>
     <dimen name="list_view_button">120dp</dimen>
     <dimen name="dialog_corner_radius">16dp</dimen>
+    <dimen name="logout_button_size">40dp</dimen>
 
 </resources>

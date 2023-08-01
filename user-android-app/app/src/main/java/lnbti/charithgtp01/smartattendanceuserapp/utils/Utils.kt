@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
@@ -21,6 +22,47 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 class Utils {
     companion object {
 
+        const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
+
+        /**
+         * Request Location Permission
+         */
+        fun requestPermissions(activity: Activity) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+
+        /**
+         * Check Location Permission Granted or Not
+         */
+        fun checkPermissions(activity: Activity): Boolean {
+            if (ActivityCompat.checkSelfPermission(
+                    activity,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    activity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                return true
+            }
+            return false
+        }
+
+        fun isLocationEnabled(activity: Activity): Boolean {
+            val locationManager: LocationManager =
+                activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        }
 
         /**
          * Check permissions
