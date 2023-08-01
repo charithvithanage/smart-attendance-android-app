@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green_button_color">#08A703</color>
     <color name="red_button_color">#DF051F</color>
+    <color name="dialog_bg_color">#50e3e3e3</color>
+
 </resources>

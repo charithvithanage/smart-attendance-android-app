@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.valueSubmitDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
@@ -22,8 +22,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickLis
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -114,11 +116,14 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnSignUp.setOnClickListener {
             valueSubmitDialog(
-                this,getString(R.string.employee_dialog_title),
+                this, getString(R.string.employee_dialog_title),
                 getString(R.string.empoyee_id),
                 object : ValueSubmitDialogListener {
                     override fun onPositiveButtonClicked(value: String) {
-                        goToQRActivity(value)
+                        navigateToAnotherActivity(
+                            this@LoginActivity,
+                            RegisterActivity::class.java
+                        )
                     }
 
                     override fun onNegativeButtonClicked() {
