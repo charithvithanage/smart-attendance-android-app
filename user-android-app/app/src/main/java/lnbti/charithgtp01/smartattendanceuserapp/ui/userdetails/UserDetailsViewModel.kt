@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.users
+package lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

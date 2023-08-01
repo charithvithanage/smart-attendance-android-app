@@ -10,5 +10,13 @@
     <color name="green_button_color">#08A703</color>
     <color name="red_button_color">#DF051F</color>
     <color name="dialog_bg_color">#50e3e3e3</color>
+    <color name="platinum">#FFD9E3EE</color>
+    <color name="whitesmoke">#f5f5f6</color>
+
+    //QR Scanner
+    <color name="viewfinder_border">#ffafed44</color>
+    <color name="viewfinder_laser">#ffcc0000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="maskColor">#00000000</color>
 
 </resources>
