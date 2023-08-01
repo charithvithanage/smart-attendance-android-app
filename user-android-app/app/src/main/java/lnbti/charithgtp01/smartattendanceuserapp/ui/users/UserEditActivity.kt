@@ -34,7 +34,7 @@ class UserEditActivity : AppCompatActivity() {
     }
 
     private fun initiateDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_edit)
         viewModel = ViewModelProvider(this)[UserDetailsViewModel::class.java]
         binding?.vm = viewModel
         binding?.lifecycleOwner = this

@@ -38,4 +38,14 @@
     <dimen name="list_card_view_corner_radius">12dp</dimen>
     <dimen name="avatar_margin">16dp</dimen>
     <dimen name="buttonRadius">30dp</dimen>
+    <dimen name="input_text_page_padding">18dp</dimen>
+    <dimen name="button_margin">16dp</dimen>
+
+    /* Edit Text Background View Dimensions */
+    <dimen name="shadow_bg_left_padding">5dp</dimen>
+    <dimen name="shadow_bg_top_padding">2dp</dimen>
+    <dimen name="text_hint_height">18dp</dimen>
+    <dimen name="input_layout_custom_label_padding">4dp</dimen>
+    <dimen name="edittext_shadow_border_radius">4dp</dimen>
+
 </resources>

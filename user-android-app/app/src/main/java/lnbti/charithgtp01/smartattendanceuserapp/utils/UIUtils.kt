@@ -4,15 +4,18 @@ import android.R
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.provider.Settings.Global.getString
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarLayoutBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarWithoutHomeLayoutBinding
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.GenderLayoutBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import java.util.Locale
@@ -155,6 +158,30 @@ class UIUtils {
                         listener.validateUI()
                     }
                 }
+        }
+
+        /**
+         * Set Error value and Background to Select Layout
+         * Ex: Gender Selection Layout
+         * @param parent Selected layout of the view model
+         * @param error Error value
+         */
+        fun setErrorBgToSelectLayout(context: Context, parent: GenderLayoutBinding, error: String) {
+            parent.error.visibility = View.VISIBLE
+            parent.bg.background =
+                context.getDrawable(lnbti.charithgtp01.smartattendanceuserapp.R.drawable.error_edittext_background)
+            parent.error.text = error
+        }
+
+        /**
+         * Set normal Background to Select Layout
+         * Ex: Gender Selection Layout
+         * @param parent Selected layout of the view model
+         */
+        fun setNormalBgToSelectLayout(context: Context, parent: GenderLayoutBinding) {
+            parent.error.visibility = View.GONE
+            parent.bg.background =
+                context.getDrawable(lnbti.charithgtp01.smartattendanceuserapp.R.drawable.app_edittext_background)
         }
     }
 }

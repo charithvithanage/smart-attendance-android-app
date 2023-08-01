@@ -42,4 +42,26 @@
     <string name="cancel">CANCEL</string>
     <string name="empoyee_id">Employee ID</string>
     <string name="employee_dialog_title">Enter Employee ID</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="contact">Contact</string>
+    <string name="dob">Date of Birth</string>
+    <string name="employee_id">Employee ID</string>
+    <string name="enter_first_name">Enter First Name</string>
+    <string name="enter_last_name">Enter Last Name</string>
+    <string name="enter_nic">Enter NIC</string>
+    <string name="enter_employee_id">Enter Employee ID</string>
+    <string name="enter_dob">Select Date Of Birth</string>
+    <string name="select_gender">Select Gender</string>
+    <string name="enter_contact">Enter Contact Number</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_user_name">Enter Username</string>
+    <string name="register">Register</string>
+    <string name="user_registration">User Registration</string>
+    <string name="gender">Gender</string>
+    <string name="date_format">dd.MM.yyyy</string>
+    <string name="user_registered_successfully">User Registered Successfully</string>
+    <string name="password">Password</string>
+    <string name="confirm_passoword">Confirm Password</string>
 </resources>

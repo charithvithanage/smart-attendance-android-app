@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword
+package lnbti.charithgtp01.smartattendanceuserapp.ui.changepassword
 
 /**
  * Data validation state of the login form.

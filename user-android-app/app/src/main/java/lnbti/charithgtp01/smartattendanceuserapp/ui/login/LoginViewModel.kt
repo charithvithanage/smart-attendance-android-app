@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
+import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterFormState
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
