@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceuserapp.ui.users
+package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,32 +6,38 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutHomeListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutUserListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeListAdapter
 import javax.inject.Inject
 
 /**
  * User Fragment List Adapter
  */
-class UsersListAdapter @Inject constructor(
+class HomeListAdapter @Inject constructor(
     private val itemClickListener: OnItemClickListener
-) : ListAdapter<User, UsersListAdapter.UsersListViewHolder>(lnbti.charithgtp01.smartattendanceuserapp.ui.home.diffUtil) {
+) : ListAdapter<User, HomeListAdapter.HomeListViewHolder>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersListViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = LayoutUserListBinding.inflate(inflater, parent, false)
-        return UsersListViewHolder(binding)
+        val binding = LayoutHomeListBinding.inflate(inflater, parent, false)
+        return HomeListViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
         val pendingApproval = getItem(position)
+
+        if (position == 0)
+            holder.binding.btnProceed.text = "SCAN"
+        else
+            holder.binding.btnProceed.text = "GENERATE"
+
         holder.binding.repositoryNameView.text =
             pendingApproval.first_name + " " + pendingApproval.last_name
         /* Show profile icon using Glide */
         Glide.with(holder.itemView.rootView).load(pendingApproval.avatar)
             .into(holder.binding.ownerIconView)
-        holder.itemView.setOnClickListener {
+        holder.binding.btnProceed.setOnClickListener {
             itemClickListener.itemClick(pendingApproval)
         }
     }
@@ -43,7 +49,7 @@ class UsersListAdapter @Inject constructor(
         fun itemClick(item: User)
     }
 
-    inner class UsersListViewHolder(val binding: LayoutUserListBinding) :
+    inner class HomeListViewHolder(val binding: LayoutHomeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
     }
 }

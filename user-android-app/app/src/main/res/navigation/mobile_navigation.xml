@@ -3,12 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_users">
+    app:startDestination="@+id/nav_home">
 
     <fragment
         android:id="@+id/nav_users"
-        android:name="lnbti.charithgtp01.smartattendanceadminapp.ui.users.UsersFragment"
+        android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.users.UsersFragment"
         android:label="@string/menu_users"
+        tools:layout="@layout/fragment_users" />
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeFragment"
+        android:label="@string/menu_home"
         tools:layout="@layout/fragment_users" />
 
     <fragment

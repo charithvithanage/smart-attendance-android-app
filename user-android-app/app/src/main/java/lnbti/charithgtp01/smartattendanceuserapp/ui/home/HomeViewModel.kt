@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceuserapp.ui.users
+package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class UsersViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> get() = _usersList

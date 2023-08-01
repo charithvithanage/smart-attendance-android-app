@@ -64,4 +64,5 @@
     <string name="user_registered_successfully">User Registered Successfully</string>
     <string name="password">Password</string>
     <string name="confirm_passoword">Confirm Password</string>
+    <string name="menu_home">HOME</string>
 </resources>

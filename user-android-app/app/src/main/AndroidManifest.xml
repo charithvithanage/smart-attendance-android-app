@@ -32,7 +32,7 @@
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
-            android:name=".ui.users.UserDetailsActivity"
+            android:name=".ui.userdetails.UserDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
