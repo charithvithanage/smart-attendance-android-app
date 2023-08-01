@@ -48,5 +48,6 @@
     <dimen name="input_layout_custom_label_padding">4dp</dimen>
     <dimen name="edittext_shadow_border_radius">4dp</dimen>
     <dimen name="list_view_button">120dp</dimen>
+    <dimen name="dialog_corner_radius">16dp</dimen>
 
 </resources>

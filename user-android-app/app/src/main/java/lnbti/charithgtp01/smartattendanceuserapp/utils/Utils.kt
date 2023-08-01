@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
@@ -19,6 +20,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
  */
 class Utils {
     companion object {
+
 
         /**
          * Check permissions

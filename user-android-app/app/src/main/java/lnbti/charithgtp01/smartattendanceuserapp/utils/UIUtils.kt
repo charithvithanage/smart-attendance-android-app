@@ -77,7 +77,7 @@ class UIUtils {
         /**
          * Convert dp values to px
          */
-        private fun convertDpToPixel(dp: Float, context: Context?): Float {
+        fun convertDpToPixel(dp: Float, context: Context?): Float {
             if (context != null)
                 return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
             return 0.0f

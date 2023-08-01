@@ -42,5 +42,9 @@ object Constants {
     )
     const val PERMISSION_ALL = 1
 
+    /**
+     * Image Types
+     */
+    const val MEDIA_TYPE_EMPLOYEE_SIGNATURE: String = "employee_signature"
 
 }

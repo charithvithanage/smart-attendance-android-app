@@ -1,7 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.scan
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,23 +8,25 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.Result
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.MEDIA_TYPE_EMPLOYEE_SIGNATURE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
-import lnbti.charithgtp01.smartattendanceuserapp.customviews.CustomZXingScannerView
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ImageInspectionListener
+import lnbti.charithgtp01.smartattendanceuserapp.ui.sign.EmployeeAuthorizationActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
-import me.dm7.barcodescanner.core.IViewFinder
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import java.io.File
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
@@ -110,6 +110,10 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun handleResult(rawResult: Result) {
         stopCamera()
         val barCodeString = rawResult.text
+        navigateToAnotherActivity(
+            this@ScanActivity,
+            EmployeeAuthorizationActivity::class.java
+        )
     }
 
     override fun onResume() {
@@ -136,5 +140,6 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             mScannerView!!.stopCamera()
         }
     }
+
 
 }
