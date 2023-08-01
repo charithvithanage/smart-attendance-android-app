@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.utils
+package lnbti.charithgtp01.smartattendanceuserapp.utils
 
 import android.app.Activity
 import android.app.Dialog

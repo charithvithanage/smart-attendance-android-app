@@ -19,6 +19,8 @@ object Constants {
     const val GET_USERS_ENDPOINT = "users"
     //Change Password endpoint
     const val CHANGE_PASSWORD_ENDPOINT = "users/2"
+    //User Register endpoint
+    const val REGISTER_ENDPOINT = "users/2"
 
     /**
      * Preference Keys

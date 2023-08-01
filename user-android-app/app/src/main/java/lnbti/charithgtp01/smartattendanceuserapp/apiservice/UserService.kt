@@ -4,9 +4,11 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.CHANGE_PASS
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.GET_PENDING_APPROVALS_ENDPOINT
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.GET_USERS_ENDPOINT
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGIN_ENDPOINT
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.REGISTER_ENDPOINT
 import lnbti.charithgtp01.smartattendanceuserapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
+import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.ServerResponse
 import org.json.JSONObject
 import retrofit2.Response
@@ -18,12 +20,12 @@ import retrofit2.http.PUT
 interface UserService {
     @POST(LOGIN_ENDPOINT)
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
-
+    @PUT(REGISTER_ENDPOINT)
+    suspend fun register(@Body registerRequest: RegisterRequest): Response<JSONObject>
     @PUT(CHANGE_PASSWORD_ENDPOINT)
     suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<JSONObject>
     @GET(GET_PENDING_APPROVALS_ENDPOINT)
     suspend fun getPendingApprovals(): Response<ServerResponse>
-
     @GET(GET_USERS_ENDPOINT)
     suspend fun getUsers(): Response<ServerResponse>
 }

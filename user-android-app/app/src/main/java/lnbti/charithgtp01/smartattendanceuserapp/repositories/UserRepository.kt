@@ -14,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
+import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.Resource
 import okhttp3.ResponseBody
 import javax.inject.Inject
@@ -57,6 +58,38 @@ class UserRepository @Inject constructor(
         }
         return loginResponse
     }
+
+    /**
+     * Register Coroutines
+     */
+    suspend fun register(
+        registerRequest: RegisterRequest
+    ): ApiCallResponse? {
+        return withContext(Dispatchers.IO) {
+            return@withContext registerServer(registerRequest)
+        }
+    }
+
+    /**
+     * Send Request to the server and get the response
+     */
+    private suspend fun registerServer(registerRequest: RegisterRequest): ApiCallResponse {
+        val gson = Gson()
+        Log.d(TAG, gson.toJson(registerRequest))
+
+        val apiCallResponse: ApiCallResponse
+        val response = userService.register(registerRequest)
+
+        apiCallResponse = if (response.isSuccessful) {
+            ApiCallResponse(true, response.body().toString())
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ApiCallResponse(false, errorObject.error)
+        }
+
+        return apiCallResponse
+    }
+
 
     /**
      * Change Password Coroutines
