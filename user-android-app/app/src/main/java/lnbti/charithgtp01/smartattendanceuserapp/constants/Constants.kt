@@ -1,5 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.constants
 
+import android.Manifest
+
 object Constants {
 
     const val TAG="Smart Attendance App"
@@ -31,6 +33,14 @@ object Constants {
      * Pass Intent keys
      */
     const val OBJECT_STRING = "object_string"
+
+    /**
+     * Permission Codes
+     */
+    var SCANNER_PERMISSIONS: Array<String> = arrayOf(
+        Manifest.permission.CAMERA
+    )
+    const val PERMISSION_ALL = 1
 
 
 }

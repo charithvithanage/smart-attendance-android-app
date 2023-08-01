@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
@@ -17,6 +19,29 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
  */
 class Utils {
     companion object {
+
+        /**
+         * Check permissions
+         *
+         * @param context
+         * @param permissions
+         * @return
+         */
+        fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
+            if (context != null) {
+                for (permission in permissions) {
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            permission
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
+
         /**
          * Generate Device Unique Identifier
          */

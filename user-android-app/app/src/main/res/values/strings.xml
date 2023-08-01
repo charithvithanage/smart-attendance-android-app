@@ -65,4 +65,9 @@
     <string name="password">Password</string>
     <string name="confirm_passoword">Confirm Password</string>
     <string name="menu_home">HOME</string>
+    <string name="scan">SCAN</string>
+    <string name="generate">GENERATE</string>
+    <string name="no_permission_to_camera">Camera access restricted or denied. Can configure it from settings.</string>
+    <string name="scan_qr">SCAN QR</string>
+
 </resources>

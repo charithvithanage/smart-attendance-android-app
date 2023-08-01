@@ -14,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -98,13 +99,18 @@ class HomeFragment : Fragment() {
         /* Initiate Adapter */
         usersListAdapter =
             HomeListAdapter(object : HomeListAdapter.OnItemClickListener {
-                override fun itemClick(item: User) {
+                override fun scan(item: User) {
+
+
+                }
+
+                override fun generate(item: User) {
                     val gson = Gson()
                     val prefMap = HashMap<String, String>()
                     prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
                     navigateToAnotherActivityWithExtras(
                         requireActivity(),
-                        UserDetailsActivity::class.java,
+                        DeviceIDQRActivity::class.java,
                         prefMap
                     )
                 }
