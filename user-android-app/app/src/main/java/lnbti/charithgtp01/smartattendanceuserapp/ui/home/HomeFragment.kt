@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceuserapp.ui.users
+package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
 import android.os.Bundle
@@ -11,10 +11,11 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
-import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentUsersBinding
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeListAdapter
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -23,10 +24,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateT
  * Users Fragment
  */
 @AndroidEntryPoint
-class UsersFragment : Fragment() {
-    private var binding: FragmentUsersBinding? = null
-    private lateinit var viewModel: UsersViewModel
-    private lateinit var usersListAdapter: UsersListAdapter
+class HomeFragment : Fragment() {
+    private var binding: FragmentHomeBinding? = null
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var usersListAdapter: HomeListAdapter
     private var dialog: Dialog? = null
 
     override fun onCreateView(
@@ -37,8 +38,8 @@ class UsersFragment : Fragment() {
         /*
          * Initiate Data Binding and View Model
         */
-        binding = FragmentUsersBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[UsersViewModel::class.java]
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         binding?.vm = viewModel
         binding?.lifecycleOwner = this
         return binding?.root
@@ -98,14 +99,26 @@ class UsersFragment : Fragment() {
     private fun initiateAdapter() {
         /* Initiate Adapter */
         usersListAdapter =
-            UsersListAdapter(object : UsersListAdapter.OnItemClickListener {
-                override fun itemClick(item: User) {
+            HomeListAdapter(object : HomeListAdapter.OnItemClickListener {
+                override fun scan(item: User) {
                     val gson = Gson()
                     val prefMap = HashMap<String, String>()
                     prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
                     navigateToAnotherActivityWithExtras(
                         requireActivity(),
-                        UserDetailsActivity::class.java,
+                        ScanActivity::class.java,
+                        prefMap
+                    )
+
+                }
+
+                override fun generate(item: User) {
+                    val gson = Gson()
+                    val prefMap = HashMap<String, String>()
+                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                    navigateToAnotherActivityWithExtras(
+                        requireActivity(),
+                        DeviceIDQRActivity::class.java,
                         prefMap
                     )
                 }

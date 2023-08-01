@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".UserApp"
@@ -31,12 +36,13 @@
             android:name=".ui.register.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
+
         <activity
-            android:name=".ui.users.UserDetailsActivity"
+            android:name=".ui.scan.ScanActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
-            android:name=".ui.users.UserEditActivity"
+            android:name=".ui.userdetails.UserDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
@@ -47,7 +53,10 @@
             android:name=".ui.qr.DeviceIDQRActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
-
+        <activity
+            android:name=".ui.sign.EmployeeAuthorizationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.changepassword.ChangePasswordActivity"
             android:exported="false"
