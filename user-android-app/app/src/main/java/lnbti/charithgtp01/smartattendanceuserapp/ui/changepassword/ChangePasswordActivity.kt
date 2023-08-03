@@ -18,6 +18,9 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 
+/**
+ * Change Password Page
+ */
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
@@ -27,7 +30,6 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initiateDataBinding()
         initiateView()
         initiateProgressDialog()

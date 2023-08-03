@@ -1,7 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
-import android.content.Intent
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.biometric.BiometricPrompt
 import android.os.Bundle
@@ -19,10 +18,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import java.util.concurrent.Executor
@@ -58,13 +57,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        
-        initiateAdapter()
-        initiateProgressDialog()
-        viewModelObservers()
+        //If the logged in user's user role is Business User should show Attendance mark users list page in the home fragment
+        //Else need to show fab button to scan the qr
+        val userRole = Utils.getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        if (userRole == getString(R.string.employee)) {
+            binding?.userLayout?.visibility = View.VISIBLE
+            binding?.businessUserLayout?.visibility = View.GONE
 
-        binding?.floatingActionButton?.setOnClickListener {
-            onClickScan()
+            binding?.btnScanQR?.setOnClickListener {
+                onClickScan()
+            }
+        } else {
+            binding?.userLayout?.visibility = View.GONE
+            binding?.businessUserLayout?.visibility = View.VISIBLE
+            initiateAdapter()
+            initiateProgressDialog()
+            viewModelObservers()
         }
     }
 
@@ -151,7 +159,7 @@ class HomeFragment : Fragment() {
         binding = null
     }
 
-    fun onClickScan() {
+    private fun onClickScan() {
 
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = BiometricPrompt(this, executor,

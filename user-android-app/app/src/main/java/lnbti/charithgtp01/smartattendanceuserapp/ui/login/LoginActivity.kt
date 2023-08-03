@@ -10,22 +10,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -74,15 +75,15 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        username.setText("eve.holt@reqres.in")
+        username.setText("charith2")
         password.setText("cityslicka")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    username?.text.toString(),
-                    password?.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
         })
@@ -90,22 +91,22 @@ class LoginActivity : AppCompatActivity() {
         inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    username?.text.toString(),
-                    password?.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
         })
 
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
-                username?.text.toString(),
-                password?.text.toString()
+                username.text.toString(),
+                password.text.toString()
             )
         }
 
         //After 4 click on the logo navigate to Device ID qr activity
         binding.appLogo.setOnClickListener {
-            i = atomicInteger.getAndIncrement();
+            i = atomicInteger.getAndIncrement()
             if (i >= 4) {
                 atomicInteger = AtomicInteger(0)
                 i = 0
@@ -138,13 +139,13 @@ class LoginActivity : AppCompatActivity() {
             val loginState = it ?: return@Observer
 
             if (loginState.nicError != null) {
-                usernameInputText?.error = getString(loginState.nicError)
+                usernameInputText.error = getString(loginState.nicError)
             } else
                 validState(usernameInputText, R.drawable.ic_check)
 
 
             if (loginState.passwordError != null) {
-                passwordInputText?.error = getString(loginState.passwordError)
+                passwordInputText.error = getString(loginState.passwordError)
             }
             /* Need to enter above data to successful login
                "email": "eve.holt@reqres.in",
@@ -152,10 +153,19 @@ class LoginActivity : AppCompatActivity() {
             */
             if (loginState.isDataValid) {
                 dialog?.show()
-                loginViewModel.login(username?.text.toString(), password?.text.toString())
+
+                val userRole: String = if (username.text.toString() == "charith")
+                    getString(R.string.employee)
+                else
+                    getString(R.string.business_user)
+
+                saveObjectInSharedPref(
+                    this@LoginActivity,
+                    Constants.USER_ROLE,
+                    userRole,
+                    SuccessListener { loginViewModel.login(username.text.toString(), password.text.toString()) })
             }
         })
-
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer

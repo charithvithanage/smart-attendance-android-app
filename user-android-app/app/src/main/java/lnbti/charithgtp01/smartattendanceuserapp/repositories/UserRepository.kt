@@ -12,6 +12,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorResponse
+import lnbti.charithgtp01.smartattendanceuserapp.model.JSONResource
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
@@ -123,27 +124,27 @@ class UserRepository @Inject constructor(
     }
 
     /**
-     * Get Pending Approvals from the server
+     * Get User from the server
      */
-    suspend fun getPendingApprovalsFromDataSource(): Resource {
+    suspend fun getUserFromDataSource(): JSONResource {
         return withContext(Dispatchers.IO) {
-            return@withContext getPendingApprovalsFromRemoteService()
+            return@withContext getUserFromRemoteService()
         }
     }
 
+
     /**
-     * @param  value: String search view text
      * @return ServerResponse Object
      */
-    private suspend fun getPendingApprovalsFromRemoteService(): Resource {
+    private suspend fun getUserFromRemoteService(): JSONResource {
 
-        /* Get Server Response */
-        val response = userService.getPendingApprovals()
+        val response = userService.getUser()
+
         return if (response.isSuccessful) {
-            Resource.Success(data = response.body()!!)
+            JSONResource.Success(data = response.body()!!)
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            Resource.Error(
+            JSONResource.Error(
                 ErrorResponse(
                     errorObject.error,
                     response.code()
@@ -167,7 +168,7 @@ class UserRepository @Inject constructor(
     private suspend fun getUsersFromRemoteService(): Resource {
 
         /* Get Server Response */
-        val response = userService.getPendingApprovals()
+        val response = userService.getUsers()
         return if (response.isSuccessful) {
             Resource.Success(data = response.body()!!)
         } else {

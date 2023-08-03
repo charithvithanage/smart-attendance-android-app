@@ -70,5 +70,8 @@
     <string name="no_permission_to_camera">Camera access restricted or denied. Can configure it from settings.</string>
     <string name="scan_qr">SCAN QR</string>
     <string name="sign_successfully">Attendance Marked Successfully</string>
+    <string name="employee">Employee</string>
+    <string name="business_user">Business User</string>
+    <string name="menu_profile">PROFILE</string>
 
 </resources>

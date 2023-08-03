@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="vm"
             type="lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeViewModel" />
@@ -24,17 +23,16 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+            <Button
+                android:id="@+id/btnScanQR"
+                style="@style/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/page_padding"
-                android:layout_marginBottom="@dimen/page_padding"
-                android:clickable="true"
-                android:src="@drawable/qr_scan_icon"
-                app:backgroundTint="@color/color_primary"
+                android:text="@string/scan_qr"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -79,14 +77,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="510dp" />
+                app:layout_constraintGuide_begin="410dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/businessUserLayout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_height="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

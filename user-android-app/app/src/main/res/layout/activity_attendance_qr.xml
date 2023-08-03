@@ -7,13 +7,13 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRViewModel" />
+            type="lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.othersettings.OtherSettingsActivity">
+        tools:context=".ui.qr.attendance.AttendanceQRActivity">
 
         <include
             android:id="@+id/actionBar"
