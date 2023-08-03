@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="lnbti.charithgtp01.smartattendanceuserapp.ui.profile.ProfileViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ownerIconView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="@dimen/avatar_margin"
+                android:contentDescription="@null"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:strokeColor="@color/color_primary"
+                app:strokeWidth="@dimen/round_icon_stroke_width" />
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ownerIconView"
+                bind:label='@{"Name"}'
+                bind:value='@{vm.profile.first_name+" "+vm.profile.last_name}' />
+
+            <include
+                android:id="@+id/include2"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include"
+                bind:label='@{"Email"}'
+                bind:value='@{vm.profile.email}' />
+
+            <include
+                android:id="@+id/include3"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include2"
+                bind:label='@{"Gender"}'
+                bind:value='@{vm.profile.gender}' />
+
+            <include
+                android:id="@+id/include4"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include3"
+                bind:label='@{"Date of Birth"}'
+                bind:value='@{vm.profile.dob}' />
+
+            <include
+                android:id="@+id/include5"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include4"
+                bind:label='@{"User Role"}'
+                bind:value='@{vm.profile.user_role}' />
+
+            <include
+                android:id="@+id/include6"
+                layout="@layout/text_view_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginTop="@dimen/content_margin_top"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include5"
+                bind:label='@{"Status"}'
+                bind:value='@{vm.profile.status}' />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

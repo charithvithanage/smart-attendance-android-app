@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class SettingsAdapterListAdapter @Inject constructor(
     private val itemClickListener: OnItemClickListener
-) : ListAdapter<SettingsObject, lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsAdapterListAdapter.UserSettingsAdapterListViewHolder>(lnbti.charithgtp01.smartattendanceuserapp.settings.diffUtil) {
+) : ListAdapter<SettingsObject, SettingsAdapterListAdapter.UserSettingsAdapterListViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

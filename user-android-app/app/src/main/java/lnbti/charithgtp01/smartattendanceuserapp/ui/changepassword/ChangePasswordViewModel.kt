@@ -19,11 +19,11 @@ import javax.inject.Inject
 class ChangePasswordViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
     //variable that will listen to user's input
-    var currentPassword: String? = "Charith"
+    var currentPassword: String? = null
 
-    var newPassword: String? = "Charith"
+    var newPassword: String? = null
 
-    var confirmPassword: String? = "Charith"
+    var confirmPassword: String? = null
 
     //Form live data
     private val _changePasswordForm = MutableLiveData<ChangePasswordFormState>()

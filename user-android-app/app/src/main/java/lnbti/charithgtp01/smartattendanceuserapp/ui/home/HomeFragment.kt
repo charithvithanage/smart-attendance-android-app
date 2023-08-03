@@ -1,10 +1,14 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
+import androidx.biometric.BiometricManager.Authenticators.*
+import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -14,11 +18,13 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.DeviceIDQRActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import java.util.concurrent.Executor
 
 /**
  * Users Fragment
@@ -29,6 +35,9 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var usersListAdapter: HomeListAdapter
     private var dialog: Dialog? = null
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,9 +56,24 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initiateAdapter()
-        initiateProgressDialog()
-        viewModelObservers()
+
+        //If the logged in user's user role is Business User should show Attendance mark users list page in the home fragment
+        //Else need to show fab button to scan the qr
+        val userRole = Utils.getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        if (userRole == getString(R.string.employee)) {
+            binding?.userLayout?.visibility = View.VISIBLE
+            binding?.businessUserLayout?.visibility = View.GONE
+
+            binding?.btnScanQR?.setOnClickListener {
+                onClickScan()
+            }
+        } else {
+            binding?.userLayout?.visibility = View.GONE
+            binding?.businessUserLayout?.visibility = View.VISIBLE
+            initiateAdapter()
+            initiateProgressDialog()
+            viewModelObservers()
+        }
     }
 
     /**
@@ -133,6 +157,50 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    private fun onClickScan() {
+
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(
+                        requireContext(),
+                        "Authentication error: $errString", Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
+                    super.onAuthenticationSucceeded(result)
+                    navigateToAnotherActivity(requireActivity(), ScanActivity::class.java)
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(
+                        requireContext(), "Authentication failed",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setAllowedAuthenticators(BIOMETRIC_WEAK or BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+            .setConfirmationRequired(true)
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 
 }
