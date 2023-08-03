@@ -50,5 +50,7 @@
     <dimen name="list_view_button">120dp</dimen>
     <dimen name="dialog_corner_radius">16dp</dimen>
     <dimen name="logout_button_size">40dp</dimen>
+    <dimen name="status_bg_corner_radius">8dp</dimen>
+    <dimen name="content_mini_horizontal_margin">4dp</dimen>
 
 </resources>

@@ -14,6 +14,8 @@ import androidx.core.app.ActivityCompat
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import java.util.Calendar
+import java.util.Date
 
 /**
  * A Utils class containing Common Methods
@@ -22,6 +24,19 @@ class Utils {
     companion object {
 
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
+
+
+
+        /**
+         * Last Day of the month for given date
+         */
+        fun getLastDayOfMonth(date: Date): Date {
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            return calendar.time
+        }
+
 
         /**
          * Request Location Permission
