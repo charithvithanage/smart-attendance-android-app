@@ -5,15 +5,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
-import android.util.DisplayMetrics
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import java.util.Calendar
+import java.util.Date
 
 /**
  * A Utils class containing Common Methods
@@ -21,6 +23,60 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 class Utils {
     companion object {
 
+        const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
+
+
+
+        /**
+         * Last Day of the month for given date
+         */
+        fun getLastDayOfMonth(date: Date): Date {
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            return calendar.time
+        }
+
+
+        /**
+         * Request Location Permission
+         */
+        fun requestPermissions(activity: Activity) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+
+        /**
+         * Check Location Permission Granted or Not
+         */
+        fun checkPermissions(activity: Activity): Boolean {
+            if (ActivityCompat.checkSelfPermission(
+                    activity,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    activity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                return true
+            }
+            return false
+        }
+
+        fun isLocationEnabled(activity: Activity): Boolean {
+            val locationManager: LocationManager =
+                activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        }
 
         /**
          * Check permissions

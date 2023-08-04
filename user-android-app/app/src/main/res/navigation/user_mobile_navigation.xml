@@ -9,16 +9,23 @@
         android:id="@+id/nav_users"
         android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.users.UsersFragment"
         android:label="@string/menu_users"
-        tools:layout="@layout/fragment_users" />
+        tools:layout="@layout/fragment_users" >
+    </fragment>
     <fragment
         android:id="@+id/nav_home"
         android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_users" />
-
+        tools:layout="@layout/fragment_users" >
+    </fragment>
     <fragment
-        android:id="@+id/nav_settings"
-        android:name="lnbti.charithgtp01.smartattendanceuserapp.settings.SettingsFragment"
+        android:id="@+id/nav_reports"
+        android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.report.AttendanceReportFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_attendance_report"/>
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="lnbti.charithgtp01.smartattendanceuserapp.ui.profile.ProfileFragment"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_profile" >
+    </fragment>
 </navigation>

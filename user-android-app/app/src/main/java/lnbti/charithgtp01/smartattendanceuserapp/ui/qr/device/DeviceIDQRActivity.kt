@@ -1,16 +1,12 @@
-package lnbti.charithgtp01.smartattendanceuserapp.ui.qr
+package lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRViewModel
-import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityDeviceIdQrBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 

@@ -12,10 +12,14 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject
 
+/**
+ * Login Page View Model
+ */
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
@@ -25,11 +29,27 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     private val _loginResult = MutableLiveData<LoginResponse?>()
     val loginResult: MutableLiveData<LoginResponse?> = _loginResult
 
+
+    //Dialog Visibility Live Data
+    private val _isDialogVisible = MutableLiveData<Boolean>()
+    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+
     fun login(email: String, password: String) {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result = userRepository.login(LoginRequest(email, password))
-            _loginResult.value = result
+        val isNetworkAvailable = Utils.isOnline(userRepository.context.applicationContext)
+
+        //If Network available call to backend API
+        if (isNetworkAvailable) {
+            //Show Progress Dialog when click on the search view submit button
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result = userRepository.login(LoginRequest("eve.holt@reqres.in", "cityslicka"))
+                _loginResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _loginResult.value =
+                LoginResponse(error = userRepository.context.getString(R.string.no_internet))
         }
     }
 

@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRViewModel" />
+            type="lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

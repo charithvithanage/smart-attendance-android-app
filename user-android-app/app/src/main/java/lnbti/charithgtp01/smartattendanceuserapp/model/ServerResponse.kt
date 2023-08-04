@@ -1,5 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.model
 
+import org.json.JSONObject
+
 /**
  * Success Server Response Object
  */

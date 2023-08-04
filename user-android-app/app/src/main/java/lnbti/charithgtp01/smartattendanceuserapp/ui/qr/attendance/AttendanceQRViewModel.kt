@@ -1,10 +1,8 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.qr
+package lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.provider.Settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +18,7 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class DeviceIDQRViewModel @Inject constructor(private val context: Context) : ViewModel() {
+class AttendanceQRViewModel @Inject constructor(private val context: Context) : ViewModel() {
 
     private val _generatedQRCodeData = MutableLiveData<Bitmap>()
     val generatedQRCodeData: LiveData<Bitmap>
