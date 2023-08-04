@@ -21,5 +21,6 @@
             android:id="@+id/nav_reports"
             android:icon="@mipmap/report_icon"
             android:title="@string/menu_reports" />
+
     </group>
 </menu>

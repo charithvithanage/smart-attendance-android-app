@@ -37,4 +37,5 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="invalid_confirm_password">Password Not Matching</string>
+    <string name="menu_signout">SIGN OUT</string>
 </resources>

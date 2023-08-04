@@ -5,24 +5,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
-import lnbti.charithgtp01.smartattendanceuserapp.ui.home.HomeFragment
-import lnbti.charithgtp01.smartattendanceuserapp.ui.profile.ProfileFragment
+import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.users.UsersFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPermissions
@@ -43,21 +38,15 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        //If the logged in user's user role is Employee, Hide Users menu
+        //If the logged in user's user role is Employee
         val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
+        val navController = findNavController(R.id.navHostFragmentUser)
+        binding.bottomNavigationUser.setupWithNavController(navController)
+
         if (userRole == getString(R.string.employee)) {
-            binding.userMainLayout.visibility = View.VISIBLE
-            binding.businessUserMainLayout.visibility = View.GONE
-            val navController = findNavController(R.id.navHostFragmentUser)
-            binding.bottomNavigationUser.setupWithNavController(navController)
-
-
-        } else {
-            binding.userMainLayout.visibility = View.GONE
-            binding.businessUserMainLayout.visibility = View.VISIBLE
-            val navController = findNavController(R.id.navHostFragmentBusinessUser)
-            binding.bottomNavigationBusinessUser.setupWithNavController(navController)
-
+            //Bottom menu without users menu
+            // Hide a menu item by ID
+            binding.bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
         }
 
         /**
@@ -89,6 +78,10 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_settings -> {
                 Utils.navigateToAnotherActivity(this, SettingsActivity::class.java)
+            }
+
+            R.id.action_logout -> {
+                Utils.navigateWithoutHistory(this, LoginActivity::class.java)
             }
         }
         return false

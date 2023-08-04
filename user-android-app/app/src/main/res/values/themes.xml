@@ -119,6 +119,18 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    //Text View Hint Text Style(Select Date Label)
+    <style name="textview_hint_title_style" parent="android:Widget.TextView">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/color_primary</item>
+    </style>
+
+    //Text View Content Text Style(Select Date Content)
+    <style name="input_textview_content_style" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="Theme.SmartAttendanceAdminApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

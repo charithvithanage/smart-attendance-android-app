@@ -10,8 +10,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityUserDetailsBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 
+/**
+ * Selected User Details Page
+ */
 @AndroidEntryPoint
 class UserDetailsActivity : AppCompatActivity() {
     private var binding: ActivityUserDetailsBinding? = null
@@ -19,9 +25,28 @@ class UserDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
+        initView()
         setData()
     }
 
+    private fun initView() {
+        UIUtils.initiateActionBar(
+            binding?.actionBar?.mainLayout!!,
+            getString(R.string.user_detais),
+            object : ActionBarListener {
+                override fun backPressed() {
+                    onBackPressed()
+                }
+
+                override fun homePressed() {
+                    Utils.goToHomeActivity(this@UserDetailsActivity)
+                }
+            })
+    }
+
+    /**
+     * Set Selected User data to the view
+     */
     private fun setData() {
         val gson = Gson()
         val objectString = intent.getStringExtra(OBJECT_STRING)
