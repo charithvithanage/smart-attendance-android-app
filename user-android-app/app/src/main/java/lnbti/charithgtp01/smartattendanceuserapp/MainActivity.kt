@@ -40,18 +40,13 @@ class MainActivity : AppCompatActivity() {
 
         //If the logged in user's user role is Employee
         val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
+        val navController = findNavController(R.id.navHostFragmentUser)
+        binding.bottomNavigationUser.setupWithNavController(navController)
+
         if (userRole == getString(R.string.employee)) {
             //Bottom menu without users menu
-            binding.userMainLayout.visibility = View.VISIBLE
-            binding.businessUserMainLayout.visibility = View.GONE
-            val navController = findNavController(R.id.navHostFragmentUser)
-            binding.bottomNavigationUser.setupWithNavController(navController)
-        } else {
-            binding.userMainLayout.visibility = View.GONE
-            binding.businessUserMainLayout.visibility = View.VISIBLE
-            val navController = findNavController(R.id.navHostFragmentBusinessUser)
-            binding.bottomNavigationBusinessUser.setupWithNavController(navController)
-
+            // Hide a menu item by ID
+            binding.bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
         }
 
         /**
