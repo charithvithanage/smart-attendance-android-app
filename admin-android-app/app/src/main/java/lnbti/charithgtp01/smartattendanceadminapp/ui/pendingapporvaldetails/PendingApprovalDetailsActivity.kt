@@ -1,24 +1,22 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails
 
 import android.app.Dialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityPendingApprovalDetailsBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarWithoutHomeListener
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 
 @AndroidEntryPoint
 class PendingApprovalDetailsActivity : AppCompatActivity() {
@@ -47,26 +45,25 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
 
             if (apiResult?.success == true) {
                 DialogUtils.showAlertDialog(
-                    this,
-                    error,
-                    object : DialogButtonClickListener {
-                        override fun onButtonClick() {
+                    this, Constants.SUCCESS,
+                    getString(R.string.approval_submitted_successfully),
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
                             onBackPressed()
+
                         }
 
                     })
             } else if (apiResult?.data != null) {
-                DialogUtils.showErrorDialog(
-                    this,
-                    apiResult?.data,
-                    object : DialogButtonClickListener {
-                        override fun onButtonClick() {
-
+                DialogUtils.showAlertDialog(
+                    this, Constants.FAIL,
+                    apiResult.data!!,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            onBackPressed()
                         }
                     })
-
             }
-
         }
     }
 

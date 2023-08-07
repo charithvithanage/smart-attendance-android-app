@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentUsersBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsActivity
@@ -56,11 +57,11 @@ class UsersFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
+            DialogUtils.showAlertDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+                Constants.FAIL, it,
+                object : CustomAlertDialogListener {
+                    override fun onDialogButtonClicked() {
 
                     }
                 })

@@ -14,11 +14,12 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
@@ -130,11 +131,14 @@ class LoginActivity : AppCompatActivity() {
                     loginResult.token
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
             } else if (loginResult.error != null) {
-                showErrorDialog(this, loginResult.error, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+                DialogUtils.showAlertDialog(
+                    this,
+                    Constants.FAIL, loginResult.error,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
 
-                    }
-                })
+                        }
+                    })
 
             }
 

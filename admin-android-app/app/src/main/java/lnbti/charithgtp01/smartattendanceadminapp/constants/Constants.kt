@@ -1,7 +1,6 @@
 package lnbti.charithgtp01.smartattendanceadminapp.constants
 
 object Constants {
-
     const val TAG="Smart Attendance App"
 
     //Application Base Url
@@ -31,6 +30,13 @@ object Constants {
      * Pass Intent keys
      */
     const val OBJECT_STRING = "object_string"
+
+    /**
+     * Dialog Fragment Types
+     */
+    const val SUCCESS = "success"
+    const val FAIL = "fail"
+    const val WARN = "warn"
 
 
 }

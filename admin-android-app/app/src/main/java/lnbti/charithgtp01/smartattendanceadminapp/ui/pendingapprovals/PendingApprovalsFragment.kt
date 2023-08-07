@@ -9,13 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 class PendingApprovalsFragment : Fragment() {
@@ -51,17 +52,21 @@ class PendingApprovalsFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            showErrorDialog(
-                requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+            if (it != null) {
+                DialogUtils.showAlertDialog(
+                    requireContext(),
+                    Constants.FAIL, it,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
 
-                    }
-                })
+                        }
+                    })
+            }
+
         }
 
-        viewModel.isDialogVisible.observe(requireActivity()) {
+        viewModel.isDialogVisible.observe(requireActivity())
+        {
             if (it) {
                 /* Show dialog when calling the API */
                 dialog?.show()
@@ -74,7 +79,8 @@ class PendingApprovalsFragment : Fragment() {
         /* Observer to catch list data
         * Update Recycle View Items using Diff Utils
         */
-        viewModel.pendingApprovalList.observe(requireActivity()) {
+        viewModel.pendingApprovalList.observe(requireActivity())
+        {
             pendingApprovalListAdapter.submitList(it)
         }
     }
