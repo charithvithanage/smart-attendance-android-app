@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="imageResId"
+            type="Integer" />
+
+        <variable
+            name="dialogMessage"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/dialogMainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dialog_horizontal_padding"
+            android:paddingTop="@dimen/dialog_top_padding"
+            android:paddingRight="@dimen/dialog_horizontal_padding"
+            android:paddingBottom="@dimen/dialog_top_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/question_mark" />
+
+            <TextView
+                android:id="@+id/tvMessage"
+                style="@style/dialog_title_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/vertical_margin"
+                android:paddingBottom="@dimen/vertical_margin"
+                android:text="@{dialogMessage}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonNo"
+                    style="@style/buttonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginEnd="@dimen/content_mini_margin"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/grey_color"
+                    android:text="@string/no" />
+
+                <Button
+                    android:id="@+id/buttonYes"
+                    style="@style/buttonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/content_mini_margin"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:layout_weight="1"
+                    android:text="@string/yes" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

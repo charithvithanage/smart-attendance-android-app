@@ -3,17 +3,18 @@ package lnbti.charithgtp01.smartattendanceuserapp.utils
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.text.InputType
 import android.view.Window
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import lnbti.charithgtp01.smartattendanceuserapp.dialogs.CustomAlertDialogFragment
+import lnbti.charithgtp01.smartattendanceuserapp.dialogs.CustomConfirmAlertDialogFragment
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 
@@ -66,65 +67,51 @@ class DialogUtils {
         /**
          * Custom Alert Dialog with icon
          * @param message Message body
+         * @param type Type of the Dialog Success,Fail or Warn Alert
          */
         fun showAlertDialog(
-            context: Context,
-            message: String?,
-            dialogButtonClickListener: DialogButtonClickListener
+            context: Context, type: String, message: String?,
+            dialogButtonClickListener: CustomAlertDialogListener
         ) {
-            Handler(Looper.getMainLooper()).post {
-                Dialog(context, R.style.DialogNoActionBar).apply {
-                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    setCancelable(false)
-                    setContentView(R.layout.alert_dialog_layout)
-                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
-                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
-                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
-                    val icon = findViewById<ImageView>(R.id.icon)
-                    val button =
-                        findViewById<Button>(R.id.button)
-
-                    button.setOnClickListener {
-                        dismiss()
-                        dialogButtonClickListener.onButtonClick()
-                    }
-                    tvMessage.text = message
-                    icon.setImageResource(R.mipmap.done)
-
-                    show()
-                }
+            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment =
+                    CustomAlertDialogFragment.newInstance(message, type, dialogButtonClickListener)
+                dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
             }
         }
 
         /**
-         * Error Dialog with icon
-         * @param error Error Message
+         * Custom Alert Dialog with icon
+         * @param message Message body
+         * @param type Type of the Dialog Success,Fail or Warn Alert
          */
         fun showErrorDialog(
-            context: Context,
-            error: String?,
-            errorDialogButtonClickListener: DialogButtonClickListener
+            context: Context, message: String?
         ) {
-            Handler(Looper.getMainLooper()).post {
-                Dialog(context, R.style.DialogNoActionBar).apply {
-                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    setCancelable(false)
-                    setContentView(R.layout.alert_dialog_layout)
-                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
-                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
-                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
-                    val icon = findViewById<ImageView>(R.id.icon)
-                    val button =
-                        findViewById<Button>(R.id.button)
+            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment = CustomAlertDialogFragment.newInstance(message)
+                dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
+            }
+        }
 
-                    button.setOnClickListener {
-                        dismiss()
-                        errorDialogButtonClickListener.onButtonClick()
-                    }
-                    tvMessage.text = error
-                    icon.setImageResource(R.mipmap.cancel)
-                    show()
-                }
+        /**
+         * Custom Confirm Alert Dialog with icon
+         * @param message Message body
+         * @param dialogButtonClickListener Dialog Button Click event listener
+         *
+         */
+        fun showConfirmAlertDialog(
+            context: Context,
+            message: String?,
+            dialogButtonClickListener: ConfirmDialogButtonClickListener
+        ) {
+            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment =
+                    CustomConfirmAlertDialogFragment.newInstance(message,  dialogButtonClickListener)
+                dialogFragment.show(fragmentManager, "CustomConfirmDialogFragmentTag")
             }
         }
 

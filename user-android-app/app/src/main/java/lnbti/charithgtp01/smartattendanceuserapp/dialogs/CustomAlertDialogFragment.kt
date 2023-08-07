@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceadminapp.dialogs
+package lnbti.charithgtp01.smartattendanceuserapp.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentCustomAlertDialogBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
-import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.changeUiSize
+import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentCustomAlertDialogBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 
 /**
  * Custom Alert Dialog Fragment
@@ -30,7 +30,7 @@ class CustomAlertDialogFragment : DialogFragment() {
         ): CustomAlertDialogFragment {
             val fragment = CustomAlertDialogFragment()
             fragment.isCancelable = false
-            this.dialogButtonClickListener = dialogButtonClickListener
+            Companion.dialogButtonClickListener = dialogButtonClickListener
             val args = Bundle().apply {
                 putString(ARG_MESSAGE, message)
                 putString(ARG_TYPE, type)

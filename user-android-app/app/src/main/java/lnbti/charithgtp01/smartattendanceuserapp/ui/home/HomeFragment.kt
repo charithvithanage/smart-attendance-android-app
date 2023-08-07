@@ -1,13 +1,15 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
-import androidx.biometric.BiometricManager.Authenticators.*
-import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,10 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
@@ -85,12 +85,8 @@ class HomeFragment : Fragment() {
         viewModel.errorMessage.observe(requireActivity()) {
             DialogUtils.showErrorDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                it
+            )
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {

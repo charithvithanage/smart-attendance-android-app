@@ -11,12 +11,14 @@ import androidx.databinding.DataBindingUtil
 import com.google.zxing.Result
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.MEDIA_TYPE_EMPLOYEE_SIGNATURE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ImageInspectionListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.sign.EmployeeAuthorizationActivity
@@ -96,11 +98,8 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                     openScanner()
                 } else {
                     DialogUtils.showErrorDialog(this@ScanActivity,
-                        getString(R.string.no_permission_to_camera),
-                        object : DialogButtonClickListener {
-                            override fun onButtonClick() {
-                            }
-                        })
+                        getString(R.string.no_permission_to_camera)
+                      )
                 }
                 return
             }
@@ -116,12 +115,14 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
         if (userRole == getString(R.string.employee)) {
             DialogUtils.showAlertDialog(
-                this,
+                this, Constants.SUCCESS,
                 getString(R.string.sign_successfully),
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+                object : CustomAlertDialogListener {
+                    override fun onDialogButtonClicked() {
                         onBackPressed()
+
                     }
+
                 })
         } else {
             navigateToAnotherActivity(

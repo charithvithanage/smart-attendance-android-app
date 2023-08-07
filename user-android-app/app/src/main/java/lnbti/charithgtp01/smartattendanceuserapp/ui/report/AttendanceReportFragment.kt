@@ -81,12 +81,7 @@ class AttendanceReportFragment : Fragment() {
         viewModel.errorMessage.observe(requireActivity()) {
             DialogUtils.showErrorDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                it)
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {

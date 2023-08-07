@@ -131,15 +131,7 @@ class LoginActivity : AppCompatActivity() {
                     loginResult.token
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
             } else if (loginResult.error != null) {
-                DialogUtils.showAlertDialog(
-                    this,
-                    Constants.FAIL, loginResult.error,
-                    object : CustomAlertDialogListener {
-                        override fun onDialogButtonClicked() {
-
-                        }
-                    })
-
+                DialogUtils.showErrorDialog(this, loginResult.error)
             }
 
         })

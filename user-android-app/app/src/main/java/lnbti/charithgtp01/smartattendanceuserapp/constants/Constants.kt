@@ -50,4 +50,11 @@ object Constants {
      */
     const val MEDIA_TYPE_EMPLOYEE_SIGNATURE: String = "employee_signature"
 
+    /**
+     * Dialog Fragment Types
+     */
+    const val SUCCESS = "success"
+    const val FAIL = "fail"
+    const val WARN = "warn"
+
 }

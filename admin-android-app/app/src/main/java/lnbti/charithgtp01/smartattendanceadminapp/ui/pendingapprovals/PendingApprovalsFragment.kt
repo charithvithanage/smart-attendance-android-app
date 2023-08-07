@@ -9,11 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
@@ -53,14 +50,8 @@ class PendingApprovalsFragment : Fragment() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
             if (it != null) {
-                DialogUtils.showAlertDialog(
-                    requireContext(),
-                    Constants.FAIL, it,
-                    object : CustomAlertDialogListener {
-                        override fun onDialogButtonClicked() {
-
-                        }
-                    })
+                DialogUtils.showErrorDialog(
+                    requireContext(), it)
             }
 
         }

@@ -13,6 +13,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityChangePass
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showAlertDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
@@ -111,15 +112,11 @@ class ChangePasswordActivity : AppCompatActivity() {
 
                     })
             } else if (apiResult?.data != null) {
-                showAlertDialog(
-                    this, Constants.FAIL,
-                    apiResult.data!!,
-                    object : CustomAlertDialogListener {
-                        override fun onDialogButtonClicked() {
-                            onBackPressed()
-                        }
-                    })
-                       }
+                showErrorDialog(
+                    this,
+                    apiResult.data!!
+                )
+            }
 
         }
     }

@@ -15,6 +15,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentProfileBind
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 
 /**
  * Users Fragment
@@ -58,14 +59,10 @@ class ProfileFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
+            showErrorDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                it
+            )
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {

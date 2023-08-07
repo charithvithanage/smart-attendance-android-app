@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.dialogs.CustomAlertDialogFragment
+import lnbti.charithgtp01.smartattendanceadminapp.dialogs.CustomConfirmAlertDialogFragment
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
@@ -33,7 +34,23 @@ class DialogUtils {
         ) {
             val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
             if (fragmentManager != null) {
-                val dialogFragment = CustomAlertDialogFragment.newInstance(message, type,dialogButtonClickListener)
+                val dialogFragment =
+                    CustomAlertDialogFragment.newInstance(message, type, dialogButtonClickListener)
+                dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
+            }
+        }
+
+        /**
+         * Custom Alert Dialog with icon
+         * @param message Message body
+         * @param type Type of the Dialog Success,Fail or Warn Alert
+         */
+        fun showErrorDialog(
+            context: Context, message: String?
+        ) {
+            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment = CustomAlertDialogFragment.newInstance(message)
                 dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
             }
         }
@@ -49,103 +66,13 @@ class DialogUtils {
             message: String?,
             dialogButtonClickListener: ConfirmDialogButtonClickListener
         ) {
-            Handler(Looper.getMainLooper()).post {
-                Dialog(context, R.style.DialogNoActionBar).apply {
-                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    setCancelable(false)
-                    setContentView(R.layout.confirm_alert_dialog_layout)
-                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
-                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
-                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
-                    val icon = findViewById<ImageView>(R.id.icon)
-                    val buttonYes =
-                        findViewById<Button>(R.id.buttonYes)
-                    val buttonNo =
-                        findViewById<Button>(R.id.buttonNo)
-
-                    buttonYes.setOnClickListener {
-                        dismiss()
-                        dialogButtonClickListener.onPositiveButtonClick()
-                    }
-
-                    buttonNo.setOnClickListener {
-                        dismiss()
-                        dialogButtonClickListener.onNegativeButtonClick()
-                    }
-                    tvMessage.text = message
-                    icon.setImageResource(R.mipmap.question_mark)
-
-                    show()
-                }
+            val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment =
+                    CustomConfirmAlertDialogFragment.newInstance(message,  dialogButtonClickListener)
+                dialogFragment.show(fragmentManager, "CustomConfirmDialogFragmentTag")
             }
         }
-
-
-        /**
-         * Custom Alert Dialog with icon
-         * @param message Message body
-         */
-//        fun showAlertDialog(
-//            context: Activity,
-//            message: String?,
-//            dialogButtonClickListener: DialogButtonClickListener
-//        ) {
-//
-//            Handler(Looper.getMainLooper()).post {
-//                Dialog(context, R.style.DialogNoActionBar).apply {
-//                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                    setCancelable(false)
-//                    setContentView(R.layout.alert_dialog_layout)
-//                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
-//                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
-//                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
-//                    val icon = findViewById<ImageView>(R.id.icon)
-//                    val button =
-//                        findViewById<Button>(R.id.button)
-//
-//                    button.setOnClickListener {
-//                        dismiss()
-//                        dialogButtonClickListener.onButtonClick()
-//                    }
-//                    tvMessage.text = message
-//                    icon.setImageResource(R.mipmap.done)
-//
-//                    show()
-//                }
-//            }
-//        }
-
-        /**
-         * Error Dialog with icon
-         * @param error Error Message
-         */
-//        fun showErrorDialog(
-//            context: Context,
-//            error: String?,
-//            errorDialogButtonClickListener: DialogButtonClickListener
-//        ) {
-//            Handler(Looper.getMainLooper()).post {
-//                Dialog(context, R.style.DialogNoActionBar).apply {
-//                    requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                    setCancelable(false)
-////                    setContentView(R.layout.alert_dialog_layout)
-//                    changeUiSize(context, findViewById(R.id.dialogMainLayout), 1, 1, 30)
-//                    changeUiSize(context, findViewById(R.id.icon), 1, 3)
-//                    val tvMessage = findViewById<TextView>(R.id.tvMessage)
-//                    val icon = findViewById<ImageView>(R.id.icon)
-//                    val button =
-//                        findViewById<Button>(R.id.button)
-//
-//                    button.setOnClickListener {
-//                        dismiss()
-//                        errorDialogButtonClickListener.onButtonClick()
-//                    }
-//                    tvMessage.text = error
-//                    icon.setImageResource(R.mipmap.cancel)
-//                    show()
-//                }
-//            }
-//        }
 
         /**
          * Progress Dialog

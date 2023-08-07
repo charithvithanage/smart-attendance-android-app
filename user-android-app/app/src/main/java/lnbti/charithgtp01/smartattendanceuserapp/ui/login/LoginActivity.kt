@@ -22,6 +22,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
@@ -179,12 +180,7 @@ class LoginActivity : AppCompatActivity() {
                     loginResult.token
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
             } else if (loginResult.error != null) {
-                showErrorDialog(this, loginResult.error, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
-
+                DialogUtils.showErrorDialog(this, loginResult.error)
             }
 
         })
