@@ -1,7 +1,6 @@
 package lnbti.charithgtp01.smartattendanceadminapp
 
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,6 +12,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityMainBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ConfirmDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginActivity
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showConfirmAlertDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -31,7 +34,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         setSupportActionBar(binding.appBarMain.toolbar)
+        setupNavigationComponents()
 
+        binding.btnSignOut.setOnClickListener {
+            showConfirmAlertDialog(
+                this@MainActivity,
+                getString(R.string.confirm_logout_message),
+                object : ConfirmDialogButtonClickListener {
+                    override fun onPositiveButtonClick() {
+                        Utils.navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                    }
+
+                    override fun onNegativeButtonClick() {
+
+                    }
+                })
+        }
+
+    }
+
+    private fun setupNavigationComponents() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -45,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()

@@ -14,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentUsersBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 

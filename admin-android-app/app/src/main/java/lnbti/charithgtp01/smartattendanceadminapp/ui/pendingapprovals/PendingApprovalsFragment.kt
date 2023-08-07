@@ -13,7 +13,9 @@ import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STR
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 class PendingApprovalsFragment : Fragment() {
@@ -21,7 +23,6 @@ class PendingApprovalsFragment : Fragment() {
     private lateinit var viewModel: PendingApprovalsViewModel
     private lateinit var pendingApprovalListAdapter: PendingApprovalListAdapter
     private var dialog: Dialog? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,7 +51,7 @@ class PendingApprovalsFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
+            showErrorDialog(
                 requireContext(),
                 it,
                 object : DialogButtonClickListener {

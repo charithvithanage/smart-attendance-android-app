@@ -1,11 +1,11 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.profile
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.JSONResource
@@ -18,7 +18,10 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class ProfileViewModel @Inject constructor(val userRepository: UserRepository) : ViewModel() {
+class ProfileViewModel @Inject constructor(
+    val userRepository: UserRepository,
+    private val context: Context
+) : ViewModel() {
 
     private val _profileResult = MutableLiveData<JSONResource>()
     val profileResult: LiveData<JSONResource> get() = _profileResult
@@ -45,7 +48,7 @@ class ProfileViewModel @Inject constructor(val userRepository: UserRepository) :
     }
 
     private fun getUser() {
-        val isNetworkAvailable = Utils.isOnline(userRepository.context.applicationContext)
+        val isNetworkAvailable = Utils.isOnline(context)
 
         //If Network available call to backend API
         if (isNetworkAvailable) {
@@ -62,7 +65,7 @@ class ProfileViewModel @Inject constructor(val userRepository: UserRepository) :
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = context.getString(R.string.no_internet)
         }
     }
 

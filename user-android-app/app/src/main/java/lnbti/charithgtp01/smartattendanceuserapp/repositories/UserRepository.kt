@@ -24,11 +24,8 @@ import javax.inject.Inject
  * User Repository
  */
 class UserRepository @Inject constructor(
-    context: Context,
     private val userService: UserService
 ) {
-
-    val context: Context = context
 
     /**
      * Login Coroutines

@@ -18,6 +18,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
@@ -142,7 +143,7 @@ class HomeFragment : Fragment() {
                     prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
                     navigateToAnotherActivityWithExtras(
                         requireActivity(),
-                        DeviceIDQRActivity::class.java,
+                        AttendanceQRActivity::class.java,
                         prefMap
                     )
                 }

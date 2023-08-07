@@ -14,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.MEDIA_TYPE_EMPLOYEE_SIGNATURE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
@@ -110,10 +111,25 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun handleResult(rawResult: Result) {
         stopCamera()
         val barCodeString = rawResult.text
-        navigateToAnotherActivity(
-            this@ScanActivity,
-            EmployeeAuthorizationActivity::class.java
-        )
+
+        val userRole = Utils.getObjectFromSharedPref(this, USER_ROLE)
+
+        if (userRole == getString(R.string.employee)) {
+            DialogUtils.showAlertDialog(
+                this,
+                getString(R.string.sign_successfully),
+                object : DialogButtonClickListener {
+                    override fun onButtonClick() {
+                        onBackPressed()
+                    }
+                })
+        } else {
+            navigateToAnotherActivity(
+                this@ScanActivity,
+                EmployeeAuthorizationActivity::class.java
+            )
+        }
+
     }
 
     override fun onResume() {

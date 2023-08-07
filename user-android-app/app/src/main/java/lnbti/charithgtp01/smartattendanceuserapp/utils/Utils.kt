@@ -111,9 +111,9 @@ class Utils {
         /**
          * Check Internet Status
          */
-        fun isOnline(context: Context): Boolean {
+        fun isOnline(context: Context?): Boolean {
             val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             if (connectivityManager != null) {
                 val capabilities =
                     connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
