@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import lnbti.charithgtp01.smartattendanceadminapp.apiservice.UserService
+import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -80,7 +80,7 @@ object NetworkModule {
      */
     @Singleton
     @Provides
-    fun provideUserApiService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
+    fun provideUserApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 }

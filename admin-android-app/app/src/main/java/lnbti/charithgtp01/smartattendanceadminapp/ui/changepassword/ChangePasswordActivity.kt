@@ -21,6 +21,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
@@ -52,7 +53,7 @@ class ChangePasswordActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
-        UIUtils.initiateActionBar(
+        initiateActionBar(
             binding?.actionBar?.mainLayout!!,
             getString(R.string.change_password),
             object : ActionBarListener {

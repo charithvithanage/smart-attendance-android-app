@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.report
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +21,10 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class AttendanceReportViewModel @Inject constructor(private val userRepository: UserRepository) :
+class AttendanceReportViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) :
     ViewModel() {
 
     //Start Date Live Date
@@ -111,7 +115,7 @@ class AttendanceReportViewModel @Inject constructor(private val userRepository: 
 
     private fun formatDate(date: Date): String {
         val format = SimpleDateFormat(
-            userRepository.context.getString(R.string.date_format),
+            context.getString(R.string.date_format),
             Locale.getDefault()
         )
         return format.format(date)

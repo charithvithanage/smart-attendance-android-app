@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import lnbti.charithgtp01.smartattendanceadminapp.apiservice.UserService
+import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
@@ -23,7 +23,7 @@ import javax.inject.Inject
  */
 class UserRepository @Inject constructor(
     context: Context,
-    private val userService: UserService
+    private val userService: ApiService
 ) {
 
     val context: Context = context

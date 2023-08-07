@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,10 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> get() = _usersList
@@ -57,7 +61,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
      */
     private fun getUsersList() {
 
-        val isNetworkAvailable = isOnline(userRepository.context.applicationContext)
+        val isNetworkAvailable = isOnline(context)
 
         //If Network available call to backend API
         if (isNetworkAvailable) {
@@ -79,7 +83,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = context?.getString(R.string.no_internet)
         }
 
     }

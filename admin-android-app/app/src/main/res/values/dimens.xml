@@ -38,5 +38,7 @@
     <dimen name="list_card_view_corner_radius">12dp</dimen>
     <dimen name="avatar_margin">16dp</dimen>
     <dimen name="buttonRadius">30dp</dimen>
+    <dimen name="content_mini_margin">8dp</dimen>
+    <dimen name="button_horizontal_margin">45dp</dimen>
 
 </resources>
