@@ -6,16 +6,30 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
+import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorBody
+import okhttp3.ResponseBody
 
 /**
  * A Utils class containing Common Methods
  */
 class Utils {
     companion object {
-
+        /**
+         * Deserialize error response.body
+         * @param errorBody Error Response
+         */
+        fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
+            Log.d(Constants.TAG, errorBody.toString())
+            val gson = Gson()
+            val type = object : TypeToken<ErrorBody>() {}.type
+            return gson.fromJson(errorBody?.charStream(), type)
+        }
 
         /**
          * Check Internet Status

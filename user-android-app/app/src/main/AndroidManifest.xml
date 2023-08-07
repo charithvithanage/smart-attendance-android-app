@@ -27,6 +27,7 @@
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,47 +38,56 @@
         <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
 
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
 
         <activity
             android:name=".ui.qr.attendance.AttendanceQRActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
-
 
         <activity
             android:name=".ui.scan.ScanActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.userdetails.UserDetailsActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.othersettings.OtherSettingsActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.qr.device.DeviceIDQRActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.sign.EmployeeAuthorizationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".ui.changepassword.ChangePasswordActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
     </application>
 

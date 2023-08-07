@@ -16,6 +16,7 @@ data class User(
     private val nullable_user_role: String?,
     private val nullable_dob: String?,
     private val nullable_status: String?,
+    private val nullable_deviceID: String?,
     val avatar: String
 ) : Parcelable {
     val gender: String
@@ -29,4 +30,8 @@ data class User(
 
     val status: String
         get() = nullable_status ?: "Active"
+
+    val deviceID: String
+        get() = nullable_gender ?: "9873498249372423"
+
 }

@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.settings
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,10 @@ import javax.inject.Inject
  * Pending Approval View Model
  */
 @HiltViewModel
-class SettingsListViewModel @Inject constructor(private val userRepository: UserRepository) :
+class SettingsListViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) :
     ViewModel() {
 
     private val _settingsList = MutableLiveData<List<SettingsObject>>()
@@ -45,15 +49,15 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
         allUsersList = listOf(
             SettingsObject(
                 R.mipmap.device_id,
-                userRepository.context.getString(R.string.get_device_id)
+                context.getString(R.string.get_device_id)
             ),
             SettingsObject(
                 R.mipmap.other_settings,
-                userRepository.context.getString(R.string.other_settings)
+                context.getString(R.string.other_settings)
             ),
             SettingsObject(
                 R.mipmap.change_password,
-                userRepository.context.getString(R.string.change_password)
+                context.getString(R.string.change_password)
             )
         )
         _settingsList.value = allUsersList

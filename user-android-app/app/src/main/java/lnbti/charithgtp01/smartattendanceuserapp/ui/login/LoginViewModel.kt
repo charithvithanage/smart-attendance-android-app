@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
-import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterFormState
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
@@ -21,7 +21,10 @@ import javax.inject.Inject
  * Login Page View Model
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -35,7 +38,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
 
     fun login(email: String, password: String) {
-        val isNetworkAvailable = Utils.isOnline(userRepository.context.applicationContext)
+        val isNetworkAvailable = Utils.isOnline(context)
 
         //If Network available call to backend API
         if (isNetworkAvailable) {
@@ -49,7 +52,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             }
         } else {
             _loginResult.value =
-                LoginResponse(error = userRepository.context.getString(R.string.no_internet))
+                LoginResponse(error = context.getString(R.string.no_internet))
         }
     }
 

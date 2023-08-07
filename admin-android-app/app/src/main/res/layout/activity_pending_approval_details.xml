@@ -8,13 +8,22 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals.PendingApprovalDetailsViewModel" />
+            type="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.pendingapprovals.PendingApprovalDetailsActivity">
+        tools:context=".ui.pendingapporvaldetails.PendingApprovalDetailsActivity">
+
+        <include
+            android:id="@+id/actionBar"
+            layout="@layout/action_bar_without_home_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ownerIconView"
@@ -26,7 +35,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/actionBar"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:strokeColor="@color/color_primary"
             app:strokeWidth="@dimen/round_icon_stroke_width" />
@@ -106,11 +115,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
+            android:layout_marginStart="@dimen/button_horizontal_margin"
             android:layout_marginTop="@dimen/button_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            android:text="@string/action_approve"
+            android:layout_marginEnd="@dimen/button_horizontal_margin"
             android:backgroundTint="@color/green_button_color"
+            android:text="@string/action_approve"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include5" />
@@ -120,10 +129,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            android:text="@string/action_reject"
+            android:layout_marginStart="@dimen/button_horizontal_margin"
+            android:layout_marginEnd="@dimen/button_horizontal_margin"
             android:backgroundTint="@color/red_button_color"
+            android:text="@string/action_reject"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnApprove" />
