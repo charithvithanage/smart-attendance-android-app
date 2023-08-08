@@ -3,14 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <variable
-            name="imageResId"
-            type="Integer"/>
         <variable
             name="dialogMessage"
             type="String" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,16 +13,15 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:orientation="vertical">
-
         <LinearLayout
             android:id="@+id/dialogMainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@drawable/dialog_content_border_bg"
-            android:paddingLeft="@dimen/dialog_horizontal_padding"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dialog_top_padding"
             android:paddingTop="@dimen/dialog_top_padding"
-            android:paddingRight="@dimen/dialog_horizontal_padding"
+            android:paddingRight="@dimen/dialog_top_padding"
             android:paddingBottom="@dimen/dialog_top_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,31 +30,35 @@
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:imageResource="@{imageResId}" />
+                android:src="@mipmap/wait"
+                android:layout_gravity="center">
+
+            </ImageView>
+
+            <ProgressBar
+                android:id="@+id/progress_horizontal"
+                style="@style/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:maxHeight="24dip"
+                android:minHeight="24dip"
+                android:visibility="visible" />
+
 
             <TextView
                 android:id="@+id/tvMessage"
-                style="@style/dialog_title_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="@dimen/vertical_margin"
-                android:paddingBottom="@dimen/vertical_margin"
-                android:text="@{dialogMessage}" />
+                android:gravity="left"
+                android:text="@{dialogMessage}"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/button"
-                style="@style/buttonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/content_horizontal_margin"
-                android:layout_marginEnd="@dimen/content_horizontal_margin"
-                android:text="@string/ok" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

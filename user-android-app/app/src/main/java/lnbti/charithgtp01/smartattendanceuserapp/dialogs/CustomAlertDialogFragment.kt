@@ -1,6 +1,8 @@
 package lnbti.charithgtp01.smartattendanceuserapp.dialogs
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +31,6 @@ class CustomAlertDialogFragment : DialogFragment() {
             dialogButtonClickListener: CustomAlertDialogListener
         ): CustomAlertDialogFragment {
             val fragment = CustomAlertDialogFragment()
-            fragment.isCancelable = false
             Companion.dialogButtonClickListener = dialogButtonClickListener
             val args = Bundle().apply {
                 putString(ARG_MESSAGE, message)
@@ -53,12 +54,19 @@ class CustomAlertDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(requireContext(), theme)
+        val dialog = Dialog(requireContext(), theme)
+        //Remove dialog unwanted bg color in the corners
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        //Disable outside click dialog dismiss event
+        dialog.setCanceledOnTouchOutside(false)
+        return dialog
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        //Disable back button pressed dialog dismiss event
+        isCancelable = false;
         binding = FragmentCustomAlertDialogBinding.inflate(inflater, container, false)
 //        binding.vm = viewModel
         binding.lifecycleOwner = this
@@ -76,11 +84,14 @@ class CustomAlertDialogFragment : DialogFragment() {
         changeUiSize(context, binding.icon, 1, 5)
         // Set data to the data binding variables
         binding.dialogMessage = message
-        if (type == Constants.SUCCESS)
-            binding.imageResId = R.mipmap.done
-        else if (type == Constants.FAIL)
+        if(isErrorDialog){
             binding.imageResId = R.mipmap.cancel
-
+        }else{
+            if (type == Constants.SUCCESS)
+                binding.imageResId = R.mipmap.done
+            else if (type == Constants.FAIL)
+                binding.imageResId = R.mipmap.cancel
+        }
         binding.button.setOnClickListener {
             //Error Dialog should not want to return button click listener
             if (!isErrorDialog)

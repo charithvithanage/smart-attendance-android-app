@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -20,7 +21,7 @@ class PendingApprovalsFragment : Fragment() {
     private var binding: FragmentPendingApprovalsBinding? = null
     private lateinit var viewModel: PendingApprovalsViewModel
     private lateinit var pendingApprovalListAdapter: PendingApprovalListAdapter
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,7 +40,6 @@ class PendingApprovalsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initiateAdapter()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -60,7 +60,7 @@ class PendingApprovalsFragment : Fragment() {
         {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -74,13 +74,6 @@ class PendingApprovalsFragment : Fragment() {
         {
             pendingApprovalListAdapter.submitList(it)
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
     }
 
     /**

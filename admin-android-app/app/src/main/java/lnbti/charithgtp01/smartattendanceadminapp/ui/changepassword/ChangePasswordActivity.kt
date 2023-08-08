@@ -4,11 +4,13 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.PROGRESS_DIALOG_FRAGMENT_TAG
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityChangePasswordBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
@@ -24,14 +26,13 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
     private lateinit var binding: ActivityChangePasswordBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -47,7 +48,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     private fun initiateView() {
         initiateActionBar(
-            binding?.actionBar?.mainLayout!!,
+            binding.actionBar.mainLayout,
             getString(R.string.change_password),
             object : ActionBarListener {
                 override fun backPressed() {
@@ -88,7 +89,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 validState(binding.confirmPasswordInputText, R.drawable.ic_check)
 
             if (formState.isDataValid) {
-                dialog?.show()
+                dialog = showProgressDialog(this, getString(R.string.wait))
                 changePasswordViewModel.changePassword()
             }
         })
@@ -119,12 +120,5 @@ class ChangePasswordActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 }

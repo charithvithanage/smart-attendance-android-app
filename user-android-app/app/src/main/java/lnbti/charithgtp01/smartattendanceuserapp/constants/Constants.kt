@@ -56,5 +56,6 @@ object Constants {
     const val SUCCESS = "success"
     const val FAIL = "fail"
     const val WARN = "warn"
+    const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
 
 }

@@ -16,8 +16,10 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPermissions
@@ -81,7 +83,19 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.action_logout -> {
-                Utils.navigateWithoutHistory(this, LoginActivity::class.java)
+                showConfirmAlertDialog(
+                    this@MainActivity,
+                    getString(R.string.confirm_logout_message),
+                    object : ConfirmDialogButtonClickListener {
+                        override fun onPositiveButtonClick() {
+                            Utils.navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                        }
+
+                        override fun onNegativeButtonClick() {
+
+                        }
+                    })
+
             }
         }
         return false

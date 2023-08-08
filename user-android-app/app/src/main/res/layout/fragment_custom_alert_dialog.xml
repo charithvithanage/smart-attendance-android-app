@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@drawable/dialog_content_border_bg"
             android:paddingLeft="@dimen/dialog_horizontal_padding"
             android:paddingTop="@dimen/dialog_top_padding"
             android:paddingRight="@dimen/dialog_horizontal_padding"

@@ -1,11 +1,11 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.report
 
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -13,10 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentAttendanceReportBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceDate
-import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceStatus
-import lnbti.charithgtp01.smartattendanceuserapp.model.CalendarDate
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
@@ -32,7 +29,7 @@ class AttendanceReportFragment : Fragment() {
     private var binding: FragmentAttendanceReportBinding? = null
     private lateinit var viewModel: AttendanceReportViewModel
     private lateinit var attendanceReportsListAdapter: AttendanceReportsListAdapter
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
 
     //Initially Start Date Set to Today and End Date Set to Last Day of the current month
     private var startDate: Date = Date()
@@ -57,7 +54,6 @@ class AttendanceReportFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initiateAdapter()
-        initiateProgressDialog()
         viewModelObservers()
 
 
@@ -87,7 +83,7 @@ class AttendanceReportFragment : Fragment() {
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -100,13 +96,6 @@ class AttendanceReportFragment : Fragment() {
         viewModel.calendarDates.observe(requireActivity()) {
             attendanceReportsListAdapter.submitList(it)
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
     }
 
     /**

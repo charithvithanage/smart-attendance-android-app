@@ -1,10 +1,10 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
-import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
@@ -16,16 +16,14 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
@@ -39,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private lateinit var username: TextInputEditText
     private lateinit var usernameInputText: TextInputLayout
     private lateinit var password: TextInputEditText
@@ -54,7 +52,6 @@ class LoginActivity : AppCompatActivity() {
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -69,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
-
+        changeUiSize(this, binding.appLogo, 1, 1, 30)
         username = binding.username
         usernameInputText = binding.usernameInputText
         password = binding.etPassword
@@ -153,8 +150,7 @@ class LoginActivity : AppCompatActivity() {
                "password": "cityslicka"
             */
             if (loginState.isDataValid) {
-                dialog?.show()
-
+                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
                 val userRole: String = if (username.text.toString() == "charith")
                     getString(R.string.employee)
                 else
@@ -164,7 +160,12 @@ class LoginActivity : AppCompatActivity() {
                     this@LoginActivity,
                     Constants.USER_ROLE,
                     userRole,
-                    SuccessListener { loginViewModel.login(username.text.toString(), password.text.toString()) })
+                    SuccessListener {
+                        loginViewModel.login(
+                            username.text.toString(),
+                            password.text.toString()
+                        )
+                    })
             }
         })
 
@@ -184,13 +185,6 @@ class LoginActivity : AppCompatActivity() {
             }
 
         })
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 
     /**

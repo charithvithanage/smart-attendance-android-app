@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var binding: ActivityRegisterBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private val cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,6 @@ class RegisterActivity : AppCompatActivity() {
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -170,7 +170,7 @@ class RegisterActivity : AppCompatActivity() {
                 normalState(binding.confirmPasswordInputText)
 
             if (formState.isDataValid) {
-                dialog?.show()
+                dialog = showProgressDialog(this, getString(R.string.wait))
                 registerViewModel.register()
             }
         })
@@ -199,13 +199,6 @@ class RegisterActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 }
 

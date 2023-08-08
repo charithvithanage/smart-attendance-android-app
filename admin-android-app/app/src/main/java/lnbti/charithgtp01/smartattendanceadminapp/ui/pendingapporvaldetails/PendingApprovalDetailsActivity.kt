@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -15,6 +16,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityPendingApp
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 
@@ -22,14 +24,13 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 class PendingApprovalDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPendingApprovalDetailsBinding
     private lateinit var viewModel: PendingApprovalDetailsViewModel
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private var error: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
         initView()
-        initiateProgressDialog()
         setData()
         viewModelObservers()
 
@@ -44,7 +45,7 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
             dialog?.dismiss()
 
             if (apiResult?.success == true) {
-                DialogUtils.showAlertDialog(
+                showAlertDialog(
                     this, Constants.SUCCESS,
                     getString(R.string.approval_submitted_successfully),
                     object : CustomAlertDialogListener {
@@ -74,13 +75,13 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         ) { onBackPressed() }
 
         binding.btnApprove.setOnClickListener {
-            dialog?.show()
+            dialog = showProgressDialog(this, getString(R.string.wait))
             error = "Request Approved Successfully"
             viewModel.submitApproval(true)
         }
 
         binding.btnReject.setOnClickListener {
-            dialog?.show()
+            dialog = showProgressDialog(this, getString(R.string.wait))
             error = "Request Rejected Successfully"
             viewModel.submitApproval(false)
         }
@@ -102,12 +103,5 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[PendingApprovalDetailsViewModel::class.java]
         binding.vm = viewModel
         binding.lifecycleOwner = this
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 }
