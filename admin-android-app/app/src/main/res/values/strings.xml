@@ -40,7 +40,7 @@
     <string name="menu_signout">SIGN OUT</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
-    <string name="confirm_logout_message">Do you want to signout?</string>
+    <string name="confirm_logout_message">Do you want to sign out?</string>
     <string name="user_details">User Details</string>
     <string name="pending_approval_details">Pending Approval</string>
     <string name="edit_user">Edit User</string>

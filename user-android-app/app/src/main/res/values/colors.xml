@@ -22,5 +22,6 @@
 
     //Report List
     <color name="weekend_highlighted_color">#FAE3E5</color>
+    <color name="grey_color">#575455</color>
 
 </resources>
