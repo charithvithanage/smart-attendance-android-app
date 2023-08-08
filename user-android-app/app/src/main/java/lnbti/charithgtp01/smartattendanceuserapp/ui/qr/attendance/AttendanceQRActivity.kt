@@ -1,15 +1,23 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance
 
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.compress
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityAttendanceQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityDeviceIdQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 
 /**
  * Business User Attendance Handshake QR Page
@@ -18,12 +26,16 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiat
 class AttendanceQRActivity : AppCompatActivity() {
     private var binding: ActivityAttendanceQrBinding? = null
     private lateinit var viewModel: AttendanceQRViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
         initView()
+        setData()
         viewModelObservers()
+    }
+
+    private fun setData() {
+        viewModel.generateQRCode(intent.getStringExtra(Constants.OBJECT_STRING))
     }
 
     /**
@@ -50,4 +62,24 @@ class AttendanceQRActivity : AppCompatActivity() {
         binding?.vm = viewModel
         binding?.lifecycleOwner = this
     }
+
+    fun encryptString(value: String): String? {
+        var encryptedCredential: String? = null
+        try {
+            val compressed: ByteArray = compress(value)!!
+            val decoded = String(compressed, StandardCharsets.ISO_8859_1)
+            val secureKey: String = Constants.SECURE_KEY
+            try {
+                encryptedCredential = Keystore.encrypt(decoded, secureKey)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            Log.d(Constants.TAG, "Compressed string $encryptedCredential")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return encryptedCredential
+    }
+
 }

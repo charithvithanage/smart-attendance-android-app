@@ -28,18 +28,14 @@ class AttendanceQRViewModel @Inject constructor(private val context: Context) : 
     val deviceID: LiveData<String>
         get() = _deviceID
 
-    init {
-        val androidID = getAndroidId(context)
-        _deviceID.value = androidID
-        generateQRCode(androidID)
-    }
-
     // ViewModel logic and data manipulation can be defined here
 
-    private fun generateQRCode(text: String) {
-        // Implement your QR code generation logic here and set the result in _generatedQRCodeData
-        val generatedQRCode = generateQRCodeBitmap(text)
-        _generatedQRCodeData.value = generatedQRCode
+    fun generateQRCode(text: String?) {
+        if (text != null) {
+            // Implement your QR code generation logic here and set the result in _generatedQRCodeData
+            val generatedQRCode = generateQRCodeBitmap(text)
+            _generatedQRCodeData.value = generatedQRCode
+        }
     }
 
     /**

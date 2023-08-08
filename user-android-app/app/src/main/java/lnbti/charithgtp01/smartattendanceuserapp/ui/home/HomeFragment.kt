@@ -1,6 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +15,21 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import java.util.concurrent.Executor
@@ -40,6 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,26 +122,48 @@ class HomeFragment : Fragment() {
         usersListAdapter =
             HomeListAdapter(object : HomeListAdapter.OnItemClickListener {
                 override fun scan(item: User) {
-                    val gson = Gson()
-                    val prefMap = HashMap<String, String>()
-                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
-                    navigateToAnotherActivityWithExtras(
-                        requireActivity(),
-                        ScanActivity::class.java,
-                        prefMap
-                    )
+
+                    qrHandshake(object : QRHandshakeListener {
+                        override fun onSuccess(location: Location) {
+                            val gson = Gson()
+                            val prefMap = HashMap<String, String>()
+                            item.lat = location.latitude
+                            item.long = location.longitude
+                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                            navigateToAnotherActivityWithExtras(
+                                requireActivity(),
+                                ScanActivity::class.java,
+                                prefMap
+                            )
+                        }
+
+                        override fun onError(error: String) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+
 
                 }
 
                 override fun generate(item: User) {
-                    val gson = Gson()
-                    val prefMap = HashMap<String, String>()
-                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
-                    navigateToAnotherActivityWithExtras(
-                        requireActivity(),
-                        AttendanceQRActivity::class.java,
-                        prefMap
-                    )
+                    qrHandshake(object : QRHandshakeListener {
+                        override fun onSuccess(location: Location) {
+                            val gson = Gson()
+                            val prefMap = HashMap<String, String>()
+                            item.lat = location.latitude
+                            item.long = location.longitude
+                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                            navigateToAnotherActivityWithExtras(
+                                requireActivity(),
+                                AttendanceQRActivity::class.java,
+                                prefMap
+                            )
+                        }
+
+                        override fun onError(error: String) {
+                            TODO("Not yet implemented")
+                        }
+                    })
                 }
             })
 
@@ -142,6 +171,30 @@ class HomeFragment : Fragment() {
         binding?.recyclerView.also { it2 ->
             it2?.adapter = usersListAdapter
         }
+    }
+
+    private fun qrHandshake(qrHandshakeListener: QRHandshakeListener) {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        getCurrentLocation(requireActivity(), mFusedLocationClient, object :
+            GetCurrentLocationListener {
+            override fun onLocationRead(location: Location) {
+                qrHandshakeListener.onSuccess(location)
+            }
+
+            override fun requestPermission() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onError(error: String) {
+                TODO("Not yet implemented")
+            }
+
+            override fun openSettings() {
+                TODO("Not yet implemented")
+            }
+
+        })
+
     }
 
     override fun onDestroyView() {
@@ -170,7 +223,27 @@ class HomeFragment : Fragment() {
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    navigateToAnotherActivity(requireActivity(), ScanActivity::class.java)
+                    qrHandshake(object : QRHandshakeListener {
+                        override fun onSuccess(location: Location) {
+                            val gson = Gson()
+                            val prefMap = HashMap<String, String>()
+                            val item = User(
+                                1, "charithvin@gmail.com",
+                                "George", "Bluth", null,
+                                null, null, null, "", location.latitude, location.longitude
+                            )
+                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                            navigateToAnotherActivityWithExtras(
+                                requireActivity(),
+                                ScanActivity::class.java,
+                                prefMap
+                            )
+                        }
+
+                        override fun onError(error: String) {
+                            TODO("Not yet implemented")
+                        }
+                    })
                 }
 
                 override fun onAuthenticationFailed() {
