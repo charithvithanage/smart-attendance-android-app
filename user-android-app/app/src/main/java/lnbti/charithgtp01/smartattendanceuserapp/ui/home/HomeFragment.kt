@@ -1,14 +1,17 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.app.Dialog
-import androidx.biometric.BiometricManager.Authenticators.*
-import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -16,10 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
@@ -35,7 +36,7 @@ class HomeFragment : Fragment() {
     private var binding: FragmentHomeBinding? = null
     private lateinit var viewModel: HomeViewModel
     private lateinit var usersListAdapter: HomeListAdapter
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
@@ -72,7 +73,6 @@ class HomeFragment : Fragment() {
             binding?.userLayout?.visibility = View.GONE
             binding?.businessUserLayout?.visibility = View.VISIBLE
             initiateAdapter()
-            initiateProgressDialog()
             viewModelObservers()
         }
     }
@@ -85,18 +85,14 @@ class HomeFragment : Fragment() {
         viewModel.errorMessage.observe(requireActivity()) {
             DialogUtils.showErrorDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                it
+            )
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -109,13 +105,6 @@ class HomeFragment : Fragment() {
         viewModel.usersList.observe(requireActivity()) {
             usersListAdapter.submitList(it)
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
     }
 
     /**

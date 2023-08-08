@@ -1,10 +1,10 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.profile
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -12,9 +12,9 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentProfileBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 
 /**
  * Users Fragment
@@ -23,7 +23,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 class ProfileFragment : Fragment() {
     private var binding: FragmentProfileBinding? = null
     private lateinit var viewModel: ProfileViewModel
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +42,6 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -58,20 +57,16 @@ class ProfileFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
+            showErrorDialog(
                 requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                it
+            )
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -96,12 +91,4 @@ class ProfileFragment : Fragment() {
 
         }
     }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(requireContext(), getString(R.string.wait))
-    }
-
 }
