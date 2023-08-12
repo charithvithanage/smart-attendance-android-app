@@ -27,7 +27,7 @@ class HomeListAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
         val pendingApproval = getItem(position)
-        if (position == 0) {
+        if (position != 0) {
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.generate)
             holder.binding.btnProceed.setOnClickListener {

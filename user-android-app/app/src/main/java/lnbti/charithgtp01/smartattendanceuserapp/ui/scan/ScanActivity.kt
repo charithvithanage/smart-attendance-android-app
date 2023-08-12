@@ -121,29 +121,25 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
             var scannedUser = gson.fromJson(barCodeString, User::class.java)
 
-            if (loggedInUser.first_name == scannedUser.first_name) {
-                val isValidLocation = Utils.isLocationCorrect(
-                    scannedUser.lat,
-                    scannedUser.long,
-                    loggedInUser.lat,
-                    loggedInUser.long
-                )
+            val isValidLocation = Utils.isLocationCorrect(
+                scannedUser.lat,
+                scannedUser.long,
+                loggedInUser.lat,
+                loggedInUser.long
+            )
 
-                if (isValidLocation) {
-                    DialogUtils.showAlertDialog(this@ScanActivity,
-                        Constants.SUCCESS, getString(R.string.sign_successfully),
-                        object : CustomAlertDialogListener {
-                            override fun onDialogButtonClicked() {
-                                onBackPressed()
-                            }
-                        })
-                } else {
-                    DialogUtils.showErrorDialog(this@ScanActivity, "Invalid Location")
-
-                }
+            if (isValidLocation) {
+                DialogUtils.showAlertDialog(this@ScanActivity,
+                    Constants.SUCCESS, getString(R.string.sign_successfully),
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            onBackPressed()
+                        }
+                    })
             } else {
-                DialogUtils.showErrorDialog(this@ScanActivity, "Please select correct user")
+                DialogUtils.showErrorDialog(this@ScanActivity, "Invalid Location")
             }
+
             DialogUtils.showAlertDialog(
                 this, Constants.SUCCESS,
                 getString(R.string.sign_successfully),

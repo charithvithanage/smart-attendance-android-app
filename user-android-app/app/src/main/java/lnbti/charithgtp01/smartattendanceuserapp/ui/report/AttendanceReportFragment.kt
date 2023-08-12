@@ -60,6 +60,15 @@ class AttendanceReportFragment : Fragment() {
     }
 
     private fun initView() {
+        val userRole = Utils.getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+
+        /**
+         * User filter showing only for back office users
+         */
+        if (userRole == getString(R.string.employee)) {
+            binding?.spinner?.visibility = View.GONE
+        }
+
         binding?.fromLayout?.mainLayout?.setOnClickListener {
             openDatePicker(true)
         }
@@ -77,7 +86,8 @@ class AttendanceReportFragment : Fragment() {
         viewModel.errorMessage.observe(requireActivity()) {
             DialogUtils.showErrorDialog(
                 requireContext(),
-                it)
+                it
+            )
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {
@@ -143,10 +153,10 @@ class AttendanceReportFragment : Fragment() {
 
                 if (isStartDate) {
                     startDate = selectedDate
-                    viewModel.setDate(startDate,endDate)
+                    viewModel.setDate(startDate, endDate)
                 } else {
                     endDate = selectedDate
-                    viewModel.setDate(startDate,endDate)
+                    viewModel.setDate(startDate, endDate)
 
                 }
             },

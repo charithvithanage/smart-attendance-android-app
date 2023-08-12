@@ -73,9 +73,6 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        username.setText("charith2")
-        password.setText("cityslicka")
-
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
             override fun validateUI() {
@@ -151,7 +148,7 @@ class LoginActivity : AppCompatActivity() {
             */
             if (loginState.isDataValid) {
                 dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
-                val userRole: String = if (username.text.toString() == "charith")
+                val userRole: String = if (username.text.toString() == "Charles")
                     getString(R.string.employee)
                 else
                     getString(R.string.business_user)

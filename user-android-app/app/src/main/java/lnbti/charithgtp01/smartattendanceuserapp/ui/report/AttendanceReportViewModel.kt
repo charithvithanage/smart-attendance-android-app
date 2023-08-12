@@ -10,6 +10,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceDate
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceStatus
 import lnbti.charithgtp01.smartattendanceuserapp.model.CalendarDate
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getLastDayOfMonth
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -26,6 +27,10 @@ class AttendanceReportViewModel @Inject constructor(
     private val context: Context
 ) :
     ViewModel() {
+
+    //Users Dropdown values
+    val spinnerOptions = arrayOf("George Bluth", "Janet Weaver", "Emma Wong","Eve Holt","Charles Morris","Tracey Ramos")
+    var selectedSpinnerPosition: Int = 0
 
     //Start Date Live Date
     private val _startDateString = MutableLiveData<String>()
@@ -113,13 +118,6 @@ class AttendanceReportViewModel @Inject constructor(
         return attendanceDates
     }
 
-    private fun formatDate(date: Date): String {
-        val format = SimpleDateFormat(
-            context.getString(R.string.date_format),
-            Locale.getDefault()
-        )
-        return format.format(date)
-    }
 
     fun setDate(startDate: Date, endDate: Date) {
         _startDateString.value = formatDate(startDate)

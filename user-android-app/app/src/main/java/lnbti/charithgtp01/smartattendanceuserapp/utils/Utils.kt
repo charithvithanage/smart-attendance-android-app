@@ -18,14 +18,36 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 /**
  * A Utils class containing Common Methods
  */
 class Utils {
     companion object {
+
+
+        /**
+         * Format date to string
+         */
+        fun formatTime(date: Date): String {
+            val format = SimpleDateFormat(
+                "HH:mm",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
+        fun formatDate(date: Date): String {
+            val format = SimpleDateFormat(
+                "dd.MM.yyyy",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
 
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
         private const val areaRadius = 100.0 // in meters

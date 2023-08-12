@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance
 
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +12,8 @@ import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.compress
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityAttendanceQrBinding
-import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityDeviceIdQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 import java.io.IOException
 import java.nio.charset.StandardCharsets
@@ -26,6 +25,7 @@ import java.nio.charset.StandardCharsets
 class AttendanceQRActivity : AppCompatActivity() {
     private var binding: ActivityAttendanceQrBinding? = null
     private lateinit var viewModel: AttendanceQRViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
@@ -35,7 +35,10 @@ class AttendanceQRActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        viewModel.generateQRCode(intent.getStringExtra(Constants.OBJECT_STRING))
+        val gson = Gson()
+        val selectedUserString = intent.getStringExtra(Constants.OBJECT_STRING)
+        var selectedUser = gson.fromJson(selectedUserString, User::class.java)
+        viewModel.generateQRCode(selectedUserString, selectedUser)
     }
 
     /**

@@ -11,7 +11,9 @@ import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -24,13 +26,20 @@ class AttendanceQRViewModel @Inject constructor(private val context: Context) : 
     val generatedQRCodeData: LiveData<Bitmap>
         get() = _generatedQRCodeData
 
-    private val _deviceID = MutableLiveData<String>()
-    val deviceID: LiveData<String>
-        get() = _deviceID
+    private val _selectedUser = MutableLiveData<User>()
+    val selectedUser: LiveData<User>
+        get() = _selectedUser
+
+    private var today: Date = Date()
+
+    private val _dateString = MutableLiveData<String>()
+    val dateString: LiveData<String> get() = _dateString
 
     // ViewModel logic and data manipulation can be defined here
 
-    fun generateQRCode(text: String?) {
+    fun generateQRCode(text: String?, selectedUser: User) {
+        _selectedUser.value = selectedUser
+        _dateString.value = Utils.formatDate(today)
         if (text != null) {
             // Implement your QR code generation logic here and set the result in _generatedQRCodeData
             val generatedQRCode = generateQRCodeBitmap(text)

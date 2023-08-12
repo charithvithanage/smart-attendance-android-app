@@ -24,7 +24,7 @@ object Constants {
     //User Register endpoint
     const val REGISTER_ENDPOINT = "users/2"
     //Get User endpoint
-    const val GET_USER_ENDPOINT = "users/1"
+    const val GET_USER_ENDPOINT = "users/5"
 
     /**
      * Preference Keys
