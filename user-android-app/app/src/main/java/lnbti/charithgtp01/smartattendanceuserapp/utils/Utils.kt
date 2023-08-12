@@ -5,17 +5,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 /**
  * A Utils class containing Common Methods
@@ -23,8 +29,100 @@ import java.util.Date
 class Utils {
     companion object {
 
-        const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
 
+        /**
+         * Format date to string
+         */
+        fun formatTime(date: Date): String {
+            val format = SimpleDateFormat(
+                "HH:mm",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
+        fun formatDate(date: Date): String {
+            val format = SimpleDateFormat(
+                "dd.MM.yyyy",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
+        const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
+        private const val areaRadius = 100.0 // in meters
+
+        /**
+         * Get Current Location Method
+         */
+        @SuppressLint("MissingPermission", "SetTextI18n")
+        fun getCurrentLocation(
+            activity: Activity,
+            mFusedLocationClient: FusedLocationProviderClient,
+            listener: GetCurrentLocationListener
+        ) {
+            if (checkPermissions(activity)) {
+                if (isLocationEnabled(activity)) {
+                    mFusedLocationClient.lastLocation.addOnCompleteListener(activity) { task ->
+                        val location: Location? = task.result
+                        if (location != null) {
+                            listener.onLocationRead(location)
+                        }
+                    }
+                } else {
+                    listener.openSettings()
+                }
+            } else {
+                listener.requestPermission()
+            }
+        }
+
+        /**
+         * Check the given latitude and longitude is inside any given area
+         */
+        fun isLocationCorrect(
+            scannedLatitude: Double,
+            scannedLongitude: Double,
+            areaLatitude: Double,
+            areaLongitude: Double
+        ): Boolean {
+            // Check if the current location is inside the desired area
+            val distance = calculateDistance(
+                scannedLatitude,
+                scannedLongitude,
+                areaLatitude,
+                areaLongitude
+            )
+            return if (distance <= areaRadius) {
+                // Inside the area
+                // Perform your desired actions here
+                Log.d(TAG, "Inside Area")
+                true
+            } else {
+                // Outside the area
+                // Perform your desired actions here
+                Log.d(TAG, "Outside Area")
+                false
+            }
+        }
+
+        // Helper method to calculate distance between two coordinates
+        private fun calculateDistance(
+            currentLatitude: Double,
+            currentLongitude: Double,
+            areaLatitude: Double,
+            areaLongitude: Double
+        ): Float {
+            val results = FloatArray(1)
+            Location.distanceBetween(
+                areaLatitude,
+                areaLongitude,
+                currentLatitude,
+                currentLongitude,
+                results
+            )
+            return results[0]
+        }
 
 
         /**

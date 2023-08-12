@@ -24,7 +24,7 @@ object Constants {
     //User Register endpoint
     const val REGISTER_ENDPOINT = "users/2"
     //Get User endpoint
-    const val GET_USER_ENDPOINT = "users/1"
+    const val GET_USER_ENDPOINT = "users/5"
 
     /**
      * Preference Keys
@@ -49,5 +49,18 @@ object Constants {
      * Image Types
      */
     const val MEDIA_TYPE_EMPLOYEE_SIGNATURE: String = "employee_signature"
+
+    /**
+     * Dialog Fragment Types
+     */
+    const val SUCCESS = "success"
+    const val FAIL = "fail"
+    const val WARN = "warn"
+    const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
+
+    /**
+     * Encryption Secure Key
+     */
+    const val SECURE_KEY = "12345"
 
 }

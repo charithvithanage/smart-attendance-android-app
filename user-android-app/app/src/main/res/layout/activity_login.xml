@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/input_text_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
+            app:endIconMode="password_toggle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/usernameInputText">
 
@@ -84,13 +85,14 @@
 
         <ImageView
             android:id="@+id/app_logo"
-            android:layout_width="378dp"
-            android:layout_height="210dp"
-            android:scaleType="centerInside"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/usernameInputText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:adjustViewBounds="true"
             app:srcCompat="@mipmap/app_logo"
             android:background="@drawable/image_button_bg"/>
 

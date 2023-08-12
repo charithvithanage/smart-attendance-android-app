@@ -11,7 +11,10 @@ import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTime
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isOnline
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -36,11 +39,16 @@ class HomeViewModel @Inject constructor(
 
     lateinit var allUsersList: List<User>
 
+    private var today: Date = Date()
+
+    private val _dateString = MutableLiveData<String>()
+    val dateString: LiveData<String> get() = _dateString
     /**
      * This will call when the View Model Created
      */
     init {
         getUsersList()
+        _dateString.value = formatDate(today)
     }
 
     /**

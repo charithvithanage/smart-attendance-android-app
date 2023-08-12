@@ -136,11 +136,13 @@ class UIUtils {
          * @param width Screen divide in to (display/width)
          * Ex: width=4 and widthRatio=3 means Actual element width= (Screen Width/4)*3
          */
-        fun changeUiSize(context: Context, view: View, widthRatio: Int, width: Int) {
-            val display = context.resources.displayMetrics
-            val params = view.layoutParams
-            params.width = display.widthPixels * widthRatio / width
-            view.layoutParams = params
+        fun changeUiSize(context: Context?, view: View, widthRatio: Int, width: Int) {
+            if (context != null) {
+                val display = context.resources.displayMetrics
+                val params = view.layoutParams
+                params.width = display.widthPixels * widthRatio / width
+                view.layoutParams = params
+            }
         }
 
         fun normalState(inputLayout: TextInputLayout?) {
