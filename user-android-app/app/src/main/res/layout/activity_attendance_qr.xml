@@ -40,7 +40,7 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{vm.selectedUser.first_name+" "+vm.selectedUser.last_name}'
+            android:text='@{vm.selectedUser.firstName+" "+vm.selectedUser.lastName}'
             android:textColor="@color/black"
             android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@+id/tvDate"
