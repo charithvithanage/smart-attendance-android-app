@@ -27,6 +27,13 @@ object Constants {
     //Get User endpoint
     const val GET_USER_ENDPOINT = "users/5"
 
+
+    /**
+     * Company Endpoints
+     */
+    //Get User endpoint
+    const val GET_COMPANY_ENDPOINT = "company/companies/"
+
     /**
      * Preference Keys
      */
