@@ -7,6 +7,17 @@ class Validations {
     companion object {
 
         /**
+         * Company ID validation
+         */
+        fun isCompanyIDValid(id: String?): Boolean {
+
+            if (id.isNullOrBlank())
+                return false
+
+            return id.length > 5
+        }
+
+        /**
          * Password validation
          */
         fun isPasswordValid(password: String?): Boolean {

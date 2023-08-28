@@ -22,6 +22,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
@@ -112,21 +113,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            valueSubmitDialog(
-                this, getString(R.string.employee_dialog_title),
-                getString(R.string.empoyee_id),
-                object : ValueSubmitDialogListener {
-                    override fun onPositiveButtonClicked(value: String) {
-                        navigateToAnotherActivity(
-                            this@LoginActivity,
-                            RegisterActivity::class.java
-                        )
-                    }
-
-                    override fun onNegativeButtonClicked() {
-
-                    }
-                })
+            navigateToAnotherActivity(
+                this@LoginActivity,
+                SearchCompanyActivity::class.java
+            )
         }
     }
 

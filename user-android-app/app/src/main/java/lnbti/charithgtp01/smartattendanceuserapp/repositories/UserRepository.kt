@@ -17,6 +17,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.Resource
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getErrorBodyFromResponse
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -178,17 +179,4 @@ class UserRepository @Inject constructor(
             )
         }
     }
-
-
-    /**
-     * Deserialize error response.body
-     * @param errorBody Error Response
-     */
-    private fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
-        Log.d(TAG, errorBody.toString())
-        val gson = Gson()
-        val type = object : TypeToken<ErrorBody>() {}.type
-        return gson.fromJson(errorBody?.charStream(), type)
-    }
-
 }
