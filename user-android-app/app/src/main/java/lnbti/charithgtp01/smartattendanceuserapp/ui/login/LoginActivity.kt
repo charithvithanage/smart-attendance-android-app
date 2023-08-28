@@ -14,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
@@ -171,14 +172,15 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.token != null) {
+            if (loginResult.success) {
+
                 saveObjectInSharedPref(
                     this,
-                    ACCESS_TOKEN,
-                    loginResult.token
+                    LOGGED_IN_USER,
+                    loginResult.data.toString()
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
-            } else if (loginResult.error != null) {
-                DialogUtils.showErrorDialog(this, loginResult.error)
+            } else {
+                DialogUtils.showErrorDialog(this, loginResult.message)
             }
 
         })

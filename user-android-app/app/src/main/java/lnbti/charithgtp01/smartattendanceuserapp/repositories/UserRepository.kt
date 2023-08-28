@@ -52,7 +52,7 @@ class UserRepository @Inject constructor(
             loginResponse = response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            loginResponse?.error = errorObject.error
+            loginResponse?.message = errorObject.message
         }
         return loginResponse
     }
@@ -82,7 +82,7 @@ class UserRepository @Inject constructor(
             ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
 
         return apiCallResponse
@@ -114,7 +114,7 @@ class UserRepository @Inject constructor(
             ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
 
         return apiCallResponse
@@ -143,7 +143,7 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             JSONResource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )
@@ -172,7 +172,7 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             Resource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )

@@ -43,7 +43,7 @@ class HomeListAdapter @Inject constructor(
         }
 
         holder.binding.repositoryNameView.text =
-            pendingApproval.first_name + " " + pendingApproval.last_name
+            pendingApproval.firstName + " " + pendingApproval.lastName
         /* Show profile icon using Glide */
         Glide.with(holder.itemView.rootView).load(pendingApproval.avatar)
             .into(holder.binding.ownerIconView)
@@ -68,7 +68,7 @@ class HomeListAdapter @Inject constructor(
  */
 val diffUtil = object : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-        return oldItem.first_name == newItem.first_name
+        return oldItem.firstName == newItem.firstName
     }
 
     override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {

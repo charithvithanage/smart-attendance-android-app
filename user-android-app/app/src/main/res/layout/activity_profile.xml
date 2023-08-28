@@ -65,7 +65,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ownerIconView"
                     bind:label='@{"Name"}'
-                    bind:value='@{vm.profile.first_name+" "+vm.profile.last_name}' />
+                    bind:value='@{vm.profile.firstName+" "+vm.profile.lastName}' />
 
                 <include
                     android:id="@+id/include2"
@@ -121,7 +121,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/include4"
                     bind:label='@{"User Role"}'
-                    bind:value='@{vm.profile.user_role}' />
+                    bind:value='@{vm.profile.userRole}' />
 
                 <include
                     android:id="@+id/include6"
@@ -135,7 +135,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/include5"
                     bind:label='@{"Status"}'
-                    bind:value='@{vm.profile.status}' />
+                    bind:value='@{vm.profile.userStatus}' />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
