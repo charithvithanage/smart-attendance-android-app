@@ -55,6 +55,11 @@
             android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
 
         <activity
+            android:name=".ui.searchcompany.SearchCompanyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SmartAttendanceAdminApp.NoActionBar" />
+        <activity
             android:name=".ui.scan.ScanActivity"
             android:exported="false"
             android:screenOrientation="portrait"

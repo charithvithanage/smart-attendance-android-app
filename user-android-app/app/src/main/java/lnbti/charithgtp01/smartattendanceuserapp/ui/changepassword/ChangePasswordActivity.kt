@@ -114,7 +114,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
                     })
             } else if (apiResult?.data != null) {
-                showErrorDialog(this, apiResult?.data)
+                showErrorDialog(this, apiResult?.data.toString())
 
             }
 

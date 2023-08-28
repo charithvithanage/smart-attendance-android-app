@@ -13,11 +13,15 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
+import okhttp3.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -28,6 +32,17 @@ import java.util.Locale
  */
 class Utils {
     companion object {
+
+        /**
+         * Deserialize error response.body
+         * @param errorBody Error Response
+         */
+        fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
+            Log.d(TAG, errorBody.toString())
+            val gson = Gson()
+            val type = object : TypeToken<ErrorBody>() {}.type
+            return gson.fromJson(errorBody?.charStream(), type)
+        }
 
 
         /**
