@@ -46,13 +46,13 @@ class LoginViewModel @Inject constructor(
             _isDialogVisible.value = true
             viewModelScope.launch {
                 // can be launched in a separate asynchronous job
-                val result = userRepository.login(LoginRequest("eve.holt@reqres.in", "cityslicka"))
+                val result = userRepository.login(LoginRequest("Charith", "Charith@1991"))
                 _loginResult.value = result
                 _isDialogVisible.value = false
             }
         } else {
             _loginResult.value =
-                LoginResponse(error = context.getString(R.string.no_internet))
+                LoginResponse(message = context.getString(R.string.no_internet))
         }
     }
 

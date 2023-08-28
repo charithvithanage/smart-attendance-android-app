@@ -227,12 +227,12 @@ class HomeFragment : Fragment() {
                         override fun onSuccess(location: Location) {
                             val gson = Gson()
                             val prefMap = HashMap<String, String>()
-                            val item = User(
-                                1, "charithvin@gmail.com",
-                                "George", "Bluth", null,
-                                null, null, null, "", location.latitude, location.longitude
-                            )
-                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+//                            val item = User(
+//                                1, "charithvin@gmail.com",
+//                                "George", "Bluth", null,
+//                                null, null, null, "", location.latitude, location.longitude
+//                            )
+//                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
                             navigateToAnotherActivityWithExtras(
                                 requireActivity(),
                                 ScanActivity::class.java,

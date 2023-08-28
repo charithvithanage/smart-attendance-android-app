@@ -7,14 +7,15 @@ object Constants {
     const val TAG="Smart Attendance App"
 
     //Application Base Url
-    const val BASE_URL = "https://reqres.in/api/"
+//    const val BASE_URL = "https://reqres.in/api/"
+    const val BASE_URL = "http://192.168.1.8:3000/"
 
     /**
      * Endpoints
      */
 
     //Login endpoint
-    const val LOGIN_ENDPOINT = "login"
+    const val LOGIN_ENDPOINT = "user/login"
     //Get Pending Approval endpoint
     const val GET_PENDING_APPROVALS_ENDPOINT = "users"
     //Get Users endpoint
@@ -29,6 +30,7 @@ object Constants {
     /**
      * Preference Keys
      */
+    const val LOGGED_IN_USER = "logged in user"
     const val ACCESS_TOKEN = "access_token"
     const val USER_ROLE="user_role"
 
