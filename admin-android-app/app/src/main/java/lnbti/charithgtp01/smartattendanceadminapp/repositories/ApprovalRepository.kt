@@ -49,7 +49,7 @@ class ApprovalRepository @Inject constructor(
             ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
 
         return apiCallResponse

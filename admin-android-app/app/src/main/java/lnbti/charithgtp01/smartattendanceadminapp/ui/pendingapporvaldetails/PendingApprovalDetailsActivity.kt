@@ -93,8 +93,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         val objectString = intent.getStringExtra(OBJECT_STRING)
         val pendingApprovalUser = gson.fromJson(objectString, User::class.java)
         viewModel.setPendingApprovalUserData(pendingApprovalUser)
-        /* Show profile icon using Glide */
-        binding.ownerIconView.let { Glide.with(this).load(pendingApprovalUser.avatar).into(it) }
 
     }
 

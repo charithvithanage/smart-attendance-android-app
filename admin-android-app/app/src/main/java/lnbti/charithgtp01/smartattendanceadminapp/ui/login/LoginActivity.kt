@@ -17,6 +17,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.ACCESS_TOKEN
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
@@ -45,8 +46,6 @@ class LoginActivity : AppCompatActivity() {
         initiateDataBinding()
         initiateView()
         viewModelObservers()
-
-        DialogUtils.showErrorDialog(this,"Ttest")
     }
 
     private fun initiateDataBinding() {
@@ -67,8 +66,8 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        username.setText("eve.holt@reqres.in")
-        password.setText("cityslicka")
+        username.setText("Charith")
+        password.setText("Charith@123")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
@@ -126,14 +125,15 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.token != null) {
+            if (loginResult.success == true) {
+
                 saveObjectInSharedPref(
                     this,
-                    ACCESS_TOKEN,
-                    loginResult.token
+                    LOGGED_IN_USER,
+                    loginResult.data.toString()
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
-            } else if (loginResult.error != null) {
-                DialogUtils.showErrorDialog(this, loginResult.error)
+            } else {
+                DialogUtils.showErrorDialog(this, loginResult.message)
             }
 
         })

@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.model
 
-import android.location.Location
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -17,7 +16,7 @@ data class User(
     val userRole: String?,
     val dob: String?,
     val userStatus: String?,
-    val avatar: String,
+    val employeeID:String,
     var lat: Double,
     var long: Double
 ) : Parcelable

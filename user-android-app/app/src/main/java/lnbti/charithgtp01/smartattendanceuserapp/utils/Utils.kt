@@ -56,6 +56,7 @@ class Utils {
             return format.format(date)
         }
 
+
         fun formatDate(date: Date): String {
             val format = SimpleDateFormat(
                 "dd.MM.yyyy",

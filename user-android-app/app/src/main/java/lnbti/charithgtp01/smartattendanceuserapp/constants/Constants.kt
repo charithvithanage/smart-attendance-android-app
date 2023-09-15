@@ -8,7 +8,7 @@ object Constants {
 
     //Application Base Url
 //    const val BASE_URL = "https://reqres.in/api/"
-    const val BASE_URL = "http://192.168.1.8:3000/"
+    const val BASE_URL = "http://192.168.1.5:3000/"
 
     /**
      * Endpoints
@@ -23,7 +23,7 @@ object Constants {
     //Change Password endpoint
     const val CHANGE_PASSWORD_ENDPOINT = "users/2"
     //User Register endpoint
-    const val REGISTER_ENDPOINT = "users/2"
+    const val REGISTER_ENDPOINT = "user/register"
     //Get User endpoint
     const val GET_USER_ENDPOINT = "users/5"
 

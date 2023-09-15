@@ -15,6 +15,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.Resource
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.getErrorBodyFromResponse
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -33,7 +34,7 @@ class UserRepository @Inject constructor(
      */
     suspend fun login(
         loginRequest: LoginRequest
-    ): LoginResponse? {
+    ): ApiCallResponse? {
         return withContext(Dispatchers.IO) {
             return@withContext loginToTheServer(loginRequest)
         }
@@ -42,22 +43,21 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun loginToTheServer(loginRequest: LoginRequest): LoginResponse? {
-        var loginResponse: LoginResponse? = LoginResponse()
-
+    private suspend fun loginToTheServer(loginRequest: LoginRequest): ApiCallResponse? {
         val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
         val response = userService.loginUser(loginRequest)
-        if (response.isSuccessful) {
-            loginResponse = response.body()
+
+        val apiCallResponse: ApiCallResponse = if (response.isSuccessful) {
+            ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            loginResponse?.error = errorObject.error
+            ApiCallResponse(false, errorObject.message)
         }
-        return loginResponse
-    }
 
+        return apiCallResponse
+    }
     /**
      * Change Password Coroutines
      */
@@ -83,7 +83,7 @@ class UserRepository @Inject constructor(
             ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
 
         return apiCallResponse
@@ -112,7 +112,7 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             Resource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )
@@ -141,23 +141,10 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             Resource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )
         }
     }
-
-
-    /**
-     * Deserialize error response.body
-     * @param errorBody Error Response
-     */
-    private fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
-        Log.d(TAG, errorBody.toString())
-        val gson = Gson()
-        val type = object : TypeToken<ErrorBody>() {}.type
-        return gson.fromJson(errorBody?.charStream(), type)
-    }
-
 }

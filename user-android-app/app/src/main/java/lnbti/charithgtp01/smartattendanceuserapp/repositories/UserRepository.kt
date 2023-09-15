@@ -33,7 +33,7 @@ class UserRepository @Inject constructor(
      */
     suspend fun login(
         loginRequest: LoginRequest
-    ): LoginResponse? {
+    ): ApiCallResponse? {
         return withContext(Dispatchers.IO) {
             return@withContext loginToTheServer(loginRequest)
         }
@@ -42,20 +42,20 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun loginToTheServer(loginRequest: LoginRequest): LoginResponse? {
-        var loginResponse: LoginResponse? = LoginResponse()
-
-        val gson = Gson()
+    private suspend fun loginToTheServer(loginRequest: LoginRequest): ApiCallResponse? {
+               val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
         val response = userService.loginUser(loginRequest)
-        if (response.isSuccessful) {
-            loginResponse = response.body()
+
+        val apiCallResponse: ApiCallResponse = if (response.isSuccessful) {
+            ApiCallResponse(true, response.body().toString())
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            loginResponse?.message = errorObject.message
+            ApiCallResponse(false, errorObject.message)
         }
-        return loginResponse
+
+        return apiCallResponse
     }
 
     /**
