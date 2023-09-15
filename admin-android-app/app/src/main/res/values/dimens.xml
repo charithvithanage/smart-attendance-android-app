@@ -41,4 +41,8 @@
     <dimen name="content_mini_margin">8dp</dimen>
     <dimen name="button_horizontal_margin">45dp</dimen>
 
+    /* Contact List Image Dimensions */
+    <dimen name="contact_letter_text_size">26sp</dimen>
+    <dimen name="contact_bg_size">50sp</dimen>
+    <dimen name="rounded_corner_radius">50dp</dimen>
 </resources>

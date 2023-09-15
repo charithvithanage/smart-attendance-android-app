@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import javax.inject.Inject
-
 /**
  * Users Fragment View Model
  */
@@ -32,5 +31,12 @@ class UserDetailsViewModel @Inject constructor() : ViewModel() {
         _pendingApprovalUser.value = pendingApprovalUser
     }
 
+    private val _isUserActive = MutableLiveData<Boolean>()
+
+    // Function to compute the status string based on the boolean condition
+    fun getUserStatusString(): String {
+        val isActive = _isUserActive.value ?: false // Default to false if null
+        return if (isActive) "Active" else "Inactive"
+    }
 
 }

@@ -74,7 +74,10 @@ class UsersFragment : Fragment() {
         * Update Recycle View Items using Diff Utils
         */
         viewModel.usersList.observe(requireActivity()) {
-            usersListAdapter.submitList(it)
+                it ->
+            //Get Active users
+            val filteredList = it.filter { it.userStatus == true }
+            usersListAdapter.submitList(filteredList)
         }
     }
 
