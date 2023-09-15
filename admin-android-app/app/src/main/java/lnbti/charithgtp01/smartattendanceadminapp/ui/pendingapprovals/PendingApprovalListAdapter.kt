@@ -26,10 +26,7 @@ class PendingApprovalListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: PendingApprovalListViewHolder, position: Int) {
         val pendingApproval = getItem(position)
         holder.binding.repositoryNameView.text =
-            pendingApproval.first_name + " " + pendingApproval.last_name
-        /* Show profile icon using Glide */
-        Glide.with(holder.itemView.rootView).load(pendingApproval.avatar)
-            .into(holder.binding.ownerIconView)
+            pendingApproval.firstName + " " + pendingApproval.lastName
         holder.itemView.setOnClickListener {
             itemClickListener.itemClick(pendingApproval)
         }
@@ -52,7 +49,7 @@ class PendingApprovalListAdapter @Inject constructor(
  */
 val diffUtil = object : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-        return oldItem.first_name == newItem.first_name
+        return oldItem.firstName == newItem.firstName
     }
 
     override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {

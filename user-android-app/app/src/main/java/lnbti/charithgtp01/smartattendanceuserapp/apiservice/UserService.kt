@@ -22,7 +22,7 @@ import retrofit2.http.PUT
 interface UserService {
     @POST(LOGIN_ENDPOINT)
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
-    @PUT(REGISTER_ENDPOINT)
+    @POST(REGISTER_ENDPOINT)
     suspend fun register(@Body registerRequest: RegisterRequest): Response<JSONObject>
     @PUT(CHANGE_PASSWORD_ENDPOINT)
     suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<JSONObject>

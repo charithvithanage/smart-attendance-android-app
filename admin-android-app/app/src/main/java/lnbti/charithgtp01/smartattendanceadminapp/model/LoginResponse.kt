@@ -1,5 +1,10 @@
 package lnbti.charithgtp01.smartattendanceadminapp.model
 
-data class LoginResponse(val token: String? = null, var error: String? = null) {
+import org.json.JSONObject
 
-}
+data class LoginResponse(
+    val success: Boolean = false,
+    var message: String? = null,
+    var data: JSONObject? = null
+)
+

@@ -27,7 +27,7 @@ class SearchCompanyViewModel @Inject constructor(
     private val _searchCompanyResult = MutableLiveData<ApiCallResponse?>()
     val searchCompanyResult: MutableLiveData<ApiCallResponse?> = _searchCompanyResult
 
-    var companyID: String? = "SAE00001"
+    var companyID: String? = null
 
 
     //Dialog Visibility Live Data

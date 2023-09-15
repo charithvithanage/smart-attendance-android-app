@@ -52,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ownerIconView"
             bind:label='@{"Name"}'
-            bind:value='@{vm.pendingApprovalUser.first_name+" "+vm.pendingApprovalUser.last_name}' />
+            bind:value='@{vm.pendingApprovalUser.firstName+" "+vm.pendingApprovalUser.lastName}' />
 
         <include
             android:id="@+id/include2"
@@ -108,7 +108,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include4"
             bind:label='@{"User Role"}'
-            bind:value='@{vm.pendingApprovalUser.user_role}' />
+            bind:value='@{vm.pendingApprovalUser.userRole}' />
 
         <Button
             android:id="@+id/btnApprove"

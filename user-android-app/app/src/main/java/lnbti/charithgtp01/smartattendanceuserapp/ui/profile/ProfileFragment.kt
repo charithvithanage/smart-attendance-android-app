@@ -85,8 +85,6 @@ class ProfileFragment : Fragment() {
             if (apiResult?.data != null) {
                 val user = gson.fromJson(apiResult.data.data.toString(), User::class.java)
                 viewModel.setUser(user)
-                /* Show profile icon using Glide */
-                binding?.ownerIconView?.let { Glide.with(this).load(user.avatar).into(it) }
             }
 
         }

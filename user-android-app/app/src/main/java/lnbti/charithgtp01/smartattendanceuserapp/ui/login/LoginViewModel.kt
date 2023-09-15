@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
@@ -29,8 +30,8 @@ class LoginViewModel @Inject constructor(
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<LoginResponse?>()
-    val loginResult: MutableLiveData<LoginResponse?> = _loginResult
+    private val _loginResult = MutableLiveData<ApiCallResponse?>()
+    val loginResult: MutableLiveData<ApiCallResponse?> = _loginResult
 
 
     //Dialog Visibility Live Data
@@ -46,13 +47,13 @@ class LoginViewModel @Inject constructor(
             _isDialogVisible.value = true
             viewModelScope.launch {
                 // can be launched in a separate asynchronous job
-                val result = userRepository.login(LoginRequest("Charith", "Charith@1991"))
+                val result = userRepository.login(LoginRequest(email, password))
                 _loginResult.value = result
                 _isDialogVisible.value = false
             }
         } else {
             _loginResult.value =
-                LoginResponse(message = context.getString(R.string.no_internet))
+                ApiCallResponse(message = context.getString(R.string.no_internet))
         }
     }
 

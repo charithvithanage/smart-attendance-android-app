@@ -20,16 +20,16 @@ class RegisterViewModel @Inject constructor(
     ViewModel() {
 
     var firstName: String? = null
-    var lastName: String ? = null
-    var nic: String ? = null
-    var employeeID: String ? = null
-    var dob: String = ""
-    private var gender: String? = null
-    var contact: String ? = null
-    var email: String ? = null
-    var userName: String ? = null
-    var newPassword: String ? = null
-    var confirmPassword: String ? = null
+    var lastName: String? = null
+    var nic: String? = null
+    var employeeID: String? = null
+    var dob: String? = null
+    var gender: String? = null
+    var contact: String? =null
+    var email: String? = null
+    var userName: String? = null
+    var newPassword: String? =null
+    var confirmPassword: String? =null
 
     //Form live data
     private val _registerForm = MutableLiveData<RegisterFormState>()
@@ -50,8 +50,17 @@ class RegisterViewModel @Inject constructor(
             val result =
                 userRepository.register(
                     RegisterRequest(
+                        employeeID,
                         firstName,
-                        lastName
+                        lastName,
+                        email,
+                        contact,
+                        nic,
+                        gender,
+                        dob,
+                        userName,
+                        newPassword,
+                        false
                     )
                 )
             registerResult.value = result
