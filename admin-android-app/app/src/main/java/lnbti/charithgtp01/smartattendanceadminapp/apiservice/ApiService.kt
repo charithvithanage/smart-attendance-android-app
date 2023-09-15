@@ -5,6 +5,8 @@ import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.CHANGE_PAS
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.GET_PENDING_APPROVALS_ENDPOINT
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.GET_USERS_ENDPOINT
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGIN_ENDPOINT
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.REJECT_APPROVAL_ENDPOINT
+import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
@@ -13,9 +15,11 @@ import lnbti.charithgtp01.smartattendanceadminapp.model.ServerResponse
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
     @POST(LOGIN_ENDPOINT)
@@ -30,6 +34,9 @@ interface ApiService {
     suspend fun getUsers(): Response<ServerResponse>
 
     @PUT(APPROVAL_ENDPOINT)
-    suspend fun submitApproval(@Body approvalRequest: ApprovalRequest): Response<JSONObject>
+    suspend fun submitApproval(@Body approvalRequest: ApprovalRequest): Response<ApiCallResponse>
+
+    @DELETE("$REJECT_APPROVAL_ENDPOINT{nic}")
+    suspend fun rejectApproval(@Path("nic") nic: String): Response<ApiCallResponse>
 
 }

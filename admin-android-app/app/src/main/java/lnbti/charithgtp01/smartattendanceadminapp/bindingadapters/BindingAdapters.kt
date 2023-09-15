@@ -3,8 +3,13 @@ package lnbti.charithgtp01.smartattendanceadminapp.bindingadapters
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.widget.AdapterView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
+import androidx.databinding.InverseMethod
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import java.util.Locale
@@ -13,6 +18,7 @@ import java.util.Locale
  * Bind Adapter to set values to profile icon Text View
  */
 object BindingAdapters {
+
     @BindingAdapter("circularBg")
     @JvmStatic
     fun setCircularBg(view: TextView, profile: User?) {
@@ -21,6 +27,19 @@ object BindingAdapters {
         //Set text color according to the first letter
         view.setTextColor(Color.parseColor(getTextColor(initialLetter)))
         val cornerRadius = view.context.resources.getDimension(R.dimen.rounded_corner_radius)
+        val color = Color.parseColor(getBgColor(initialLetter))
+        val roundedDrawable = createRoundedDrawable(cornerRadius, color)
+        view.background = roundedDrawable
+    }
+
+    @BindingAdapter("profileCircularBg")
+    @JvmStatic
+    fun setProfileCircularBg(view: TextView, profile: User?) {
+        val initialLetter: String? = profile?.firstName?.take(1)?.uppercase()
+        view.text = initialLetter
+        //Set text color according to the first letter
+        view.setTextColor(Color.parseColor(getTextColor(initialLetter)))
+        val cornerRadius = view.context.resources.getDimension(R.dimen.profile_rounded_corner_radius)
         val color = Color.parseColor(getBgColor(initialLetter))
         val roundedDrawable = createRoundedDrawable(cornerRadius, color)
         view.background = roundedDrawable

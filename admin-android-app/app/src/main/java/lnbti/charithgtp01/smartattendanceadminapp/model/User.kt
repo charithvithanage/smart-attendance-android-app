@@ -13,7 +13,7 @@ data class User(
     val firstName: String,
     val lastName: String,
     val gender: String,
-    val userRole: String?,
+    var userRole: String?,
     val dob: String?,
     val userStatus: Boolean?,
     val deviceID: String?,
