@@ -7,19 +7,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.PROGRESS_DIALOG_FRAGMENT_TAG
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityChangePasswordBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import okhttp3.internal.Util
 
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
@@ -46,7 +50,12 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
     }
 
+    lateinit var loggedInUser: User
     private fun initiateView() {
+        val gson = Gson()
+        val loggedInUserString = Utils.getObjectFromSharedPref(this, LOGGED_IN_USER)
+        loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
+
         initiateActionBar(
             binding.actionBar.mainLayout,
             getString(R.string.change_password),
@@ -63,6 +72,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.btnSubmit.setOnClickListener {
             changePasswordViewModel.validateFields()
         }
+//
+//        changePasswordViewModel.currentPassword="Charith@123"
+//        changePasswordViewModel.newPassword="Charith@1234"
+//        changePasswordViewModel.confirmPassword="Charith@1234"
     }
 
     private fun viewModelObservers() {
@@ -90,7 +103,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
             if (formState.isDataValid) {
                 dialog = showProgressDialog(this, getString(R.string.wait))
-                changePasswordViewModel.changePassword()
+                changePasswordViewModel.changePassword(loggedInUser.id)
             }
         })
 

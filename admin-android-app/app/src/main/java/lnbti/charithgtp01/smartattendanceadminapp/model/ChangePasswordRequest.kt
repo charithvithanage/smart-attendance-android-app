@@ -1,5 +1,5 @@
 package lnbti.charithgtp01.smartattendanceadminapp.model
 
 class ChangePasswordRequest(
-    val name: String?, val job: String?
+    val id: String, val oldPassword: String?, val newPassword: String?
 )

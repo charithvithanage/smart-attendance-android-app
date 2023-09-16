@@ -21,8 +21,8 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<ApiCallResponse?>()
-    val loginResult: MutableLiveData<ApiCallResponse?> = _loginResult
+    private val _loginResult = MutableLiveData<LoginResponse?>()
+    val loginResult: MutableLiveData<LoginResponse?> = _loginResult
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
