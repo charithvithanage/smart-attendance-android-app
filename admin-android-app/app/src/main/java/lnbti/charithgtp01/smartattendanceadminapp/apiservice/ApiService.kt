@@ -28,7 +28,7 @@ interface ApiService {
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
 
     @PUT(CHANGE_PASSWORD_ENDPOINT)
-    suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<JSONObject>
+    suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<ApiCallResponse>
     @GET(GET_PENDING_APPROVALS_ENDPOINT)
     suspend fun getPendingApprovals(): Response<ServerResponse>
 

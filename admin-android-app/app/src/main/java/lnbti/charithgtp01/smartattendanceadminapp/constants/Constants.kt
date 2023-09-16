@@ -17,7 +17,7 @@ object Constants {
     //Get Users endpoint
     const val GET_USERS_ENDPOINT = "admin/users"
     //Change Password endpoint
-    const val CHANGE_PASSWORD_ENDPOINT = "admin/users/2"
+    const val CHANGE_PASSWORD_ENDPOINT = "admin/change-password"
     //Approval endpoint
     const val APPROVAL_ENDPOINT = "user/activateUser"
     //Reject Approval endpoint

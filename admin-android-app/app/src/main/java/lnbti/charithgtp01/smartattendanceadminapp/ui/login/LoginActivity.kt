@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -18,6 +19,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGGED_IN_USER
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
@@ -126,7 +128,6 @@ class LoginActivity : AppCompatActivity() {
             dialog?.dismiss()
 
             if (loginResult.success == true) {
-
                 saveObjectInSharedPref(
                     this,
                     LOGGED_IN_USER,
