@@ -12,6 +12,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailsViewModel @Inject constructor() : ViewModel() {
 
+
+
     private val _pendingApprovalUser = MutableLiveData<User>()
     val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
 
@@ -27,7 +29,8 @@ class UserDetailsViewModel @Inject constructor() : ViewModel() {
      * Set Pending Approval User Object to Live Data
      * @param Selected Pending Approval User Object
      */
-    fun setPendingApprovalUserData(pendingApprovalUser: User) {
-        _pendingApprovalUser.value = pendingApprovalUser
-    }
+    fun setPendingApprovalUserData(user: User) {
+        _pendingApprovalUser.value = user
+       }
+
 }

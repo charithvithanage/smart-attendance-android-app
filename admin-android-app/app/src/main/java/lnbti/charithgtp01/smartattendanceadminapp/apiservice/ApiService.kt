@@ -6,12 +6,14 @@ import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.GET_PENDIN
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.GET_USERS_ENDPOINT
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGIN_ENDPOINT
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.REJECT_APPROVAL_ENDPOINT
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.UPDATE_USER_ENDPOINT
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ServerResponse
+import lnbti.charithgtp01.smartattendanceadminapp.model.UserUpdateRequest
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
@@ -38,5 +40,8 @@ interface ApiService {
 
     @DELETE("$REJECT_APPROVAL_ENDPOINT{nic}")
     suspend fun rejectApproval(@Path("nic") nic: String): Response<ApiCallResponse>
+
+    @PUT(UPDATE_USER_ENDPOINT)
+    suspend fun updateUser(@Body updateRequest: UserUpdateRequest): Response<ApiCallResponse>
 
 }

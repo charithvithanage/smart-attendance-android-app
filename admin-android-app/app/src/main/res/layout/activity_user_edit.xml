@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="utils"
+            type="lnbti.charithgtp01.smartattendanceadminapp.utils.Utils" />
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsViewModel" />
+            type="lnbti.charithgtp01.smartattendanceadminapp.ui.useredit.UserEditViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,131 +28,181 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/actionBar">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ownerIconView"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="@dimen/avatar_margin"
-                    android:contentDescription="@null"
-                    android:src="@mipmap/ic_launcher"
-                    app:layout_constraintDimensionRatio="1:1"
+                <TextView
+                    android:id="@+id/clientLetter"
+                    android:layout_width="@dimen/profile_bg_size"
+                    android:layout_height="@dimen/profile_bg_size"
+                    android:gravity="center"
+                    android:textSize="@dimen/profile_letter_text_size"
+                    app:profileCircularBg="@{vm.pendingApprovalUser}"
+                    android:layout_marginTop="@dimen/page_top_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                    app:strokeColor="@color/color_primary"
-                    app:strokeWidth="@dimen/round_icon_stroke_width" />
+                    app:layout_constraintTop_toTopOf="parent" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/firstNameInputText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:hint="@string/firstname"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clientLetter">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.firstName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lastNameInputText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:hint="@string/lastname"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/firstNameInputText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.lastName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailInputText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:hint="@string/email"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lastNameInputText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.email}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dobInputText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:hint="@string/dob"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/emailInputText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDOB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.dob}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <include
-                    android:id="@+id/include"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
+                    android:id="@+id/selectGenderLayout"
+                    layout="@layout/radio_button_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/content_horizontal_margin"
                     android:layout_marginTop="@dimen/content_margin_top"
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ownerIconView"
-                    bind:label='@{"Name"}'
-                    bind:value='@{vm.pendingApprovalUser.firstName+" "+vm.pendingApprovalUser.lastName}' />
+                    app:layout_constraintTop_toBottomOf="@+id/dobInputText"
+                    bind:isLeftRadioCheck='@{vm.isLeftButtonChecked}'
+                    bind:isRightRadioCheck='@{vm.isRightButtonChecked}'
+                    bind:leftButtonValue='@{"Male"}'
+                    bind:rightButtonValue='@{"Female"}'
+                    bind:layoutLabel='@{"Gender"}'
+                    bind:selectedGender='@{vm.selectedGender}'/>
 
-                <include
-                    android:id="@+id/include2"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
                     android:layout_marginStart="@dimen/content_horizontal_margin"
-                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginTop="@dimen/vertical_margin"
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:background="@drawable/select_layout_bg"
+                    android:entries="@{utils.Companion.spinnerItems}"
+                    android:paddingLeft="@dimen/content_mini_margin"
+                    android:paddingRight="@dimen/content_mini_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include"
-                    bind:label='@{"Email"}'
-                    bind:value='@{vm.pendingApprovalUser.email}' />
+                    app:layout_constraintTop_toBottomOf="@+id/selectGenderLayout" />
 
-                <include
-                    android:id="@+id/include3"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_horizontal_margin"
-                    android:layout_marginTop="@dimen/content_margin_top"
-                    android:layout_marginEnd="@dimen/content_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include2"
-                    bind:label='@{"Gender"}'
-                    bind:value='@{vm.pendingApprovalUser.gender}' />
-
-                <include
-                    android:id="@+id/include4"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_horizontal_margin"
-                    android:layout_marginTop="@dimen/content_margin_top"
-                    android:layout_marginEnd="@dimen/content_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include3"
-                    bind:label='@{"Date of Birth"}'
-                    bind:value='@{vm.pendingApprovalUser.dob}' />
-
-                <include
-                    android:id="@+id/include5"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_horizontal_margin"
-                    android:layout_marginTop="@dimen/content_margin_top"
-                    android:layout_marginEnd="@dimen/content_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include4"
-                    bind:label='@{"User Role"}'
-                    bind:value='@{vm.pendingApprovalUser.userRole}' />
-
-                <include
-                    android:id="@+id/include6"
-                    layout="@layout/input_text_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/content_horizontal_margin"
-                    android:layout_marginTop="@dimen/content_margin_top"
-                    android:layout_marginEnd="@dimen/content_horizontal_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include5"
-                    bind:label='@{"Status"}'
-                    bind:value='@{vm.getUserStatusString()}'/>
-
-
-                <include
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/deviceIDLayout"
-                    layout="@layout/input_text_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:hint="@string/device_id"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNewPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={vm.deviceID}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <include
+                    android:id="@+id/selectUserStatusLayout"
+                    layout="@layout/radio_button_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/content_horizontal_margin"
                     android:layout_marginTop="@dimen/content_margin_top"
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include6"
-                    bind:label='@{"Device ID"}'
-                    bind:value='@{vm.pendingApprovalUser.deviceID}' />
+                    app:layout_constraintTop_toBottomOf="@+id/deviceIDLayout"
+                    bind:isLeftRadioCheck='@{vm.isLeftButtonChecked}'
+                    bind:isRightRadioCheck='@{vm.isRightButtonChecked}'
+                    bind:leftButtonValue="@{@string/activate}"
+                    bind:rightButtonValue="@{@string/deactivate}"
+                    bind:layoutLabel="@{@string/userstatus}"/>
 
                 <Button
                     android:id="@+id/btnUpdate"
@@ -161,7 +213,7 @@
                     android:text="@string/update"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/deviceIDLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/selectUserStatusLayout" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
