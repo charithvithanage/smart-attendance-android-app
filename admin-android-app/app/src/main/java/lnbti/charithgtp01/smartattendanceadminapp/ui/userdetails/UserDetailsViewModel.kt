@@ -12,6 +12,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailsViewModel @Inject constructor() : ViewModel() {
 
+
+
     private val _pendingApprovalUser = MutableLiveData<User>()
     val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
 
@@ -27,16 +29,8 @@ class UserDetailsViewModel @Inject constructor() : ViewModel() {
      * Set Pending Approval User Object to Live Data
      * @param Selected Pending Approval User Object
      */
-    fun setPendingApprovalUserData(pendingApprovalUser: User) {
-        _pendingApprovalUser.value = pendingApprovalUser
-    }
-
-    private val _isUserActive = MutableLiveData<Boolean>()
-
-    // Function to compute the status string based on the boolean condition
-    fun getUserStatusString(): String {
-        val isActive = _isUserActive.value ?: false // Default to false if null
-        return if (isActive) "Active" else "Inactive"
-    }
+    fun setPendingApprovalUserData(user: User) {
+        _pendingApprovalUser.value = user
+       }
 
 }

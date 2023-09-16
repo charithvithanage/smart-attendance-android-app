@@ -9,12 +9,14 @@ import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.Resource
+import lnbti.charithgtp01.smartattendanceadminapp.model.UserUpdateRequest
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.getErrorBodyFromResponse
 import okhttp3.ResponseBody
 import javax.inject.Inject
@@ -145,6 +147,34 @@ class UserRepository @Inject constructor(
                     response.code()
                 )
             )
+        }
+    }
+
+    /**
+     * Update User Request Coroutines
+     */
+    suspend fun updateUser(
+        updateRequest: UserUpdateRequest
+    ): ApiCallResponse? {
+        return withContext(Dispatchers.IO) {
+            return@withContext updateUserServer(updateRequest)
+        }
+    }
+
+    /**
+     * Send Request to the server and get the response
+     */
+    private suspend fun updateUserServer(updateRequest: UserUpdateRequest): ApiCallResponse? {
+        val gson = Gson()
+        Log.d(TAG, gson.toJson(updateRequest))
+
+        val response = userService.updateUser(updateRequest)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ApiCallResponse(false, errorObject.message)
         }
     }
 }
