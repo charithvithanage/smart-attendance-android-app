@@ -112,13 +112,12 @@ class ChangePasswordActivity : AppCompatActivity() {
                         }
 
                     })
-            } else if (apiResult?.data != null) {
+            } else {
                 showErrorDialog(
                     this,
-                    apiResult.data!!
+                    apiResult?.message
                 )
             }
-
         }
     }
 }

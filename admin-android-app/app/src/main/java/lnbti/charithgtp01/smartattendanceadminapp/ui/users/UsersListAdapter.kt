@@ -2,6 +2,7 @@ package lnbti.charithgtp01.smartattendanceadminapp.ui.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,11 +25,10 @@ class UsersListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
-        val pendingApproval = getItem(position)
-        holder.binding.repositoryNameView.text =
-            pendingApproval.firstName + " " + pendingApproval.lastName
-        holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(pendingApproval)
+        val user = getItem(position)
+        holder.bind(user)
+        holder.binding.root.setOnClickListener {
+            itemClickListener.itemClick(user)
         }
     }
 
@@ -41,6 +41,10 @@ class UsersListAdapter @Inject constructor(
 
     inner class UsersListViewHolder(val binding: LayoutUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: User) {
+            binding.setVariable(BR.item, user)
+            binding.executePendingBindings()
+        }
     }
 }
 

@@ -19,6 +19,13 @@ import javax.inject.Inject
 class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRepository: ApprovalRepository) :
     ViewModel() {
 
+    var deviceID: String? = null
+    val spinnerItems: List<String> = listOf("Office User", "Employee")
+
+    // Define LiveData for the selected item
+    private val _selectedItem = MutableLiveData<String?>()
+    val selectedItem: MutableLiveData<String?> = _selectedItem
+
     private val _pendingApprovalUser = MutableLiveData<User>()
     val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
 
@@ -39,19 +46,39 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
      * @param Selected Pending Approval User Object
      */
     fun setPendingApprovalUserData(pendingApprovalUser: User) {
+        deviceID = pendingApprovalUser.deviceID
         _pendingApprovalUser.value = pendingApprovalUser
     }
 
-    fun submitApproval(isApprove: Boolean) {
+    // Function to set the selected item
+    fun updateSelectedItem(item: String?) {
+        _selectedItem.value = item
+    }
+
+    fun submitApproval(nic: String, deviceID: String?, userRole: String?, isApprove: Boolean) {
 
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
             val result =
                 approvalRepository.submitApproval(
                     ApprovalRequest(
-                        "test",
-                        "test"
+                        nic = nic,
+                        deviceID = deviceID,
+                        userRole = userRole,
+                        userStatus = isApprove
                     )
+                )
+            _pendingApprovalResult.value = result
+        }
+    }
+
+    fun rejectApproval(nic: String) {
+
+        viewModelScope.launch {
+            // can be launched in a separate asynchronous job
+            val result =
+                approvalRepository.rejectApproval(
+                    nic
                 )
             _pendingApprovalResult.value = result
         }

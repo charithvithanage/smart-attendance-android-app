@@ -1,7 +1,7 @@
 package lnbti.charithgtp01.smartattendanceadminapp.constants
 
 object Constants {
-    const val TAG="Smart Attendance App"
+    const val TAG="Smart Attendance Admin App"
 
     //Application Base Url
     const val BASE_URL = "http://192.168.1.8:3000/"
@@ -19,7 +19,9 @@ object Constants {
     //Change Password endpoint
     const val CHANGE_PASSWORD_ENDPOINT = "admin/users/2"
     //Approval endpoint
-    const val APPROVAL_ENDPOINT = "admin/users/2"
+    const val APPROVAL_ENDPOINT = "user/activateUser"
+    //Reject Approval endpoint
+    const val REJECT_APPROVAL_ENDPOINT = "user/deleteUser/"
 
     /**
      * Preference Keys

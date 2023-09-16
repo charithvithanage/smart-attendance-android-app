@@ -51,7 +51,8 @@ class PendingApprovalsFragment : Fragment() {
         viewModel.errorMessage.observe(requireActivity()) {
             if (it != null) {
                 DialogUtils.showErrorDialog(
-                    requireContext(), it)
+                    requireContext(), it
+                )
             }
 
         }
@@ -71,8 +72,10 @@ class PendingApprovalsFragment : Fragment() {
         * Update Recycle View Items using Diff Utils
         */
         viewModel.pendingApprovalList.observe(requireActivity())
-        {
-            pendingApprovalListAdapter.submitList(it)
+        { it ->
+            //Get Inactive users
+            val filteredList = it.filter { it.userStatus == false }
+            pendingApprovalListAdapter.submitList(filteredList)
         }
     }
 

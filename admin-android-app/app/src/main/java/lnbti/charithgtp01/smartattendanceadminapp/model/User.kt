@@ -13,11 +13,13 @@ data class User(
     val firstName: String,
     val lastName: String,
     val gender: String,
-    val userRole: String?,
+    var userRole: String?,
     val dob: String?,
-    val userStatus: String?,
+    val userStatus: Boolean?,
     val deviceID: String?,
     val employeeID:String,
     var lat: Double,
     var long: Double
-) : Parcelable
+) : Parcelable{
+
+}
