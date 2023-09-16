@@ -94,7 +94,7 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
     private fun filterApprovalList(searchString: String): List<User>? {
         // to get the result as list
         return allUsersList?.filter { s ->
-            (s.first_name + " " + s.last_name).contains(
+            (s.firstName + " " + s.lastName).contains(
                 searchString
             )
         }

@@ -44,10 +44,6 @@ class HomeListAdapter @Inject constructor(
 
         holder.binding.repositoryNameView.text =
             pendingApproval.firstName + " " + pendingApproval.lastName
-        /* Show profile icon using Glide */
-        Glide.with(holder.itemView.rootView).load(pendingApproval.avatar)
-            .into(holder.binding.ownerIconView)
-
     }
 
     /**

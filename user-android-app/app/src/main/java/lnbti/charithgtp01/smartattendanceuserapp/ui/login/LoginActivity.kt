@@ -139,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
             */
             if (loginState.isDataValid) {
                 dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
-                val userRole: String = if (username.text.toString() == "Charles")
+                val userRole: String = if (username.text.toString() == "Charith")
                     getString(R.string.employee)
                 else
                     getString(R.string.business_user)
@@ -162,8 +162,7 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.success) {
-
+            if (loginResult.success == true) {
                 saveObjectInSharedPref(
                     this,
                     LOGGED_IN_USER,

@@ -24,19 +24,29 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/companyIDInputText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/actionBar"
+            app:srcCompat="@mipmap/search_company" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/companyIDInputText"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/content_horizontal_margin"
             android:hint="@string/empoyee_id"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/actionBar">
+            app:layout_constraintTop_toBottomOf="@id/imageView2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCompanyID"

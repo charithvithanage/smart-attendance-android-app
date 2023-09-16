@@ -25,7 +25,7 @@ class ApprovalRepository @Inject constructor(
 
 
     /**
-     * Change Password Coroutines
+     * Approve User Request Coroutines
      */
     suspend fun submitApproval(
         approvalRequest: ApprovalRequest
@@ -38,21 +38,44 @@ class ApprovalRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun submitApprovalServer(approvalRequest: ApprovalRequest): ApiCallResponse {
+    private suspend fun submitApprovalServer(approvalRequest: ApprovalRequest): ApiCallResponse? {
         val gson = Gson()
         Log.d(TAG, gson.toJson(approvalRequest))
 
-        val apiCallResponse: ApiCallResponse
         val response = apiService.submitApproval(approvalRequest)
 
-        apiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
+    }
 
-        return apiCallResponse
+
+    /**
+     * Approve User Request Coroutines
+     */
+    suspend fun rejectApproval(
+        nic: String
+    ): ApiCallResponse? {
+        return withContext(Dispatchers.IO) {
+            return@withContext rejectApprovalServer(nic)
+        }
+    }
+
+    /**
+     * Send Request to the server and get the response
+     */
+    private suspend fun rejectApprovalServer(  nic: String): ApiCallResponse? {
+         val response = apiService.rejectApproval(nic)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ApiCallResponse(false, errorObject.message)
+        }
     }
 
 

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <data>
+        <variable
+            name="item"
+            type="lnbti.charithgtp01.smartattendanceadminapp.model.User" />
+    </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,29 +22,30 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/content_margin_top"
+            android:paddingBottom="@dimen/content_margin_top">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ownerIconView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/recycle_view_margin"
+            <TextView
+                android:id="@+id/clientLetter"
+                android:layout_width="@dimen/contact_bg_size"
+                android:layout_height="@dimen/contact_bg_size"
+                android:gravity="center"
+                android:textSize="@dimen/contact_letter_text_size"
+                app:circularBg="@{item}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                app:strokeColor="@color/color_primary"
-                app:strokeWidth="@dimen/round_icon_stroke_width" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/repositoryNameView"
+                android:id="@+id/nameView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
-                android:textColor="@color/black"
-                android:textSize="12sp"
+                android:text="@{item.firstName+' '+item.lastName}"
+                style="@style/list_item_content_text_style"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/forwardArrowIcon"
                 app:layout_constraintStart_toEndOf="@+id/guideline"
