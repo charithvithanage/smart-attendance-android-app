@@ -30,13 +30,4 @@ class UserDetailsViewModel @Inject constructor() : ViewModel() {
     fun setPendingApprovalUserData(pendingApprovalUser: User) {
         _pendingApprovalUser.value = pendingApprovalUser
     }
-
-    private val _isUserActive = MutableLiveData<Boolean>()
-
-    // Function to compute the status string based on the boolean condition
-    fun getUserStatusString(): String {
-        val isActive = _isUserActive.value ?: false // Default to false if null
-        return if (isActive) "Active" else "Inactive"
-    }
-
 }

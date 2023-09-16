@@ -21,7 +21,11 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.goToHomeActivity
 
+/**
+ * Pending Approval Details View/Approve/Reject page
+ */
 @AndroidEntryPoint
 class PendingApprovalDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPendingApprovalDetailsBinding
@@ -35,7 +39,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         initView()
         setData()
         viewModelObservers()
-
     }
 
     private fun initView() {
@@ -112,10 +115,7 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         val objectString = intent.getStringExtra(OBJECT_STRING)
         pendingApprovalUser = gson.fromJson(objectString, User::class.java)
         viewModel.setPendingApprovalUserData(pendingApprovalUser)
-
     }
-
-
     private fun viewModelObservers() {
         viewModel.selectedItem.observe(this) { selectedItem ->
             // Handle the selected item here
@@ -134,7 +134,7 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                     apiResult.message,
                     object : CustomAlertDialogListener {
                         override fun onDialogButtonClicked() {
-                            Utils.goToHomeActivity(this@PendingApprovalDetailsActivity)
+                            goToHomeActivity(this@PendingApprovalDetailsActivity)
                         }
                     })
             } else {
