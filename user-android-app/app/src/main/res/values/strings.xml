@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Attendance User App</string>
+    <string name="app_name">SA User</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -71,7 +71,7 @@
     <string name="scan_qr">SCAN QR</string>
     <string name="sign_successfully">Attendance Marked Successfully</string>
     <string name="employee">Employee</string>
-    <string name="business_user">Business User</string>
+    <string name="business_user">Office User</string>
     <string name="menu_profile">PROFILE</string>
     <string name="user_detais">User Details</string>
     <string name="action_logout">Logout</string>

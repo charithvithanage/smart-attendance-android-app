@@ -4,7 +4,7 @@ object Constants {
     const val TAG="Smart Attendance Admin App"
 
     //Application Base Url
-    const val BASE_URL = "http://192.168.1.8:3000/"
+    const val BASE_URL = "http://192.168.1.22:3000/"
 
     /**
      * Endpoints

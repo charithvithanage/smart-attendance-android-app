@@ -1,9 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.repositories
 
-import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.UserService
@@ -18,7 +16,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.Resource
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getErrorBodyFromResponse
-import okhttp3.ResponseBody
 import javax.inject.Inject
 
 /**
@@ -33,7 +30,7 @@ class UserRepository @Inject constructor(
      */
     suspend fun login(
         loginRequest: LoginRequest
-    ): ApiCallResponse? {
+    ): LoginResponse? {
         return withContext(Dispatchers.IO) {
             return@withContext loginToTheServer(loginRequest)
         }
@@ -42,20 +39,19 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun loginToTheServer(loginRequest: LoginRequest): ApiCallResponse? {
-               val gson = Gson()
+    private suspend fun loginToTheServer(loginRequest: LoginRequest): LoginResponse? {
+        val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
         val response = userService.loginUser(loginRequest)
+        Log.d(TAG, "Response Object "+response.body().toString())
 
-        val apiCallResponse: ApiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.message)
+            LoginResponse(false, errorObject.message)
         }
-
-        return apiCallResponse
     }
 
     /**

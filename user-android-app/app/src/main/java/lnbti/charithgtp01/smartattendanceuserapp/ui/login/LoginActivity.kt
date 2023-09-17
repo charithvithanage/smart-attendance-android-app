@@ -162,7 +162,7 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.success == true) {
+            if (loginResult.success) {
                 saveObjectInSharedPref(
                     this,
                     LOGGED_IN_USER,
