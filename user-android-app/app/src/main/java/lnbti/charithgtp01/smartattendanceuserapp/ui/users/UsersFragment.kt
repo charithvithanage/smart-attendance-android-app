@@ -73,10 +73,13 @@ class UsersFragment : Fragment() {
         }
 
         /* Observer to catch list data
-        * Update Recycle View Items using Diff Utils
-        */
+       * Update Recycle View Items using Diff Utils
+       */
         viewModel.usersList.observe(requireActivity()) {
-            usersListAdapter.submitList(it)
+                it ->
+            //Get Active users
+            val filteredList = it.filter { it.userStatus }
+            usersListAdapter.submitList(filteredList)
         }
     }
 
