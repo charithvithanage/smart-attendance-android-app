@@ -54,4 +54,13 @@
     <dimen name="content_mini_horizontal_margin">4dp</dimen>
     <dimen name="content_mini_margin">8dp</dimen>
 
+    /* Profile Image Dimensions */
+    <dimen name="profile_bg_size">150dp</dimen>
+    <dimen name="profile_letter_text_size">100sp</dimen>
+    <dimen name="profile_rounded_corner_radius">150dp</dimen>
+
+    /* Contact List Image Dimensions */
+    <dimen name="contact_letter_text_size">26sp</dimen>
+    <dimen name="contact_bg_size">50sp</dimen>
+    <dimen name="rounded_corner_radius">50dp</dimen>
 </resources>
