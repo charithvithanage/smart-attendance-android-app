@@ -9,12 +9,15 @@ import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.Resource
+import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.model.UserUpdateRequest
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.getErrorBodyFromResponse
 import okhttp3.ResponseBody
 import javax.inject.Inject
@@ -34,7 +37,7 @@ class UserRepository @Inject constructor(
      */
     suspend fun login(
         loginRequest: LoginRequest
-    ): ApiCallResponse? {
+    ): LoginResponse? {
         return withContext(Dispatchers.IO) {
             return@withContext loginToTheServer(loginRequest)
         }
@@ -43,21 +46,21 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun loginToTheServer(loginRequest: LoginRequest): ApiCallResponse? {
+    private suspend fun loginToTheServer(loginRequest: LoginRequest): LoginResponse? {
         val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
         val response = userService.loginUser(loginRequest)
+        Log.d(TAG, "Response Object "+response.body().toString())
 
-        val apiCallResponse: ApiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.message)
+            LoginResponse(false, errorObject.message)
         }
-
-        return apiCallResponse
     }
+
     /**
      * Change Password Coroutines
      */
@@ -72,21 +75,14 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse {
-        val gson = Gson()
-        Log.d(TAG, gson.toJson(changePasswordRequest))
-
-        val apiCallResponse: ApiCallResponse
+    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse? {
         val response = userService.changePassword(changePasswordRequest)
-
-        apiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             ApiCallResponse(false, errorObject.message)
         }
-
-        return apiCallResponse
     }
 
     /**
@@ -145,6 +141,31 @@ class UserRepository @Inject constructor(
                     response.code()
                 )
             )
+        }
+    }
+
+    /**
+     * Update User Request Coroutines
+     */
+    suspend fun updateUser(
+        updateRequest: UserUpdateRequest
+    ): ApiCallResponse? {
+        return withContext(Dispatchers.IO) {
+            return@withContext updateUserServer(updateRequest)
+        }
+    }
+
+    /**
+     * Send Request to the server and get the response
+     */
+    private suspend fun updateUserServer(updateRequest: UserUpdateRequest): ApiCallResponse? {
+        val response = userService.updateUser(updateRequest)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ApiCallResponse(false, errorObject.message)
         }
     }
 }

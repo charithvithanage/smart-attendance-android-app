@@ -8,18 +8,22 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class User(
+    val id: String,
     val nic: String,
     val email: String,
     val firstName: String,
     val lastName: String,
     val gender: String,
-    var userRole: String?,
-    val dob: String?,
-    val userStatus: Boolean?,
-    val deviceID: String?,
+    var userRole: String,
+    val dob: String,
+    val userStatus: Boolean,
+    val deviceID: String,
     val employeeID:String,
     var lat: Double,
     var long: Double
 ) : Parcelable{
-
+    fun getUserStatusString(): String {
+        val isActive = userStatus ?: false // Default to false if null
+        return if (isActive) "Active" else "Inactive"
+    }
 }

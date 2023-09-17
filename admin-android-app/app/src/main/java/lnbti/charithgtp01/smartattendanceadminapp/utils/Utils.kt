@@ -20,6 +20,9 @@ import okhttp3.ResponseBody
  */
 class Utils {
     companion object {
+
+        val spinnerItems:  MutableList<String> = mutableListOf("Office User", "Employee")
+
         /**
          * Deserialize error response.body
          * @param errorBody Error Response

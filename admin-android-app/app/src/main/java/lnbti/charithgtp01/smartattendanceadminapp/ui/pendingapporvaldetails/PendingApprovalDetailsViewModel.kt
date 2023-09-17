@@ -20,7 +20,6 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
     ViewModel() {
 
     var deviceID: String? = null
-    val spinnerItems: List<String> = listOf("Office User", "Employee")
 
     // Define LiveData for the selected item
     private val _selectedItem = MutableLiveData<String?>()

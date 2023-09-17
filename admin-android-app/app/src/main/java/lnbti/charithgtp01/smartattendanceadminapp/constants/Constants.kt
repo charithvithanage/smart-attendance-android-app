@@ -4,7 +4,7 @@ object Constants {
     const val TAG="Smart Attendance Admin App"
 
     //Application Base Url
-    const val BASE_URL = "http://192.168.1.8:3000/"
+    const val BASE_URL = "http://192.168.1.22:3000/"
 
     /**
      * Endpoints
@@ -17,11 +17,13 @@ object Constants {
     //Get Users endpoint
     const val GET_USERS_ENDPOINT = "admin/users"
     //Change Password endpoint
-    const val CHANGE_PASSWORD_ENDPOINT = "admin/users/2"
+    const val CHANGE_PASSWORD_ENDPOINT = "admin/change-password"
     //Approval endpoint
     const val APPROVAL_ENDPOINT = "user/activateUser"
     //Reject Approval endpoint
     const val REJECT_APPROVAL_ENDPOINT = "user/deleteUser/"
+    //Update user endpoint
+    const val UPDATE_USER_ENDPOINT = "user/updateUser"
 
     /**
      * Preference Keys

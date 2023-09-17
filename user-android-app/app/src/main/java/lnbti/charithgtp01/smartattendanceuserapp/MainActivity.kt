@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
@@ -31,7 +33,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isLocatio
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    var locationPermissionGranted = false;
+    var locationPermissionGranted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +43,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         //If the logged in user's user role is Employee
-        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
         val navController = findNavController(R.id.navHostFragmentUser)
         binding.bottomNavigationUser.setupWithNavController(navController)
 
+        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.LOGGED_IN_USER)
         if (userRole == getString(R.string.employee)) {
             //Bottom menu without users menu
             // Hide a menu item by ID
@@ -88,7 +90,10 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.confirm_logout_message),
                     object : ConfirmDialogButtonClickListener {
                         override fun onPositiveButtonClick() {
-                            Utils.navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                            Utils.navigateWithoutHistory(
+                                this@MainActivity,
+                                LoginActivity::class.java
+                            )
                         }
 
                         override fun onNegativeButtonClick() {

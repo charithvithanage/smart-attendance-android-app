@@ -5,9 +5,6 @@ import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.CompanyService
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
-import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorResponse
-import lnbti.charithgtp01.smartattendanceuserapp.model.JSONResource
-import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getErrorBodyFromResponse
 import javax.inject.Inject
 

@@ -6,6 +6,10 @@
 
     <data>
         <variable
+            name="utils"
+            type="lnbti.charithgtp01.smartattendanceadminapp.utils.Utils" />
+
+        <variable
             name="vm"
             type="lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsViewModel" />
     </data>
@@ -118,7 +122,7 @@
                     android:layout_marginTop="@dimen/vertical_margin"
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
                     android:background="@drawable/select_layout_bg"
-                    android:entries="@{vm.spinnerItems}"
+                    android:entries="@{utils.Companion.spinnerItems}"
                     android:paddingLeft="@dimen/content_mini_margin"
                     android:paddingRight="@dimen/content_mini_margin"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -30,8 +30,8 @@ class LoginViewModel @Inject constructor(
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<ApiCallResponse?>()
-    val loginResult: MutableLiveData<ApiCallResponse?> = _loginResult
+    private val _loginResult = MutableLiveData<LoginResponse?>()
+    val loginResult: MutableLiveData<LoginResponse?> = _loginResult
 
 
     //Dialog Visibility Live Data
@@ -39,21 +39,10 @@ class LoginViewModel @Inject constructor(
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
 
     fun login(email: String, password: String) {
-        val isNetworkAvailable = Utils.isOnline(context)
-
-        //If Network available call to backend API
-        if (isNetworkAvailable) {
-            //Show Progress Dialog when click on the search view submit button
-            _isDialogVisible.value = true
-            viewModelScope.launch {
-                // can be launched in a separate asynchronous job
-                val result = userRepository.login(LoginRequest(email, password))
-                _loginResult.value = result
-                _isDialogVisible.value = false
-            }
-        } else {
-            _loginResult.value =
-                ApiCallResponse(message = context.getString(R.string.no_internet))
+        viewModelScope.launch {
+            // can be launched in a separate asynchronous job
+            val result = userRepository.login(LoginRequest(email, password))
+            _loginResult.value = result
         }
     }
 
