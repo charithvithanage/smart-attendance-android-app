@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
@@ -16,10 +17,12 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
@@ -31,6 +34,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validSt
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -163,11 +167,17 @@ class LoginActivity : AppCompatActivity() {
             dialog?.dismiss()
 
             if (loginResult.success) {
-                saveObjectInSharedPref(
-                    this,
-                    LOGGED_IN_USER,
-                    loginResult.data.toString()
-                ) { navigateToAnotherActivity(this, MainActivity::class.java) }
+                val gson= Gson()
+                val  loggedInUser=gson.fromJson(loginResult.data.toString(), User::class.java)
+                val hashMap = HashMap<String, String>()
+
+                // Add values to the HashMap
+                hashMap[LOGGED_IN_USER] =loginResult.data.toString()
+                hashMap[USER_ROLE] = loggedInUser.userRole.toString()
+
+                saveMultipleObjectsInSharedPref(this@LoginActivity,hashMap,
+                    SuccessListener { navigateToAnotherActivity(this@LoginActivity, MainActivity::class.java) })
+
             } else {
                 DialogUtils.showErrorDialog(this, loginResult.message)
             }

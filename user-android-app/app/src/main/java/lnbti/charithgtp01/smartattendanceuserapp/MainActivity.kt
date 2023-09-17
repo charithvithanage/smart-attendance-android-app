@@ -34,8 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     var locationPermissionGranted = false
-    lateinit var loggedInUser:User
-    val gson= Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +43,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         //If the logged in user's user role is Employee
-        val loggedInUserString = getObjectFromSharedPref(this@MainActivity, Constants.LOGGED_IN_USER)
-        loggedInUser=gson.fromJson(loggedInUserString,User::class.java)
         val navController = findNavController(R.id.navHostFragmentUser)
         binding.bottomNavigationUser.setupWithNavController(navController)
 
-        if (loggedInUser.userRole == getString(R.string.employee)) {
+        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.LOGGED_IN_USER)
+        if (userRole == getString(R.string.employee)) {
             //Bottom menu without users menu
             // Hide a menu item by ID
             binding.bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
@@ -93,7 +90,10 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.confirm_logout_message),
                     object : ConfirmDialogButtonClickListener {
                         override fun onPositiveButtonClick() {
-                            Utils.navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                            Utils.navigateWithoutHistory(
+                                this@MainActivity,
+                                LoginActivity::class.java
+                            )
                         }
 
                         override fun onNegativeButtonClick() {
