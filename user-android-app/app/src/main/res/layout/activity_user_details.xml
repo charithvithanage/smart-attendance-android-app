@@ -122,6 +122,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include5"
             bind:label='@{"Status"}'
-            bind:value='@{vm.pendingApprovalUser.userStatus}' />
+            bind:value='@{vm.pendingApprovalUser.getUserStatusString()}' />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
