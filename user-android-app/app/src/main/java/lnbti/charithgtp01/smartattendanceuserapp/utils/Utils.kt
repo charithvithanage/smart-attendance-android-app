@@ -5,15 +5,27 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
+import okhttp3.ResponseBody
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 /**
  * A Utils class containing Common Methods
@@ -21,7 +33,124 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 class Utils {
     companion object {
 
+        /**
+         * Deserialize error response.body
+         * @param errorBody Error Response
+         */
+        fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
+            Log.d(TAG, errorBody.toString())
+            val gson = Gson()
+            val type = object : TypeToken<ErrorBody>() {}.type
+            return gson.fromJson(errorBody?.charStream(), type)
+        }
+
+
+        /**
+         * Format date to string
+         */
+        fun formatTime(date: Date): String {
+            val format = SimpleDateFormat(
+                "HH:mm",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
+
+        fun formatDate(date: Date): String {
+            val format = SimpleDateFormat(
+                "dd.MM.yyyy",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
+        private const val areaRadius = 100.0 // in meters
+
+        /**
+         * Get Current Location Method
+         */
+        @SuppressLint("MissingPermission", "SetTextI18n")
+        fun getCurrentLocation(
+            activity: Activity,
+            mFusedLocationClient: FusedLocationProviderClient,
+            listener: GetCurrentLocationListener
+        ) {
+            if (checkPermissions(activity)) {
+                if (isLocationEnabled(activity)) {
+                    mFusedLocationClient.lastLocation.addOnCompleteListener(activity) { task ->
+                        val location: Location? = task.result
+                        if (location != null) {
+                            listener.onLocationRead(location)
+                        }
+                    }
+                } else {
+                    listener.openSettings()
+                }
+            } else {
+                listener.requestPermission()
+            }
+        }
+
+        /**
+         * Check the given latitude and longitude is inside any given area
+         */
+        fun isLocationCorrect(
+            scannedLatitude: Double,
+            scannedLongitude: Double,
+            areaLatitude: Double,
+            areaLongitude: Double
+        ): Boolean {
+            // Check if the current location is inside the desired area
+            val distance = calculateDistance(
+                scannedLatitude,
+                scannedLongitude,
+                areaLatitude,
+                areaLongitude
+            )
+            return if (distance <= areaRadius) {
+                // Inside the area
+                // Perform your desired actions here
+                Log.d(TAG, "Inside Area")
+                true
+            } else {
+                // Outside the area
+                // Perform your desired actions here
+                Log.d(TAG, "Outside Area")
+                false
+            }
+        }
+
+        // Helper method to calculate distance between two coordinates
+        private fun calculateDistance(
+            currentLatitude: Double,
+            currentLongitude: Double,
+            areaLatitude: Double,
+            areaLongitude: Double
+        ): Float {
+            val results = FloatArray(1)
+            Location.distanceBetween(
+                areaLatitude,
+                areaLongitude,
+                currentLatitude,
+                currentLongitude,
+                results
+            )
+            return results[0]
+        }
+
+
+        /**
+         * Last Day of the month for given date
+         */
+        fun getLastDayOfMonth(date: Date): Date {
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            return calendar.time
+        }
+
 
         /**
          * Request Location Permission
@@ -96,9 +225,9 @@ class Utils {
         /**
          * Check Internet Status
          */
-        fun isOnline(context: Context): Boolean {
+        fun isOnline(context: Context?): Boolean {
             val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             if (connectivityManager != null) {
                 val capabilities =
                     connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)

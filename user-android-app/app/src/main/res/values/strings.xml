@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Attendance User App</string>
+    <string name="app_name">SA User</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -40,7 +40,7 @@
     <string name="menu_about">About</string>
     <string name="sign_up">Sign Up</string>
     <string name="cancel">CANCEL</string>
-    <string name="empoyee_id">Employee ID</string>
+    <string name="empoyee_id">Company ID</string>
     <string name="employee_dialog_title">Enter Employee ID</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -71,7 +71,16 @@
     <string name="scan_qr">SCAN QR</string>
     <string name="sign_successfully">Attendance Marked Successfully</string>
     <string name="employee">Employee</string>
-    <string name="business_user">Business User</string>
+    <string name="business_user">Office User</string>
     <string name="menu_profile">PROFILE</string>
-
+    <string name="user_detais">User Details</string>
+    <string name="action_logout">Logout</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="attendance_qr">Attendance QR</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="confirm_logout_message">Do you want to sign out?</string>
+    <string name="search">Search</string>
+    <string name="search_company">Search Company</string>
 </resources>

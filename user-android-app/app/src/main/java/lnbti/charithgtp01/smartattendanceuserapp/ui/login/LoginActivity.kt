@@ -1,35 +1,40 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
-import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -38,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private lateinit var username: TextInputEditText
     private lateinit var usernameInputText: TextInputLayout
     private lateinit var password: TextInputEditText
@@ -53,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -68,15 +72,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
-
+        changeUiSize(this, binding.appLogo, 1, 1, 30)
         username = binding.username
         usernameInputText = binding.usernameInputText
         password = binding.etPassword
         passwordInputText = binding.passwordInputText
         login = binding.login
-
-        username.setText("charith2")
-        password.setText("cityslicka")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
@@ -116,21 +117,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            valueSubmitDialog(
-                this, getString(R.string.employee_dialog_title),
-                getString(R.string.empoyee_id),
-                object : ValueSubmitDialogListener {
-                    override fun onPositiveButtonClicked(value: String) {
-                        navigateToAnotherActivity(
-                            this@LoginActivity,
-                            RegisterActivity::class.java
-                        )
-                    }
-
-                    override fun onNegativeButtonClicked() {
-
-                    }
-                })
+            navigateToAnotherActivity(
+                this@LoginActivity,
+                SearchCompanyActivity::class.java
+            )
         }
     }
 
@@ -152,9 +142,8 @@ class LoginActivity : AppCompatActivity() {
                "password": "cityslicka"
             */
             if (loginState.isDataValid) {
-                dialog?.show()
-
-                val userRole: String = if (username.text.toString() == "charith")
+                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
+                val userRole: String = if (username.text.toString() == "Charith")
                     getString(R.string.employee)
                 else
                     getString(R.string.business_user)
@@ -163,7 +152,12 @@ class LoginActivity : AppCompatActivity() {
                     this@LoginActivity,
                     Constants.USER_ROLE,
                     userRole,
-                    SuccessListener { loginViewModel.login(username.text.toString(), password.text.toString()) })
+                    SuccessListener {
+                        loginViewModel.login(
+                            username.text.toString(),
+                            password.text.toString()
+                        )
+                    })
             }
         })
 
@@ -172,29 +166,23 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.token != null) {
-                saveObjectInSharedPref(
-                    this,
-                    ACCESS_TOKEN,
-                    loginResult.token
-                ) { navigateToAnotherActivity(this, MainActivity::class.java) }
-            } else if (loginResult.error != null) {
-                showErrorDialog(this, loginResult.error, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+            if (loginResult.success) {
+                val gson= Gson()
+                val  loggedInUser=gson.fromJson(loginResult.data.toString(), User::class.java)
+                val hashMap = HashMap<String, String>()
 
-                    }
-                })
+                // Add values to the HashMap
+                hashMap[LOGGED_IN_USER] =loginResult.data.toString()
+                hashMap[USER_ROLE] = loggedInUser.userRole.toString()
 
+                saveMultipleObjectsInSharedPref(this@LoginActivity,hashMap,
+                    SuccessListener { navigateToAnotherActivity(this@LoginActivity, MainActivity::class.java) })
+
+            } else {
+                DialogUtils.showErrorDialog(this, loginResult.message)
             }
 
         })
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 
     /**

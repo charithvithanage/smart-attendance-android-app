@@ -4,9 +4,11 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
@@ -14,11 +16,14 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.ACCESS_TOKEN
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.LOGGED_IN_USER
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
-import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
@@ -30,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private lateinit var username: TextInputEditText
     private lateinit var usernameInputText: TextInputLayout
     private lateinit var password: TextInputEditText
@@ -42,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -64,15 +68,15 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        username.setText("eve.holt@reqres.in")
-        password.setText("cityslicka")
+        username.setText("Charith")
+        password.setText("Charith@123")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    username?.text.toString(),
-                    password?.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
         })
@@ -80,15 +84,15 @@ class LoginActivity : AppCompatActivity() {
         inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
             override fun validateUI() {
                 loginViewModel.loginDataChanged(
-                    username?.text.toString(),
-                    password?.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
         })
 
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
-                username?.text.toString(),
+                username.text.toString(),
                 password?.text.toString()
             )
         }
@@ -112,8 +116,8 @@ class LoginActivity : AppCompatActivity() {
                "password": "cityslicka"
             */
             if (loginState.isDataValid) {
-                dialog?.show()
-                loginViewModel.login(username?.text.toString(), password?.text.toString())
+                dialog = showProgressDialog(this, getString(R.string.wait))
+                loginViewModel.login(username.text.toString(), password.text.toString())
             }
         })
 
@@ -123,43 +127,16 @@ class LoginActivity : AppCompatActivity() {
 
             dialog?.dismiss()
 
-            if (loginResult.token != null) {
+            if (loginResult.success == true) {
                 saveObjectInSharedPref(
                     this,
-                    ACCESS_TOKEN,
-                    loginResult.token
+                    LOGGED_IN_USER,
+                    loginResult.data.toString()
                 ) { navigateToAnotherActivity(this, MainActivity::class.java) }
-            } else if (loginResult.error != null) {
-                showErrorDialog(this, loginResult.error, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
-
+            } else {
+                DialogUtils.showErrorDialog(this, loginResult.message)
             }
 
         })
     }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
-    }
-}
-
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
 }

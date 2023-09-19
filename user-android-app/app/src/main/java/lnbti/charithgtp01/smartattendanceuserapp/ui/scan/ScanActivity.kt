@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import com.google.zxing.Result
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.MEDIA_TYPE_EMPLOYEE_SIGNATURE
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ImageInspectionListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.sign.EmployeeAuthorizationActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
@@ -26,13 +29,14 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeA
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import me.dm7.barcodescanner.zxing.ZXingScannerView
-import java.io.File
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     private var binding: ActivityScanBinding? = null
     var contentFrame: ViewGroup? = null
     private var mScannerView: ZXingScannerView? = null
+    private lateinit var loggedInUser: User
+    val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,8 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
 
     private fun initView() {
+        val loggedInUserString = intent.getStringExtra(OBJECT_STRING)
+        loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
         contentFrame = findViewById(R.id.content_frame)
 
         initiateActionBar(
@@ -94,12 +100,10 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openScanner()
                 } else {
-                    DialogUtils.showErrorDialog(this@ScanActivity,
-                        getString(R.string.no_permission_to_camera),
-                        object : DialogButtonClickListener {
-                            override fun onButtonClick() {
-                            }
-                        })
+                    DialogUtils.showErrorDialog(
+                        this@ScanActivity,
+                        getString(R.string.no_permission_to_camera)
+                    )
                 }
                 return
             }
@@ -110,10 +114,49 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun handleResult(rawResult: Result) {
         stopCamera()
         val barCodeString = rawResult.text
-        navigateToAnotherActivity(
-            this@ScanActivity,
-            EmployeeAuthorizationActivity::class.java
-        )
+
+        val userRole = Utils.getObjectFromSharedPref(this, USER_ROLE)
+
+        if (userRole == getString(R.string.employee)) {
+
+            var scannedUser = gson.fromJson(barCodeString, User::class.java)
+
+            val isValidLocation = Utils.isLocationCorrect(
+                scannedUser.lat,
+                scannedUser.long,
+                loggedInUser.lat,
+                loggedInUser.long
+            )
+
+            if (isValidLocation) {
+                DialogUtils.showAlertDialog(this@ScanActivity,
+                    Constants.SUCCESS, getString(R.string.sign_successfully),
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            onBackPressed()
+                        }
+                    })
+            } else {
+                DialogUtils.showErrorDialog(this@ScanActivity, "Invalid Location")
+            }
+
+            DialogUtils.showAlertDialog(
+                this, Constants.SUCCESS,
+                getString(R.string.sign_successfully),
+                object : CustomAlertDialogListener {
+                    override fun onDialogButtonClicked() {
+                        onBackPressed()
+
+                    }
+
+                })
+        } else {
+            navigateToAnotherActivity(
+                this@ScanActivity,
+                EmployeeAuthorizationActivity::class.java
+            )
+        }
+
     }
 
     override fun onResume() {

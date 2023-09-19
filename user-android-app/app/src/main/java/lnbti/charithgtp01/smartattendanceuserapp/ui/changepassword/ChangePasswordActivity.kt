@@ -4,16 +4,18 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePasswordBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
-import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePasswordBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
@@ -26,13 +28,12 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
     private lateinit var binding: ActivityChangePasswordBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -89,7 +90,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 validState(binding.confirmPasswordInputText, R.drawable.ic_check)
 
             if (formState.isDataValid) {
-                dialog?.show()
+                dialog = showProgressDialog(this, getString(R.string.wait))
                 changePasswordViewModel.changePassword()
             }
         })
@@ -103,30 +104,21 @@ class ChangePasswordActivity : AppCompatActivity() {
 
             if (apiResult?.success == true) {
                 showAlertDialog(
-                    this,
+                    this, Constants.SUCCESS,
                     getString(R.string.password_changed_successfully),
-                    object : DialogButtonClickListener {
-                        override fun onButtonClick() {
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
                             onBackPressed()
+
                         }
 
                     })
             } else if (apiResult?.data != null) {
-                showErrorDialog(this, apiResult?.data, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                showErrorDialog(this, apiResult?.data.toString())
 
             }
 
         }
     }
 
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
-    }
 }

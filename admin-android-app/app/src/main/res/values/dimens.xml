@@ -37,5 +37,29 @@
     <dimen name="content_card_view_elevation">10dp</dimen>
     <dimen name="list_card_view_corner_radius">12dp</dimen>
     <dimen name="avatar_margin">16dp</dimen>
+    <dimen name="buttonRadius">30dp</dimen>
+    <dimen name="content_mini_margin">8dp</dimen>
+    <dimen name="button_horizontal_margin">16dp</dimen>
 
+    /* Contact List Image Dimensions */
+    <dimen name="contact_letter_text_size">26sp</dimen>
+    <dimen name="contact_bg_size">50sp</dimen>
+    <dimen name="rounded_corner_radius">50dp</dimen>
+
+    /* Profile Image Dimensions */
+    <dimen name="profile_bg_size">150dp</dimen>
+    <dimen name="profile_letter_text_size">100sp</dimen>
+    <dimen name="profile_rounded_corner_radius">150dp</dimen>
+
+    /* Edit Text Background View Dimensions */
+    <dimen name="shadow_bg_left_padding">5dp</dimen>
+    <dimen name="shadow_bg_top_padding">2dp</dimen>
+    <dimen name="text_hint_height">18dp</dimen>
+    <dimen name="input_layout_custom_label_padding">4dp</dimen>
+    <dimen name="edittext_shadow_border_radius">4dp</dimen>
+    <dimen name="list_view_button">120dp</dimen>
+    <dimen name="dialog_corner_radius">16dp</dimen>
+    <dimen name="logout_button_size">40dp</dimen>
+    <dimen name="status_bg_corner_radius">8dp</dimen>
+    <dimen name="content_mini_horizontal_margin">4dp</dimen>
 </resources>

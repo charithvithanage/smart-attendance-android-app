@@ -1,0 +1,74 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="content"
+            type="String" />
+
+        <variable
+            name="label"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select_layout_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_dummy_hint"
+                style="@style/textview_hint_title_style"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/text_hint_height"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                android:paddingLeft="@dimen/input_layout_custom_label_padding"
+                android:paddingRight="@dimen/input_layout_custom_label_padding"
+                android:text="@{label}"
+                app:layout_constraintEnd_toStartOf="@+id/endIcon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvContent"
+                style="@style/input_textview_content_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingLeft="@dimen/input_layout_custom_label_padding"
+                android:paddingRight="@dimen/input_layout_custom_label_padding"
+                android:text="@{content}"
+                app:layout_constraintEnd_toStartOf="@+id/endIcon"
+                app:layout_constraintStart_toStartOf="@+id/text_dummy_hint"
+                app:layout_constraintTop_toTopOf="@+id/text_dummy_hint" />
+
+            <ImageView
+                android:id="@+id/endIcon"
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/content_horizontal_margin"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/down_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

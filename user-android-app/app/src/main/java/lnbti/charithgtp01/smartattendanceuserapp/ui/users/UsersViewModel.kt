@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.users
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,10 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class UsersViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class UsersViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> get() = _usersList
@@ -57,7 +61,7 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
      */
     private fun getUsersList() {
 
-        val isNetworkAvailable = isOnline(userRepository.context.applicationContext)
+        val isNetworkAvailable = isOnline(context)
 
         //If Network available call to backend API
         if (isNetworkAvailable) {
@@ -79,7 +83,7 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = context.getString(R.string.no_internet)
         }
 
     }
@@ -91,7 +95,7 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
     private fun filterApprovalList(searchString: String): List<User>? {
         // to get the result as list
         return allUsersList?.filter { s ->
-            (s.first_name + " " + s.last_name).contains(
+            (s.firstName + " " + s.lastName).contains(
                 searchString
             )
         }

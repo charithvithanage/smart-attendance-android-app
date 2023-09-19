@@ -3,17 +3,17 @@ package lnbti.charithgtp01.smartattendanceuserapp.ui.register
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityRegisterBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
@@ -21,7 +21,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiat
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.normalState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setErrorBgToSelectLayout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setNormalBgToSelectLayout
-import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -31,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var binding: ActivityRegisterBinding
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
     private val cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class RegisterActivity : AppCompatActivity() {
 
         initiateDataBinding()
         initiateView()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -172,7 +170,7 @@ class RegisterActivity : AppCompatActivity() {
                 normalState(binding.confirmPasswordInputText)
 
             if (formState.isDataValid) {
-                dialog?.show()
+                dialog = showProgressDialog(this, getString(R.string.wait))
                 registerViewModel.register()
             }
         })
@@ -186,31 +184,21 @@ class RegisterActivity : AppCompatActivity() {
 
             if (apiResult?.success == true) {
                 showAlertDialog(
-                    this,
+                    this, Constants.SUCCESS,
                     getString(R.string.user_registered_successfully),
-                    object : DialogButtonClickListener {
-                        override fun onButtonClick() {
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
                             onBackPressed()
+
                         }
 
                     })
             } else if (apiResult?.data != null) {
-                showErrorDialog(this, apiResult.data, object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+                showErrorDialog(this, apiResult.data.toString())
 
             }
 
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = showProgressDialog(this, getString(R.string.wait))
     }
 }
 

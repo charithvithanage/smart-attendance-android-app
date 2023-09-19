@@ -2,6 +2,7 @@ package lnbti.charithgtp01.smartattendanceadminapp.ui.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,14 +25,10 @@ class UsersListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
-        val pendingApproval = getItem(position)
-        holder.binding.repositoryNameView.text =
-            pendingApproval.first_name + " " + pendingApproval.last_name
-        /* Show profile icon using Glide */
-        Glide.with(holder.itemView.rootView).load(pendingApproval.avatar)
-            .into(holder.binding.ownerIconView)
-        holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(pendingApproval)
+        val user = getItem(position)
+        holder.bind(user)
+        holder.binding.root.setOnClickListener {
+            itemClickListener.itemClick(user)
         }
     }
 
@@ -44,6 +41,10 @@ class UsersListAdapter @Inject constructor(
 
     inner class UsersListViewHolder(val binding: LayoutUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: User) {
+            binding.setVariable(BR.item, user)
+            binding.executePendingBindings()
+        }
     }
 }
 
@@ -52,7 +53,7 @@ class UsersListAdapter @Inject constructor(
  */
 val diffUtil = object : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-        return oldItem.first_name == newItem.first_name
+        return oldItem.firstName == newItem.firstName
     }
 
     override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {

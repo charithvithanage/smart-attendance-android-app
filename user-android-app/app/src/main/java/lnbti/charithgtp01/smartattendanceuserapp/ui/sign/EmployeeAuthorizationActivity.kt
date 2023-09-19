@@ -14,14 +14,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.customviews.SignatureView
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityEmployeeAuthorizationBinding
-import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.FileUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import java.io.File
 import java.io.FileOutputStream
 
@@ -94,9 +90,9 @@ class EmployeeAuthorizationActivity : AppCompatActivity() {
             // Close the output stream.
             fileOutputStream.close()
 
-            DialogUtils.showAlertDialog(this,getString(R.string.sign_successfully),object :DialogButtonClickListener{
-                override fun onButtonClick() {
-                    goToHomeActivity(this@EmployeeAuthorizationActivity)
+            DialogUtils.showAlertDialog(this,Constants.SUCCESS,getString(R.string.sign_successfully),object :CustomAlertDialogListener{
+                          override fun onDialogButtonClicked() {
+                    TODO("Not yet implemented")
                 }
             })
         } catch (e: Exception) {

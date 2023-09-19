@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -12,8 +13,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentUsersBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
@@ -25,7 +28,7 @@ class UsersFragment : Fragment() {
     private var binding: FragmentUsersBinding? = null
     private lateinit var viewModel: UsersViewModel
     private lateinit var usersListAdapter: UsersListAdapter
-    private var dialog: Dialog? = null
+    private var dialog: DialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +48,6 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initiateAdapter()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -55,20 +57,13 @@ class UsersFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
-                requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
-
-                    }
-                })
+            DialogUtils.showErrorDialog( requireContext(), it)
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -79,15 +74,11 @@ class UsersFragment : Fragment() {
         * Update Recycle View Items using Diff Utils
         */
         viewModel.usersList.observe(requireActivity()) {
-            usersListAdapter.submitList(it)
+                it ->
+            //Get Active users
+            val filteredList = it.filter { it.userStatus }
+            usersListAdapter.submitList(filteredList)
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
     }
 
     /**

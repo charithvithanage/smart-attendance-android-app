@@ -17,9 +17,10 @@
             android:icon="@mipmap/settings_icon"
             android:title="@string/menu_settings" />
 
-        <item
-            android:id="@+id/nav_reports"
-            android:icon="@mipmap/report_icon"
-            android:title="@string/menu_reports" />
+<!--        <item-->
+<!--            android:id="@+id/nav_reports"-->
+<!--            android:icon="@mipmap/report_icon"-->
+<!--            android:title="@string/menu_reports" />-->
+
     </group>
 </menu>

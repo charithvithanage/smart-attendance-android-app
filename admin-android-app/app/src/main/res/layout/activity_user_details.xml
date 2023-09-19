@@ -8,16 +8,16 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.users.UserDetailsViewModel" />
+            type="lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.pendingapprovals.PendingApprovalDetailsActivity">
+        tools:context=".ui.pendingapporvaldetails.PendingApprovalDetailsActivity">
 
         <include
-            android:id="@+id/include7"
+            android:id="@+id/actionBar"
             layout="@layout/action_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,103 +25,133 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ownerIconView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="@dimen/avatar_margin"
-            android:contentDescription="@null"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintDimensionRatio="1:1"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include7"
-            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-            app:strokeColor="@color/color_primary"
-            app:strokeWidth="@dimen/round_icon_stroke_width" />
+            app:layout_constraintTop_toBottomOf="@+id/actionBar">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ownerIconView"
-            bind:label='@{"Name"}'
-            bind:value='@{vm.pendingApprovalUser.first_name+" "+vm.pendingApprovalUser.last_name}' />
 
-        <include
-            android:id="@+id/include2"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include"
-            bind:label='@{"Email"}'
-            bind:value='@{vm.pendingApprovalUser.email}' />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/include3"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include2"
-            bind:label='@{"Gender"}'
-            bind:value='@{vm.pendingApprovalUser.gender}' />
+                <TextView
+                    android:id="@+id/clientLetter"
+                    android:layout_width="@dimen/profile_bg_size"
+                    android:layout_height="@dimen/profile_bg_size"
+                    android:gravity="center"
+                    android:textSize="@dimen/profile_letter_text_size"
+                    app:profileCircularBg="@{vm.pendingApprovalUser}"
+                    android:layout_marginTop="@dimen/page_top_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/include4"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include3"
-            bind:label='@{"Date of Birth"}'
-            bind:value='@{vm.pendingApprovalUser.dob}' />
+                <include
+                    android:id="@+id/include"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clientLetter"
+                    bind:label='@{"Name"}'
+                    bind:value='@{vm.pendingApprovalUser.firstName+" "+vm.pendingApprovalUser.lastName}' />
 
-        <include
-            android:id="@+id/include5"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include4"
-            bind:label='@{"User Role"}'
-            bind:value='@{vm.pendingApprovalUser.user_role}' />
+                <include
+                    android:id="@+id/include2"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include"
+                    bind:label='@{"Email"}'
+                    bind:value='@{vm.pendingApprovalUser.email}' />
 
-        <include
-            android:id="@+id/include6"
-            layout="@layout/text_view_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_horizontal_margin"
-            android:layout_marginTop="@dimen/content_margin_top"
-            android:layout_marginEnd="@dimen/content_horizontal_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include5"
-            bind:label='@{"Status"}'
-            bind:value='@{vm.pendingApprovalUser.status}' />
+                <include
+                    android:id="@+id/include3"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include2"
+                    bind:label='@{"Gender"}'
+                    bind:value='@{vm.pendingApprovalUser.gender}' />
+
+                <include
+                    android:id="@+id/include4"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include3"
+                    bind:label='@{"Date of Birth"}'
+                    bind:value='@{vm.pendingApprovalUser.dob}' />
+
+                <include
+                    android:id="@+id/include5"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include4"
+                    bind:label='@{"User Role"}'
+                    bind:value='@{vm.pendingApprovalUser.userRole}' />
+
+                <include
+                    android:id="@+id/include6"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include5"
+                    bind:label='@{"Status"}'
+                    bind:value='@{vm.pendingApprovalUser.getUserStatusString()}' />
+
+                <include
+                    android:id="@+id/include7"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include6"
+                    bind:label='@{"Device ID"}'
+                    bind:value='@{vm.pendingApprovalUser.deviceID}' />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

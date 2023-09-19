@@ -1,7 +1,7 @@
-package lnbti.charithgtp01.smartattendanceadminapp.ui.users
+package lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -9,9 +9,12 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityPendingApprovalDetailsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityUserDetailsBinding
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.useredit.UserEditActivity
+import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBarWithCustomButton
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 @AndroidEntryPoint
 class UserDetailsActivity : AppCompatActivity() {
@@ -20,7 +23,32 @@ class UserDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
+        initView()
         setData()
+    }
+
+    private fun initView() {
+        initiateActionBarWithCustomButton(
+            binding?.actionBar?.mainLayout!!,
+            getString(R.string.user_details), R.mipmap.edit_white,
+            object : ActionBarListener {
+                override fun backPressed() {
+                    onBackPressed()
+                }
+
+                override fun homePressed() {
+                    val objectString = intent.getStringExtra(OBJECT_STRING)
+                    val prefMap = HashMap<String, String>()
+                    if (objectString != null) {
+                        prefMap[OBJECT_STRING] = objectString
+                        navigateToAnotherActivityWithExtras(
+                            this@UserDetailsActivity,
+                            UserEditActivity::class.java, prefMap
+                        )
+                    }
+
+                }
+            })
     }
 
     private fun setData() {
@@ -28,8 +56,6 @@ class UserDetailsActivity : AppCompatActivity() {
         val objectString = intent.getStringExtra(OBJECT_STRING)
         val pendingApprovalUser = gson.fromJson(objectString, User::class.java)
         viewModel.setPendingApprovalUserData(pendingApprovalUser)
-        /* Show profile icon using Glide */
-        binding?.ownerIconView?.let { Glide.with(this).load(pendingApprovalUser.avatar).into(it) }
 
     }
 

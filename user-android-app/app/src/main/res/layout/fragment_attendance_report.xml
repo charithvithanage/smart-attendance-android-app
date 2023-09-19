@@ -1,3 +1,4 @@
+<<<<<<< .mine
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -25,3 +26,136 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="lnbti.charithgtp01.smartattendanceuserapp.ui.report.AttendanceReportViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/content_horizontal_margin"
+            android:layout_marginTop="@dimen/content_margin_top"
+            android:layout_marginEnd="@dimen/content_horizontal_margin"
+            android:background="@drawable/select_layout_bg"
+            android:paddingLeft="@dimen/content_mini_margin"
+            android:paddingRight="@dimen/content_mini_margin"
+            android:entries="@{vm.spinnerOptions}"
+            android:selectedItemPosition="@={vm.selectedSpinnerPosition}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/dateSelectSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_margin_top"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner">
+
+            <include
+                android:id="@+id/fromLayout"
+                layout="@layout/date_select_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:layout_marginEnd="@dimen/content_mini_horizontal_margin"
+                android:layout_weight="1"
+                bind:content="@{vm.startDateString}"
+                bind:label='@{"Start Date"}' />
+
+            <include
+                android:id="@+id/toLayout"
+                layout="@layout/date_select_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_mini_horizontal_margin"
+                android:layout_marginEnd="@dimen/content_horizontal_margin"
+                android:layout_weight="1"
+                bind:content="@{vm.endDateString}"
+                bind:label='@{"End Date"}' />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/content_margin_top"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateSelectSection" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+>>>>>>> .theirs

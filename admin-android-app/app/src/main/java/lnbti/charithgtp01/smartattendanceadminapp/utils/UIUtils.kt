@@ -1,7 +1,6 @@
 package lnbti.charithgtp01.smartattendanceadminapp.utils
 
 import android.R
-import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -9,11 +8,12 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActionBarLayoutBinding
+import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActionBarWithoutHomeLayoutBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarWithoutHomeListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
 import java.util.Locale
 
@@ -23,6 +23,56 @@ import java.util.Locale
 class UIUtils {
 
     companion object {
+
+        /**
+         * Action Bar Initiation
+         * @param parent Parent layout of the action bar layout
+         * @param activityTitle Action Bar Title String
+         * @param actionBarListener Action Bar image button listener
+         */
+        fun initiateActionBarWithCustomButton(
+            parent: ViewGroup,
+            activityTitle: String,
+            rightImageICon: Int,
+            actionBarListener: ActionBarListener
+        ) {
+            // Inflate the layout using DataBindingUtil
+            val binding =
+                ActionBarLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, true)
+            binding.tvTitle.text = activityTitle.uppercase(Locale.getDefault())
+            binding.btnHome.setImageResource(rightImageICon)
+            binding.backBtn.setOnClickListener {
+                actionBarListener.backPressed()
+            }
+            binding.btnHome?.setOnClickListener {
+                actionBarListener.homePressed()
+            }
+        }
+
+
+        /**
+         * Action Bar Initiation without Home Button
+         * @param parent Parent layout of the action bar layout
+         * @param activityTitle Action Bar Title String
+         * @param actionBarListener Action Bar image button listener
+         */
+        fun initiateActionBarWithoutHomeButton(
+            parent: ViewGroup,
+            activityTitle: String,
+            actionBarListener: ActionBarWithoutHomeListener
+        ) {
+            // Inflate the layout using DataBindingUtil
+            val binding =
+                ActionBarWithoutHomeLayoutBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    true
+                )
+            binding.tvTitle.text = activityTitle.uppercase(Locale.getDefault())
+            binding.backBtn.setOnClickListener {
+                actionBarListener.backPressed()
+            }
+        }
 
         /**
          * Action Bar Initiation
@@ -86,11 +136,13 @@ class UIUtils {
          * @param width Screen divide in to (display/width)
          * Ex: width=4 and widthRatio=3 means Actual element width= (Screen Width/4)*3
          */
-        fun changeUiSize(context: Context, view: View, widthRatio: Int, width: Int) {
-            val display = context.resources.displayMetrics
-            val params = view.layoutParams
-            params.width = display.widthPixels * widthRatio / width
-            view.layoutParams = params
+        fun changeUiSize(context: Context?, view: View, widthRatio: Int, width: Int) {
+            if (context != null) {
+                val display = context.resources.displayMetrics
+                val params = view.layoutParams
+                params.width = display.widthPixels * widthRatio / width
+                view.layoutParams = params
+            }
         }
 
         fun normalState(inputLayout: TextInputLayout?) {

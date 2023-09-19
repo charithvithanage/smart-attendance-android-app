@@ -1,3 +1,9 @@
 package lnbti.charithgtp01.smartattendanceuserapp.model
 
-data class ApiCallResponse(val success: Boolean? = null, var data: String? = null)
+import com.google.gson.JsonObject
+
+data class ApiCallResponse(
+    val success: Boolean? = null,
+    var message: String? = null,
+    var data: JsonObject? = null
+)

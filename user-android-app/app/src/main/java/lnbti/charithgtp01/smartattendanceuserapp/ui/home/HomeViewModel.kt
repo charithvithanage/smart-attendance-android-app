@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,14 +11,20 @@ import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTime
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isOnline
+import java.util.Date
 import javax.inject.Inject
 
 /**
  * Users Fragment View Model
  */
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val context: Context
+) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> get() = _usersList
@@ -32,11 +39,16 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
 
     lateinit var allUsersList: List<User>
 
+    private var today: Date = Date()
+
+    private val _dateString = MutableLiveData<String>()
+    val dateString: LiveData<String> get() = _dateString
     /**
      * This will call when the View Model Created
      */
     init {
         getUsersList()
+        _dateString.value = formatDate(today)
     }
 
     /**
@@ -57,7 +69,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
      */
     private fun getUsersList() {
 
-        val isNetworkAvailable = isOnline(userRepository.context.applicationContext)
+        val isNetworkAvailable = isOnline(context)
 
         //If Network available call to backend API
         if (isNetworkAvailable) {
@@ -79,7 +91,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = context?.getString(R.string.no_internet)
         }
 
     }
@@ -91,7 +103,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
     private fun filterApprovalList(searchString: String): List<User>? {
         // to get the result as list
         return allUsersList?.filter { s ->
-            (s.first_name + " " + s.last_name).contains(
+            (s.firstName + " " + s.lastName).contains(
                 searchString
             )
         }

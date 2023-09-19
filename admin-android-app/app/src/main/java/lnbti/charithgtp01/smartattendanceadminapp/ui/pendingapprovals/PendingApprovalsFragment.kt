@@ -5,14 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentPendingApprovalsBinding
-import lnbti.charithgtp01.smartattendanceadminapp.interfaces.DialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails.PendingApprovalDetailsActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
@@ -20,8 +21,7 @@ class PendingApprovalsFragment : Fragment() {
     private var binding: FragmentPendingApprovalsBinding? = null
     private lateinit var viewModel: PendingApprovalsViewModel
     private lateinit var pendingApprovalListAdapter: PendingApprovalListAdapter
-    private var dialog: Dialog? = null
-
+    private var dialog: DialogFragment? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +40,6 @@ class PendingApprovalsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initiateAdapter()
-        initiateProgressDialog()
         viewModelObservers()
     }
 
@@ -50,20 +49,19 @@ class PendingApprovalsFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
-                requireContext(),
-                it,
-                object : DialogButtonClickListener {
-                    override fun onButtonClick() {
+            if (it != null) {
+                DialogUtils.showErrorDialog(
+                    requireContext(), it
+                )
+            }
 
-                    }
-                })
         }
 
-        viewModel.isDialogVisible.observe(requireActivity()) {
+        viewModel.isDialogVisible.observe(requireActivity())
+        {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog?.show()
+                dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -73,16 +71,12 @@ class PendingApprovalsFragment : Fragment() {
         /* Observer to catch list data
         * Update Recycle View Items using Diff Utils
         */
-        viewModel.pendingApprovalList.observe(requireActivity()) {
-            pendingApprovalListAdapter.submitList(it)
+        viewModel.pendingApprovalList.observe(requireActivity())
+        { it ->
+            //Get Inactive users
+            val filteredList = it.filter { it.userStatus == false }
+            pendingApprovalListAdapter.submitList(filteredList)
         }
-    }
-
-    /**
-     * Progress Dialog Initiation
-     */
-    private fun initiateProgressDialog() {
-        dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
     }
 
     /**

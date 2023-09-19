@@ -8,25 +8,21 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class User(
-    val id: Int,
+    val nic: String,
     val email: String,
-    val first_name: String,
-    val last_name: String,
-    private val nullable_gender: String?,
-    private val nullable_user_role: String?,
-    private val nullable_dob: String?,
-    private val nullable_status: String?,
-    val avatar: String
-) : Parcelable {
-    val gender: String
-        get() = nullable_gender ?: "Male"
-
-    val user_role: String
-        get() = nullable_gender ?: "Technician"
-
-    val dob: String
-        get() = nullable_gender ?: "1991/05/03"
-
-    val status: String
-        get() = nullable_status ?: "Active"
+    val firstName: String,
+    val lastName: String,
+    val gender: String,
+    val userRole: String,
+    val dob: String,
+    val userStatus: Boolean,
+    val employeeID:String,
+    val userType:String,
+    var lat: Double,
+    var long: Double
+) : Parcelable{
+    fun getUserStatusString(): String {
+        val isActive = userStatus ?: false // Default to false if null
+        return if (isActive) "Active" else "Inactive"
+    }
 }

@@ -6,15 +6,19 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import lnbti.charithgtp01.smartattendanceadminapp.apiservice.UserService
+import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.Resource
+import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.model.UserUpdateRequest
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.getErrorBodyFromResponse
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -23,7 +27,7 @@ import javax.inject.Inject
  */
 class UserRepository @Inject constructor(
     context: Context,
-    private val userService: UserService
+    private val userService: ApiService
 ) {
 
     val context: Context = context
@@ -43,19 +47,18 @@ class UserRepository @Inject constructor(
      * Send Request to the server and get the response
      */
     private suspend fun loginToTheServer(loginRequest: LoginRequest): LoginResponse? {
-        var loginResponse: LoginResponse? = LoginResponse()
-
         val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
         val response = userService.loginUser(loginRequest)
-        if (response.isSuccessful) {
-            loginResponse = response.body()
+        Log.d(TAG, "Response Object "+response.body().toString())
+
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            loginResponse?.error = errorObject.error
+            LoginResponse(false, errorObject.message)
         }
-        return loginResponse
     }
 
     /**
@@ -72,21 +75,14 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse {
-        val gson = Gson()
-        Log.d(TAG, gson.toJson(changePasswordRequest))
-
-        val apiCallResponse: ApiCallResponse
+    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse? {
         val response = userService.changePassword(changePasswordRequest)
-
-        apiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.error)
+            ApiCallResponse(false, errorObject.message)
         }
-
-        return apiCallResponse
     }
 
     /**
@@ -112,7 +108,7 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             Resource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )
@@ -141,23 +137,35 @@ class UserRepository @Inject constructor(
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             Resource.Error(
                 ErrorResponse(
-                    errorObject.error,
+                    errorObject.message,
                     response.code()
                 )
             )
         }
     }
 
-
     /**
-     * Deserialize error response.body
-     * @param errorBody Error Response
+     * Update User Request Coroutines
      */
-    private fun getErrorBodyFromResponse(errorBody: ResponseBody?): ErrorBody {
-        Log.d(TAG, errorBody.toString())
-        val gson = Gson()
-        val type = object : TypeToken<ErrorBody>() {}.type
-        return gson.fromJson(errorBody?.charStream(), type)
+    suspend fun updateUser(
+        updateRequest: UserUpdateRequest
+    ): ApiCallResponse? {
+        return withContext(Dispatchers.IO) {
+            return@withContext updateUserServer(updateRequest)
+        }
     }
 
+    /**
+     * Send Request to the server and get the response
+     */
+    private suspend fun updateUserServer(updateRequest: UserUpdateRequest): ApiCallResponse? {
+        val response = userService.updateUser(updateRequest)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ApiCallResponse(false, errorObject.message)
+        }
+    }
 }
