@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
-import android.app.Dialog
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,7 +29,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import java.util.concurrent.Executor
 
@@ -73,8 +72,12 @@ class HomeFragment : Fragment() {
             binding?.userLayout?.visibility = View.VISIBLE
             binding?.businessUserLayout?.visibility = View.GONE
 
-            binding?.btnScanQR?.setOnClickListener {
-                onClickScan()
+            binding?.btnMarkIn?.setOnClickListener {
+                onClickScan("in")
+            }
+
+            binding?.btnMarkOut?.setOnClickListener {
+                onClickScan("out")
             }
         } else {
             binding?.userLayout?.visibility = View.GONE
@@ -202,7 +205,7 @@ class HomeFragment : Fragment() {
         binding = null
     }
 
-    private fun onClickScan() {
+    private fun onClickScan(attendanceType: String) {
 
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = BiometricPrompt(this, executor,
@@ -227,12 +230,13 @@ class HomeFragment : Fragment() {
                         override fun onSuccess(location: Location) {
                             val gson = Gson()
                             val prefMap = HashMap<String, String>()
-//                            val item = User(
-//                                1, "charithvin@gmail.com",
-//                                "George", "Bluth", null,
-//                                null, null, null, "", location.latitude, location.longitude
-//                            )
-//                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                            val loggedInUserString =
+                                getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
+                            val loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
+                            loggedInUser.lat = location.latitude
+                            loggedInUser.long = location.longitude
+                            prefMap[Constants.OBJECT_STRING] = gson.toJson(loggedInUser)
+                            prefMap[Constants.ATTENDANCE_TYPE] = attendanceType
                             navigateToAnotherActivityWithExtras(
                                 requireActivity(),
                                 ScanActivity::class.java,

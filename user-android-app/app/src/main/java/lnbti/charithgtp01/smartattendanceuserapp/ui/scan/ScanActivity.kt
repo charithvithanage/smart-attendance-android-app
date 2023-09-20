@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.zxing.Result
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ATTENDANCE_TYPE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
@@ -20,15 +23,24 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkInRequest
+import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkOutRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.changepassword.ChangePasswordViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.sign.EmployeeAuthorizationActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Calendar.*
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
@@ -37,15 +49,20 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     private var mScannerView: ZXingScannerView? = null
     private lateinit var loggedInUser: User
     val gson = Gson()
+    private lateinit var scanViewModel: ScanViewModel
+    private var dialog: DialogFragment? = null
+    private var attendanceType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
         initView()
+        viewModelObservers()
     }
 
 
     private fun initView() {
+        attendanceType = intent.getStringExtra(ATTENDANCE_TYPE)
         val loggedInUserString = intent.getStringExtra(OBJECT_STRING)
         loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
         contentFrame = findViewById(R.id.content_frame)
@@ -86,6 +103,9 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     private fun initiateDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_scan)
+        //Data binding
+        scanViewModel = ViewModelProvider(this)[ScanViewModel::class.java]
+        binding?.vm = scanViewModel
         binding?.lifecycleOwner = this
     }
 
@@ -129,27 +149,43 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             )
 
             if (isValidLocation) {
-                DialogUtils.showAlertDialog(this@ScanActivity,
-                    Constants.SUCCESS, getString(R.string.sign_successfully),
-                    object : CustomAlertDialogListener {
-                        override fun onDialogButtonClicked() {
-                            onBackPressed()
-                        }
-                    })
+                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
+                val calendar = getInstance()
+
+// Format the date as "dd.MM.yyyy"
+                val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(calendar.time)
+
+// Format the time as "hh:mm:ss a"
+                val timeFormat = SimpleDateFormat("hh:mm:ss a", Locale.getDefault())
+                val formattedTime = timeFormat.format(calendar.time)
+
+                if (attendanceType == "in") {
+                    val attendanceMarkInRequest = AttendanceMarkInRequest(
+                        userID = loggedInUser.nic,
+                        date = formattedDate,
+                        inTime = formattedTime
+                    )
+
+                    scanViewModel.markIn(
+                        attendanceMarkInRequest
+                    )
+                } else {
+                    val attendanceMarkOutRequest = AttendanceMarkOutRequest(
+                        userID = loggedInUser.nic,
+                        date = formattedDate,
+                        outTime = formattedTime
+                    )
+
+                    scanViewModel.markOut(
+                        attendanceMarkOutRequest
+                    )
+                }
+
+
             } else {
                 DialogUtils.showErrorDialog(this@ScanActivity, "Invalid Location")
             }
-
-            DialogUtils.showAlertDialog(
-                this, Constants.SUCCESS,
-                getString(R.string.sign_successfully),
-                object : CustomAlertDialogListener {
-                    override fun onDialogButtonClicked() {
-                        onBackPressed()
-
-                    }
-
-                })
         } else {
             navigateToAnotherActivity(
                 this@ScanActivity,
@@ -184,5 +220,38 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
     }
 
+    private fun viewModelObservers() {
+        //Waiting for Api response
+        scanViewModel.attendanceMarkResult.observe(this@ScanActivity) {
+            val apiResult = it
+
+            dialog?.dismiss()
+
+            if (apiResult?.success == true) {
+                showAlertDialog(
+                    this, Constants.SUCCESS,
+                    apiResult.message,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            goToHomeActivity(this@ScanActivity)
+
+                        }
+
+                    })
+            } else {
+                showAlertDialog(
+                    this, Constants.FAIL,
+                    apiResult?.message,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            startCamera()
+                        }
+
+                    })
+
+            }
+
+        }
+    }
 
 }

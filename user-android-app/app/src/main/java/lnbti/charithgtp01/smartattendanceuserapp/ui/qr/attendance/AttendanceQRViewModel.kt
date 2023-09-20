@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Users Fragment View Model
  */
 @HiltViewModel
-class AttendanceQRViewModel @Inject constructor(private val context: Context) : ViewModel() {
+class AttendanceQRViewModel @Inject constructor() : ViewModel() {
 
     private val _generatedQRCodeData = MutableLiveData<Bitmap>()
     val generatedQRCodeData: LiveData<Bitmap>

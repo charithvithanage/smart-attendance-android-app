@@ -79,25 +79,6 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        //UI initiation
-        inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
-        inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
                 username.text.toString(),

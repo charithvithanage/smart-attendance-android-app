@@ -19,11 +19,11 @@ import javax.inject.Inject
 class ChangePasswordViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
     //variable that will listen to user's input
-    var currentPassword: String? = null
+    var currentPassword: String? = "Nithin@1234"
 
-    var newPassword: String? = null
+    var newPassword: String? = "Charith@1991"
 
-    var confirmPassword: String? = null
+    var confirmPassword: String? = "Charith@1991"
 
     //Form live data
     private val _changePasswordForm = MutableLiveData<ChangePasswordFormState>()
@@ -42,14 +42,15 @@ class ChangePasswordViewModel @Inject constructor(private val userRepository: Us
         return userMutableLiveData
     }
 
-    fun changePassword() {
+    fun changePassword(nic: String) {
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
             val result =
                 userRepository.changePassword(
                     ChangePasswordRequest(
-                        currentPassword,
-                        newPassword
+                        nic,
+                        oldPassword = currentPassword,
+                        newPassword = newPassword
                     )
                 )
             changePasswordResult.value = result

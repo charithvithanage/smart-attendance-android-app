@@ -100,21 +100,14 @@ class UserRepository @Inject constructor(
     /**
      * Send Request to the server and get the response
      */
-    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse {
-        val gson = Gson()
-        Log.d(TAG, gson.toJson(changePasswordRequest))
-
-        val apiCallResponse: ApiCallResponse
+    private suspend fun changePasswordServer(changePasswordRequest: ChangePasswordRequest): ApiCallResponse? {
         val response = userService.changePassword(changePasswordRequest)
-
-        apiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
+        return if (response.isSuccessful) {
+            response.body()
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             ApiCallResponse(false, errorObject.message)
         }
-
-        return apiCallResponse
     }
 
     /**
