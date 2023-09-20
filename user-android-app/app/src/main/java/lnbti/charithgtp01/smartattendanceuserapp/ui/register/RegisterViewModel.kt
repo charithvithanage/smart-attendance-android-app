@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceuserapp.model.Company
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isPasswordValid
@@ -25,11 +26,11 @@ class RegisterViewModel @Inject constructor(
     var employeeID: String? = null
     var dob: String? = null
     var gender: String? = null
-    var contact: String? =null
+    var contact: String? = null
     var email: String? = null
     var userName: String? = null
-    var newPassword: String? =null
-    var confirmPassword: String? =null
+    var newPassword: String? = null
+    var confirmPassword: String? = null
 
     //Form live data
     private val _registerForm = MutableLiveData<RegisterFormState>()
@@ -111,6 +112,11 @@ class RegisterViewModel @Inject constructor(
         } else {
             _registerForm.value = RegisterFormState(isDataValid = true)
         }
+    }
+
+    fun setCompany(company: Company) {
+        employeeID = company.companyID
+
     }
 
 

@@ -61,7 +61,7 @@
     <string name="user_registration">User Registration</string>
     <string name="gender">Gender</string>
     <string name="date_format">dd.MM.yyyy</string>
-    <string name="user_registered_successfully">User Registered Successfully</string>
+    <string name="time_format">hh:mm:ss a</string>
     <string name="password">Password</string>
     <string name="confirm_passoword">Confirm Password</string>
     <string name="menu_home">HOME</string>
@@ -83,4 +83,9 @@
     <string name="confirm_logout_message">Do you want to sign out?</string>
     <string name="search">Search</string>
     <string name="search_company">Search Company</string>
+
+    //Dialog Messages
+    <string name="user_registered_successfully">User Registered Successfully</string>
+    <string name="markin">Mark In</string>
+    <string name="markout">Mark Out</string>
 </resources>

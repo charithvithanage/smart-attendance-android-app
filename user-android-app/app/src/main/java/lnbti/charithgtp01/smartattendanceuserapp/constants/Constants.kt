@@ -4,7 +4,8 @@ import android.Manifest
 
 object Constants {
 
-    const val TAG="Smart Attendance App"
+
+    const val TAG = "Smart Attendance App"
 
     //Application Base Url
 //    const val BASE_URL = "https://reqres.in/api/"
@@ -16,18 +17,30 @@ object Constants {
 
     //Login endpoint
     const val LOGIN_ENDPOINT = "user/login"
+
     //Get Pending Approval endpoint
     const val GET_PENDING_APPROVALS_ENDPOINT = "users"
+
     //Get Users endpoint
     const val GET_USERS_ENDPOINT = "user/users"
+
     //Change Password endpoint
-    const val CHANGE_PASSWORD_ENDPOINT = "users/2"
+    const val CHANGE_PASSWORD_ENDPOINT = "user/change-password"
+
     //User Register endpoint
     const val REGISTER_ENDPOINT = "user/register"
+
     //Get User endpoint
     const val GET_USER_ENDPOINT = "users/5"
 
+    //Mark In Attendance Endpoint
+    const val MARK_IN_ATTENDANCE_ENDPOINT = "attendance/in"
 
+    //Mark Out Attendance Endpoint
+    const val MARK_OUT_ATTENDANCE_ENDPOINT = "attendance/out"
+
+    //Get Today Attendance Endpoint
+    const val GET_TODAY_ATTENDANCE_ENDPOINT = "attendance/today-attendancebyuser"
     /**
      * Company Endpoints
      */
@@ -39,12 +52,13 @@ object Constants {
      */
     const val LOGGED_IN_USER = "logged in user"
     const val ACCESS_TOKEN = "access_token"
-    const val USER_ROLE="user_role"
+    const val USER_ROLE = "user_role"
 
     /**
      * Pass Intent keys
      */
     const val OBJECT_STRING = "object_string"
+    const val ATTENDANCE_TYPE = "Attendance Type"
 
     /**
      * Permission Codes

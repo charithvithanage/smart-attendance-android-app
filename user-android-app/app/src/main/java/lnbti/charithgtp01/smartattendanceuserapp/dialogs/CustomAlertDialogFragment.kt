@@ -24,14 +24,13 @@ class CustomAlertDialogFragment : DialogFragment() {
         private const val ARG_MESSAGE = "message"
         private const val ARG_TYPE = "type"
         lateinit var dialogButtonClickListener: CustomAlertDialogListener
-        var isErrorDialog = false
         fun newInstance(
             message: String?,
             type: String,
             dialogButtonClickListener: CustomAlertDialogListener
         ): CustomAlertDialogFragment {
             val fragment = CustomAlertDialogFragment()
-            Companion.dialogButtonClickListener = dialogButtonClickListener
+            this.dialogButtonClickListener = dialogButtonClickListener
             val args = Bundle().apply {
                 putString(ARG_MESSAGE, message)
                 putString(ARG_TYPE, type)
@@ -43,10 +42,10 @@ class CustomAlertDialogFragment : DialogFragment() {
         fun newInstance(
             message: String?
         ): CustomAlertDialogFragment {
-            isErrorDialog = true
             val fragment = CustomAlertDialogFragment()
             val args = Bundle().apply {
                 putString(ARG_MESSAGE, message)
+                putString(ARG_TYPE, Constants.FAIL)
             }
             fragment.arguments = args
             return fragment
@@ -84,18 +83,18 @@ class CustomAlertDialogFragment : DialogFragment() {
         changeUiSize(context, binding.icon, 1, 5)
         // Set data to the data binding variables
         binding.dialogMessage = message
-        if(isErrorDialog){
+        if (type == Constants.SUCCESS)
+            binding.imageResId = R.mipmap.done
+        else if (type == Constants.FAIL)
             binding.imageResId = R.mipmap.cancel
-        }else{
-            if (type == Constants.SUCCESS)
-                binding.imageResId = R.mipmap.done
-            else if (type == Constants.FAIL)
-                binding.imageResId = R.mipmap.cancel
-        }
+
         binding.button.setOnClickListener {
             //Error Dialog should not want to return button click listener
-            if (!isErrorDialog)
+            try{
                 dialogButtonClickListener.onDialogButtonClicked()
+            }catch (e:Exception){
+
+            }
             dismiss()
         }
 

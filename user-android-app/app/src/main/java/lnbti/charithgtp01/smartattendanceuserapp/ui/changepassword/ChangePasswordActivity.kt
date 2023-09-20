@@ -7,12 +7,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePasswordBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
@@ -29,6 +32,7 @@ class ChangePasswordActivity : AppCompatActivity() {
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
     private lateinit var binding: ActivityChangePasswordBinding
     private var dialog: DialogFragment? = null
+    lateinit var loggedInUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +52,9 @@ class ChangePasswordActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
+        val gson = Gson()
+        val loggedInUserString = Utils.getObjectFromSharedPref(this, LOGGED_IN_USER)
+        loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
         UIUtils.initiateActionBar(
             binding?.actionBar?.mainLayout!!,
             getString(R.string.change_password),
@@ -91,7 +98,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
             if (formState.isDataValid) {
                 dialog = showProgressDialog(this, getString(R.string.wait))
-                changePasswordViewModel.changePassword()
+                changePasswordViewModel.changePassword(loggedInUser.nic)
             }
         })
 
@@ -113,9 +120,11 @@ class ChangePasswordActivity : AppCompatActivity() {
                         }
 
                     })
-            } else if (apiResult?.data != null) {
-                showErrorDialog(this, apiResult?.data.toString())
-
+            } else {
+                showErrorDialog(
+                    this,
+                    apiResult?.message
+                )
             }
 
         }

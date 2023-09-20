@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTime
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isOnline
 import java.util.Date
 import javax.inject.Inject
 
@@ -23,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val context: Context
+    private val attendanceRepository: AttendanceRepository
 ) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
@@ -43,6 +42,16 @@ class HomeViewModel @Inject constructor(
 
     private val _dateString = MutableLiveData<String>()
     val dateString: LiveData<String> get() = _dateString
+
+    //Live data for Get Attendance Response
+    private val _attendanceResult = MutableLiveData<ApiCallResponse?>()
+    val attendanceResult: MutableLiveData<ApiCallResponse?> = _attendanceResult
+
+    var name: String? = null
+    var attendanceDataString: String? = null
+    private val _attendanceData = MutableLiveData<AttendanceData?>()
+    val attendanceData: MutableLiveData<AttendanceData?> = _attendanceData
+
     /**
      * This will call when the View Model Created
      */
@@ -68,30 +77,21 @@ class HomeViewModel @Inject constructor(
      * Get Server Response and Set values to live data
      */
     private fun getUsersList() {
+//Show Progress Dialog when click on the search view submit button
+        _isDialogVisible.value = true
+        /* View Model Scope - Coroutine */
+        viewModelScope.launch {
+            val resource = userRepository.getUsersFromDataSource()
 
-        val isNetworkAvailable = isOnline(context)
+            if (resource?.data != null) {
+                allUsersList = resource.data.data
+                _usersList.value = allUsersList
+            } else
+                _errorMessage.value = resource?.error?.error
 
-        //If Network available call to backend API
-        if (isNetworkAvailable) {
-            //Show Progress Dialog when click on the search view submit button
-            _isDialogVisible.value = true
-            /* View Model Scope - Coroutine */
-            viewModelScope.launch {
-                val resource = userRepository.getUsersFromDataSource()
-
-                if (resource?.data != null) {
-                    allUsersList = resource.data.data
-                    _usersList.value = allUsersList
-                } else
-                    _errorMessage.value = resource?.error?.error
-
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
-                _isDialogVisible.value = false
-            }
-        } else {
-            //Show Error Alert
-            _errorMessage.value = context?.getString(R.string.no_internet)
+            /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
+            delay(1000L)
+            _isDialogVisible.value = false
         }
 
     }
@@ -107,6 +107,25 @@ class HomeViewModel @Inject constructor(
                 searchString
             )
         }
+    }
+
+    /**
+     * Get attendance data from nic and date
+     */
+    fun getTodayAttendanceByUser(nic: String, date: String) {
+        _isDialogVisible.value = true
+        viewModelScope.launch {
+            // can be launched in a separate asynchronous job
+            val result =
+                attendanceRepository.getTodayAttendanceByUser(
+                    nic, date
+                )
+            _attendanceResult.value = result
+        }
+    }
+
+    fun setAttendanceData(attendanceData: AttendanceData?) {
+        _attendanceData.value = attendanceData
     }
 
 }

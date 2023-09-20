@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.navHostFragmentUser)
         binding.bottomNavigationUser.setupWithNavController(navController)
 
-        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.LOGGED_IN_USER)
+        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
         if (userRole == getString(R.string.employee)) {
             //Bottom menu without users menu
             // Hide a menu item by ID

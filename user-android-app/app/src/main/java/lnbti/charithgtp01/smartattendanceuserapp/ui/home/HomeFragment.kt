@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
-import android.app.Dialog
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,15 +21,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import java.util.concurrent.Executor
 
@@ -68,20 +70,33 @@ class HomeFragment : Fragment() {
 
         //If the logged in user's user role is Business User should show Attendance mark users list page in the home fragment
         //Else need to show fab button to scan the qr
-        val userRole = Utils.getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        val userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        val loggedInUserString = getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
+        val gson = Gson()
+        val loggedInUser: User = gson.fromJson(loggedInUserString, User::class.java)
         if (userRole == getString(R.string.employee)) {
             binding?.userLayout?.visibility = View.VISIBLE
             binding?.businessUserLayout?.visibility = View.GONE
+            viewModel.name = loggedInUser.firstName + " " + loggedInUser.lastName
 
-            binding?.btnScanQR?.setOnClickListener {
-                onClickScan()
+            binding?.btnMarkIn?.setOnClickListener {
+                onClickScan("in")
             }
+
+            binding?.btnMarkOut?.setOnClickListener {
+                onClickScan("out")
+            }
+
+            viewModel.getTodayAttendanceByUser(loggedInUser.nic, formatTodayDate(requireContext()))
+
         } else {
             binding?.userLayout?.visibility = View.GONE
             binding?.businessUserLayout?.visibility = View.VISIBLE
-            initiateAdapter()
-            viewModelObservers()
         }
+
+        initiateAdapter()
+        viewModelObservers()
+
     }
 
     /**
@@ -111,6 +126,28 @@ class HomeFragment : Fragment() {
         */
         viewModel.usersList.observe(requireActivity()) {
             usersListAdapter.submitList(it)
+        }
+
+        //Waiting for Api response
+        viewModel.attendanceResult.observe(requireActivity()) {
+            val apiResult = it
+            if (apiResult?.success == true) {
+                val gson = Gson()
+                val attendanceData = gson.fromJson(apiResult.data, AttendanceData::class.java)
+                viewModel.setAttendanceData(attendanceData)
+                binding?.btnMarkIn?.visibility = View.GONE
+                if(attendanceData.inTime!=null&&attendanceData.outTime==null){
+                    binding?.btnMarkOut?.visibility = View.VISIBLE
+                }else{
+                    binding?.btnMarkOut?.visibility = View.GONE
+
+                }
+            } else {
+                binding?.btnMarkIn?.visibility = View.VISIBLE
+                binding?.btnMarkOut?.visibility = View.GONE
+            }
+            dialog?.dismiss()
+
         }
     }
 
@@ -202,7 +239,11 @@ class HomeFragment : Fragment() {
         binding = null
     }
 
-    private fun onClickScan() {
+    /**
+     * Show finger print authentication dialog
+     * Employee can scan QR only if the user successfully authenticated
+     */
+    private fun onClickScan(attendanceType: String) {
 
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = BiometricPrompt(this, executor,
@@ -227,12 +268,13 @@ class HomeFragment : Fragment() {
                         override fun onSuccess(location: Location) {
                             val gson = Gson()
                             val prefMap = HashMap<String, String>()
-//                            val item = User(
-//                                1, "charithvin@gmail.com",
-//                                "George", "Bluth", null,
-//                                null, null, null, "", location.latitude, location.longitude
-//                            )
-//                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+                            val loggedInUserString =
+                                getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
+                            val loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
+                            loggedInUser.lat = location.latitude
+                            loggedInUser.long = location.longitude
+                            prefMap[Constants.OBJECT_STRING] = gson.toJson(loggedInUser)
+                            prefMap[Constants.ATTENDANCE_TYPE] = attendanceType
                             navigateToAnotherActivityWithExtras(
                                 requireActivity(),
                                 ScanActivity::class.java,

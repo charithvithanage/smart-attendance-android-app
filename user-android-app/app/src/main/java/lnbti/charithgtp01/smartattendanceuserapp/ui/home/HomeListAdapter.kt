@@ -30,21 +30,14 @@ class HomeListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
         val user = getItem(position)
         //QR generate and should scan from the Employee
-        if (user.userType.equals("Android User")) {
+        if (user.userType == "Android User") {
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.generate)
-            holder.binding.btnProceed.setOnClickListener {
-                itemClickListener.generate(user)
-            }
-
         } else {
             //Other devices users has printed QR
             //Office User cam scan printed QR
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.scan)
-            holder.binding.btnProceed.setOnClickListener {
-                itemClickListener.scan(user)
-            }
         }
 
         holder.bind(user)
@@ -62,7 +55,20 @@ class HomeListAdapter @Inject constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             binding.setVariable(BR.item, user)
+            //QR generate and should scan from the Employee
+            binding.btnProceed.setOnClickListener {
+                if (user.userType == "Android User") {
+                    itemClickListener.generate(user)
+                } else {
+                    //Other devices users has printed QR
+                    //Office User cam scan printed QR
+                    itemClickListener.scan(user)
+                }
+
+            }
+
             binding.executePendingBindings()
+
         }
     }
 }

@@ -79,25 +79,6 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        //UI initiation
-        inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
-        inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
                 username.text.toString(),
@@ -143,21 +124,10 @@ class LoginActivity : AppCompatActivity() {
             */
             if (loginState.isDataValid) {
                 dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
-                val userRole: String = if (username.text.toString() == "Charith")
-                    getString(R.string.employee)
-                else
-                    getString(R.string.business_user)
-
-                saveObjectInSharedPref(
-                    this@LoginActivity,
-                    Constants.USER_ROLE,
-                    userRole,
-                    SuccessListener {
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                    })
+                loginViewModel.login(
+                    username.text.toString(),
+                    password.text.toString()
+                )
             }
         })
 
@@ -173,7 +143,7 @@ class LoginActivity : AppCompatActivity() {
 
                 // Add values to the HashMap
                 hashMap[LOGGED_IN_USER] =loginResult.data.toString()
-                hashMap[USER_ROLE] = loggedInUser.userRole.toString()
+                hashMap[USER_ROLE] = loggedInUser.userRole
 
                 saveMultipleObjectsInSharedPref(this@LoginActivity,hashMap,
                     SuccessListener { navigateToAnotherActivity(this@LoginActivity, MainActivity::class.java) })
