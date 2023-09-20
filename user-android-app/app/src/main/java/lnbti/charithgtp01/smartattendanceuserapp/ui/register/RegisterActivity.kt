@@ -9,11 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityRegisterBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.Company
+import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
@@ -21,6 +24,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiat
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.normalState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setErrorBgToSelectLayout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setNormalBgToSelectLayout
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -52,6 +56,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
+        val gson = Gson()
+        val company =
+            gson.fromJson(intent.getStringExtra(Constants.OBJECT_STRING), Company::class.java)
+        registerViewModel.setCompany(company)
+
+        binding.etEmployeeID.isEnabled = false
+
         initiateActionBarWithoutHomeButton(
             binding.actionBar.mainLayout,
             getString(R.string.user_registration)
@@ -116,12 +127,6 @@ class RegisterActivity : AppCompatActivity() {
                     getString(formState.nicError!!)
             } else
                 normalState(binding.nicInputText)
-
-            if (formState.employeeIDError != null) {
-                binding.employeeIDInputText.error =
-                    getString(formState.employeeIDError!!)
-            } else
-                normalState(binding.employeeIDInputText)
 
             if (formState.dobError != null) {
                 binding.dobInputText.error =
@@ -188,7 +193,7 @@ class RegisterActivity : AppCompatActivity() {
                     getString(R.string.user_registered_successfully),
                     object : CustomAlertDialogListener {
                         override fun onDialogButtonClicked() {
-                            onBackPressed()
+                            Utils.navigateWithoutHistory(this@RegisterActivity, LoginActivity::class.java)
 
                         }
 

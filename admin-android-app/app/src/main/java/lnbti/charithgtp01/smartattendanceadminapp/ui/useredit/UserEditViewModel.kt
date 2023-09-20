@@ -121,7 +121,7 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
             dob,
             true,
             deviceID,
-            "Android User"
+            userType = "Android User"
         )
 
         val gson = Gson()

@@ -90,8 +90,11 @@ class CustomAlertDialogFragment : DialogFragment() {
 
         binding.button.setOnClickListener {
             //Error Dialog should not want to return button click listener
-            if (dialogButtonClickListener != null)
+            try{
                 dialogButtonClickListener.onDialogButtonClicked()
+            }catch (e:Exception){
+
+            }
             dismiss()
         }
 
