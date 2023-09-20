@@ -2,10 +2,12 @@ package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutHomeListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutUserListBinding
@@ -26,24 +28,26 @@ class HomeListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
-        val pendingApproval = getItem(position)
-        if (position != 0) {
+        val user = getItem(position)
+        //QR generate and should scan from the Employee
+        if (user.userType.equals("Android User")) {
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.generate)
             holder.binding.btnProceed.setOnClickListener {
-                itemClickListener.generate(pendingApproval)
+                itemClickListener.generate(user)
             }
 
         } else {
+            //Other devices users has printed QR
+            //Office User cam scan printed QR
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.scan)
             holder.binding.btnProceed.setOnClickListener {
-                itemClickListener.scan(pendingApproval)
+                itemClickListener.scan(user)
             }
         }
 
-        holder.binding.repositoryNameView.text =
-            pendingApproval.firstName + " " + pendingApproval.lastName
+        holder.bind(user)
     }
 
     /**
@@ -56,6 +60,10 @@ class HomeListAdapter @Inject constructor(
 
     inner class HomeListViewHolder(val binding: LayoutHomeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: User) {
+            binding.setVariable(BR.item, user)
+            binding.executePendingBindings()
+        }
     }
 }
 

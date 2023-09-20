@@ -76,7 +76,7 @@ class UsersFragment : Fragment() {
         viewModel.usersList.observe(requireActivity()) {
                 it ->
             //Get Active users
-            val filteredList = it.filter { it.userStatus == true }
+            val filteredList = it.filter { it.userStatus }
             usersListAdapter.submitList(filteredList)
         }
     }

@@ -17,6 +17,7 @@ data class User(
     val dob: String,
     val userStatus: Boolean,
     val employeeID:String,
+    val userType:String,
     var lat: Double,
     var long: Double
 ) : Parcelable{
