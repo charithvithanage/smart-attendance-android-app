@@ -48,21 +48,25 @@ class Utils {
         /**
          * Format date to string
          */
-        fun formatTime(date: Date): String {
-            val format = SimpleDateFormat(
-                "HH:mm",
-                Locale.getDefault()
-            )
-            return format.format(date)
-        }
-
-
-        fun formatDate(date: Date): String {
+                fun formatDate(date: Date): String {
             val format = SimpleDateFormat(
                 "dd.MM.yyyy",
                 Locale.getDefault()
             )
             return format.format(date)
+        }
+
+        fun formatTodayDate(context: Context): String {
+            val calendar = Calendar.getInstance()
+            val dateFormat =
+                SimpleDateFormat(context.getString(R.string.date_format), Locale.getDefault())
+            return dateFormat.format(calendar.time)
+        }
+
+        fun formatNowTime(context: Context): String {
+            val calendar = Calendar.getInstance()
+            val timeFormat = SimpleDateFormat(context.getString(R.string.time_format), Locale.getDefault())
+            return timeFormat.format(calendar.time)
         }
 
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100

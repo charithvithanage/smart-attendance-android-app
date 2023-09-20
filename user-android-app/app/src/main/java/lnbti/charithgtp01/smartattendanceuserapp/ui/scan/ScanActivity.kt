@@ -32,6 +32,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
@@ -153,7 +154,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                 val calendar = getInstance()
 
 // Format the date as "dd.MM.yyyy"
-                val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat(getString(R.string.date_format), Locale.getDefault())
                 val formattedDate = dateFormat.format(calendar.time)
 
 // Format the time as "hh:mm:ss a"

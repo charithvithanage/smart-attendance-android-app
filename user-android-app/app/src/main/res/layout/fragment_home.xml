@@ -21,40 +21,44 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             tools:visibility="visible">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/page_padding"
+                android:layout_marginEnd="@dimen/page_padding"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline3"
-                android:layout_marginEnd="@dimen/page_padding"
-                android:layout_marginStart="@dimen/page_padding">
+                app:layout_constraintTop_toTopOf="@+id/guideline3">
 
                 <Button
                     android:id="@+id/btnMarkIn"
                     style="@style/buttonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_mini_margin"
                     android:layout_weight="1"
-                    android:text="@string/markin"
                     android:gravity="center"
-                    android:layout_marginStart="@dimen/content_mini_margin"/>
+                    android:visibility="gone"
+                    android:text="@string/markin" />
 
                 <Button
                     android:id="@+id/btnMarkOut"
                     style="@style/buttonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_mini_margin"
                     android:layout_weight="1"
-                    android:text="@string/markout"
+                    android:visibility="gone"
                     android:gravity="center"
-                    android:layout_marginStart="@dimen/content_mini_margin"/>
+                    android:text="@string/markout" />
 
             </LinearLayout>
 
@@ -62,7 +66,7 @@
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Charles Morris"
+                android:text="@{vm.name}"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/tvDate"
@@ -82,6 +86,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvAttendanceData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`In Time : ` + (vm.attendanceData.inTime != null ? vm.attendanceData.inTime : `N/A`)+`    Out Time : `+(vm.attendanceData.outTime!= null ? vm.attendanceData.outTime : `N/A`)}"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/tvTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+
+
 
             <android.widget.TextClock
                 android:id="@+id/tvTime"

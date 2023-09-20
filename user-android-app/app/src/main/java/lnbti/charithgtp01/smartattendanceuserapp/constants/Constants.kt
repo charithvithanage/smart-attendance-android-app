@@ -39,6 +39,8 @@ object Constants {
     //Mark Out Attendance Endpoint
     const val MARK_OUT_ATTENDANCE_ENDPOINT = "attendance/out"
 
+    //Get Today Attendance Endpoint
+    const val GET_TODAY_ATTENDANCE_ENDPOINT = "attendance/today-attendancebyuser"
     /**
      * Company Endpoints
      */

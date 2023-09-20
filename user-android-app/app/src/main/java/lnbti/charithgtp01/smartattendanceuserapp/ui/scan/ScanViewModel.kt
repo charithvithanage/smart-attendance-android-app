@@ -48,4 +48,5 @@ class ScanViewModel @Inject constructor(private val attendanceRepository: Attend
             attendanceMarkResult.value = result
         }
     }
+
 }
