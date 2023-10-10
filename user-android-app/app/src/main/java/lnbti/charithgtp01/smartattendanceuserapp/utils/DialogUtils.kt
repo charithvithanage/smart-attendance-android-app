@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import lnbti.charithgtp01.smartattendanceuserapp.R
@@ -119,13 +120,30 @@ class DialogUtils {
         }
 
         /**
-         * Progress Dialog
+         * Progress Dialog Inside Activity
          * @param message progress message
          */
         fun showProgressDialog(context: Context?, message: String?): DialogFragment? {
             var dialogFragment: DialogFragment? = null
             if (context != null) {
                 val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+                if (fragmentManager != null) {
+                    dialogFragment =
+                        CustomProgressDialogFragment.newInstance(message)
+                    dialogFragment.show(fragmentManager, PROGRESS_DIALOG_FRAGMENT_TAG)
+                }
+            }
+            return dialogFragment
+        }
+
+        /**
+         * Progress Dialog in Fragment
+         * @param message progress message
+         */
+        fun showProgressDialogInFragment(context: Context?, message: String?): DialogFragment? {
+            var dialogFragment: DialogFragment? = null
+            if (context != null) {
+                val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
                 if (fragmentManager != null) {
                     dialogFragment =
                         CustomProgressDialogFragment.newInstance(message)

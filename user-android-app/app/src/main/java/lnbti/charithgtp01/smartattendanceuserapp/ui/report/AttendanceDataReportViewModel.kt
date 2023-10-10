@@ -90,9 +90,7 @@ class AttendanceDataReportViewModel @Inject constructor(
                 val allUsersList = resource.data.data
                 spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
             }
-            delay(2000)
             _isDialogVisible.value = false
-
         }
     }
 }

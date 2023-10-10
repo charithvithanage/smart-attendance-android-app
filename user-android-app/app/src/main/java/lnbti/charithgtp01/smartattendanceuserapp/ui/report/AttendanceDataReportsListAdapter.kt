@@ -42,8 +42,8 @@ class AttendanceDataReportsListAdapter @Inject constructor(
 
     inner class AttendanceDataReportsListViewHolder(val binding: LayoutAttendanceDataReportListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: AttendanceData) {
-            binding.setVariable(BR.item, user)
+        fun bind(attendanceData: AttendanceData) {
+            binding.setVariable(BR.item, attendanceData)
             binding.executePendingBindings()
         }
     }
