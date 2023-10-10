@@ -10,6 +10,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkInRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkOutRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
+import lnbti.charithgtp01.smartattendanceuserapp.model.ResponseWithJSONArray
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getErrorBodyFromResponse
 import javax.inject.Inject
 
@@ -98,6 +99,70 @@ class AttendanceRepository @Inject constructor(
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             ApiCallResponse(false, errorObject.message)
+        }
+    }
+
+    /**
+     * Get Attendance Data by user and date range from the server
+     */
+    suspend fun getAttendanceDataByUser(
+        nic: String,
+        fromData: String,
+        toDate: String
+    ): ResponseWithJSONArray? {
+        return withContext(Dispatchers.IO) {
+            return@withContext getAttendanceDataByUserFromRemoteService(nic, fromData, toDate)
+        }
+    }
+
+    /**
+     * @return ServerResponse Object
+     */
+    private suspend fun getAttendanceDataByUserFromRemoteService(
+        nic: String,
+        fromData: String,
+        toDate: String
+    ): ResponseWithJSONArray? {
+
+        /* Get Server Response */
+        val response = attendanceService.getAttendanceByUser(nic, fromData, toDate)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ResponseWithJSONArray(false, errorObject.message)
+        }
+    }
+
+    /**
+     * Get Attendance Data by user and date range from the server
+     */
+    suspend fun getAttendances(
+        fromData: String,
+        toDate: String
+    ): ResponseWithJSONArray? {
+        return withContext(Dispatchers.IO) {
+            return@withContext getAttendancesFromRemoteService(fromData, toDate)
+        }
+    }
+
+    /**
+     * @return ServerResponse Object
+     */
+    private suspend fun getAttendancesFromRemoteService(
+        fromData: String,
+        toDate: String
+    ): ResponseWithJSONArray? {
+
+        /* Get Server Response */
+        val response = attendanceService.getAttendances(fromData, toDate)
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+            ResponseWithJSONArray(false, errorObject.message)
         }
     }
 }

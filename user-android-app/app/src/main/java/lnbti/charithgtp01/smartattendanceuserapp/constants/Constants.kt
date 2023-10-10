@@ -41,6 +41,12 @@ object Constants {
 
     //Get Today Attendance Endpoint
     const val GET_TODAY_ATTENDANCE_ENDPOINT = "attendance/today-attendancebyuser"
+
+    //Get Attendance By NameEndpoint
+    const val GET_ATTENDANCES_BY_USER_ENDPOINT = "attendance/attendancesbyuser"
+
+    //Get Attendance By Date Range Endpoint
+    const val GET_ATTENDANCE_ENDPOINT = "attendance/attendances"
     /**
      * Company Endpoints
      */

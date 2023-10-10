@@ -10,7 +10,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorResponse
-import lnbti.charithgtp01.smartattendanceuserapp.model.JSONResource
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
@@ -107,36 +106,6 @@ class UserRepository @Inject constructor(
         } else {
             val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
             ApiCallResponse(false, errorObject.message)
-        }
-    }
-
-    /**
-     * Get User from the server
-     */
-    suspend fun getUserFromDataSource(): JSONResource {
-        return withContext(Dispatchers.IO) {
-            return@withContext getUserFromRemoteService()
-        }
-    }
-
-
-    /**
-     * @return ServerResponse Object
-     */
-    private suspend fun getUserFromRemoteService(): JSONResource {
-
-        val response = userService.getUser()
-
-        return if (response.isSuccessful) {
-            JSONResource.Success(data = response.body()!!)
-        } else {
-            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            JSONResource.Error(
-                ErrorResponse(
-                    errorObject.message,
-                    response.code()
-                )
-            )
         }
     }
 
