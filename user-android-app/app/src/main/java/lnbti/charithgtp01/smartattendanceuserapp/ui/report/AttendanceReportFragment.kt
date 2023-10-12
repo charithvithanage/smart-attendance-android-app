@@ -11,19 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentAttendanceReportBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
-import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceDate
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
@@ -103,7 +98,7 @@ class AttendanceReportFragment : Fragment() {
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog = showProgressDialogInFragment(requireActivity(), getString(R.string.wait))
+                dialog = showProgressDialogInFragment(this@AttendanceReportFragment, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -119,6 +114,7 @@ class AttendanceReportFragment : Fragment() {
             if (apiResult?.success == true) {
                 val listType = object : TypeToken<List<AttendanceData>>() {}.type
                 val attendanceList: List<AttendanceData> = gson.fromJson(apiResult.data, listType)
+                viewModel.setCount(attendanceList.size)
                 attendanceReportsListAdapter.submitList(attendanceList)
             } else if (apiResult?.data != null) {
                 DialogUtils.showErrorDialog(requireActivity(), apiResult.data.toString())

@@ -56,7 +56,6 @@ class HomeViewModel @Inject constructor(
      * This will call when the View Model Created
      */
     init {
-        getUsersList()
         _dateString.value = formatDate(today)
     }
 
@@ -76,7 +75,7 @@ class HomeViewModel @Inject constructor(
     /**
      * Get Server Response and Set values to live data
      */
-    private fun getUsersList() {
+    fun getUsersList() {
 //Show Progress Dialog when click on the search view submit button
         _isDialogVisible.value = true
         /* View Model Scope - Coroutine */
@@ -90,7 +89,6 @@ class HomeViewModel @Inject constructor(
                 _errorMessage.value = resource?.error?.error
 
             /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-            delay(1000L)
             _isDialogVisible.value = false
         }
 
@@ -121,6 +119,8 @@ class HomeViewModel @Inject constructor(
                     nic, date
                 )
             _attendanceResult.value = result
+            _isDialogVisible.value = false
+
         }
     }
 

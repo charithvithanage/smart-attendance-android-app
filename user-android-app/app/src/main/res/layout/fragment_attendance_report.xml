@@ -22,9 +22,9 @@
             android:layout_marginTop="@dimen/content_margin_top"
             android:layout_marginEnd="@dimen/content_horizontal_margin"
             android:background="@drawable/select_layout_bg"
+            android:entries="@{vm.spinnerOptions}"
             android:paddingLeft="@dimen/content_mini_margin"
             android:paddingRight="@dimen/content_mini_margin"
-            android:entries="@{vm.spinnerOptions}"
             android:selectedItemPosition="@={vm.selectedSpinnerPosition}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,53 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/bottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/input_text_margin_top"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/page_padding"
+            android:paddingRight="@dimen/page_padding"
+            app:layout_constraintTop_toBottomOf="@+id/dateSelectSection">
 
+            <TextView
+                style="@style/input_textview_content_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:text="@string/total_count"
+                android:textColor="@color/color_primary" />
+
+            <TextView
+                android:id="@+id/tvCount"
+                style="@style/input_textview_content_style"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/count_button_bg"
+                android:gravity="center"
+                android:minWidth="30dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="@{vm.dataCountString}"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/page_padding"
+            android:layout_marginTop="@dimen/input_text_margin_top"
+            android:layout_marginRight="@dimen/page_padding"
+            android:background="@color/color_primary"
+            app:layout_constraintTop_toBottomOf="@id/bottomLayout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -75,7 +121,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateSelectSection" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

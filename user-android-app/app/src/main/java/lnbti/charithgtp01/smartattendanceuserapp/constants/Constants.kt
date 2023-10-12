@@ -9,7 +9,7 @@ object Constants {
 
     //Application Base Url
 //    const val BASE_URL = "https://reqres.in/api/"
-    const val BASE_URL = "http://192.168.1.22:3000/"
+    const val BASE_URL = "http://192.168.115.120:3000/"
 
     /**
      * Endpoints

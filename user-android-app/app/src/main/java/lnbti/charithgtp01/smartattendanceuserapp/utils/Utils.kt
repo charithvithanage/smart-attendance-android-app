@@ -32,7 +32,6 @@ import java.util.Locale
  */
 class Utils {
     companion object {
-
         /**
          * Deserialize error response.body
          * @param errorBody Error Response
@@ -48,12 +47,44 @@ class Utils {
         /**
          * Format date to string
          */
-                fun formatDate(date: Date): String {
+        fun formatDate(date: Date): String {
             val format = SimpleDateFormat(
                 "dd.MM.yyyy",
                 Locale.getDefault()
             )
             return format.format(date)
+        }
+
+        fun formatDateWithMonth(inputDate: String): String {
+            val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault())
+
+            val date: Date = inputFormat.parse(inputDate) ?: Date()
+            return outputFormat.format(date)
+        }
+
+
+        /**
+         * @param dateString Date as String
+         * @return Day of the week (Monday,Tuesday,...)
+         */
+        fun formatDateToDayOfWeek(dateString: String): String {
+            // Define the input date format
+            val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+
+            try {
+                // Parse the input date string
+                val date = inputFormat.parse(dateString)
+
+                // Define the output date format for the day of the week
+                val outputFormat = SimpleDateFormat("EEEE", Locale.US)
+
+                // Format the date to get the day of the week
+                return outputFormat.format(date)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return "Invalid Date"
+            }
         }
 
         fun formatTodayDate(context: Context): String {
@@ -65,7 +96,8 @@ class Utils {
 
         fun formatNowTime(context: Context): String {
             val calendar = Calendar.getInstance()
-            val timeFormat = SimpleDateFormat(context.getString(R.string.time_format), Locale.getDefault())
+            val timeFormat =
+                SimpleDateFormat(context.getString(R.string.time_format), Locale.getDefault())
             return timeFormat.format(calendar.time)
         }
 

@@ -30,6 +30,10 @@ class AttendanceDataReportViewModel @Inject constructor(
 ) :
     ViewModel() {
 
+    //Date Count Live Date
+    private val _dataCountString = MutableLiveData("0")
+    val dataCountString: LiveData<String> get() = _dataCountString
+
     //Users Dropdown values
     var spinnerOptions: Array<String>? = null
 
@@ -85,12 +89,16 @@ class AttendanceDataReportViewModel @Inject constructor(
             _responseResult.value = result
 
             //Get all users for the spinner
-            val resource = userRepository.getUsersFromDataSource()
-            if (resource.data != null) {
-                val allUsersList = resource.data.data
-                spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
-            }
+//            val resource = userRepository.getUsersFromDataSource()
+//            if (resource.data != null) {
+//                val allUsersList = resource.data.data
+//                spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
+//            }
             _isDialogVisible.value = false
         }
+    }
+
+    fun setCount(count: Int) {
+        _dataCountString.value = count.toString()
     }
 }

@@ -143,4 +143,21 @@
 
     <style name="Theme.SmartAttendanceAdminApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="report_date_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="report_time_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="report_time_label_style">
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
