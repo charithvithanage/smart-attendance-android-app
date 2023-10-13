@@ -3,6 +3,8 @@ package lnbti.charithgtp01.smartattendanceuserapp.ui.register
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,10 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityRegisterBinding
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.Company
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
@@ -89,6 +93,15 @@ class RegisterActivity : AppCompatActivity() {
                 registerViewModel.setSelectedRadioButtonValue(selectedValue)
             }
         }
+
+        registerViewModel.setFocusChangeListener(binding.etFirstName)
+        registerViewModel.setFocusChangeListener(binding.etLastName)
+        registerViewModel.setFocusChangeListener(binding.etNIC)
+        registerViewModel.setFocusChangeListener(binding.etEmail)
+        registerViewModel.setFocusChangeListener(binding.etContact)
+        registerViewModel.setFocusChangeListener(binding.etUserName)
+        registerViewModel.setFocusChangeListener(binding.etPassword)
+        registerViewModel.setFocusChangeListener(binding.etConfirmPassword)
     }
 
     /**
@@ -175,8 +188,21 @@ class RegisterActivity : AppCompatActivity() {
                 normalState(binding.confirmPasswordInputText)
 
             if (formState.isDataValid) {
-                dialog = showProgressDialog(this, getString(R.string.wait))
-                registerViewModel.register()
+                showConfirmAlertDialog(
+                    this@RegisterActivity,
+                    getString(R.string.confirm_registration),
+                    object : ConfirmDialogButtonClickListener {
+                        override fun onPositiveButtonClick() {
+                            dialog =
+                                showProgressDialog(this@RegisterActivity, getString(R.string.wait))
+                            registerViewModel.register()
+                        }
+
+                        override fun onNegativeButtonClick() {
+
+                        }
+                    })
+
             }
         })
 
@@ -193,7 +219,10 @@ class RegisterActivity : AppCompatActivity() {
                     getString(R.string.user_registered_successfully),
                     object : CustomAlertDialogListener {
                         override fun onDialogButtonClicked() {
-                            Utils.navigateWithoutHistory(this@RegisterActivity, LoginActivity::class.java)
+                            Utils.navigateWithoutHistory(
+                                this@RegisterActivity,
+                                LoginActivity::class.java
+                            )
 
                         }
 
