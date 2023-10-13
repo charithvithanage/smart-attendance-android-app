@@ -28,12 +28,14 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
@@ -51,9 +53,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: TextInputEditText
     private lateinit var passwordInputText: TextInputLayout
     private lateinit var login: Button
-
-    private lateinit var networkUtils: NetworkUtils
-
+    val gson = Gson()
 
     //This counter is using for catch the app logo click event counter
     private var atomicInteger = AtomicInteger(0)
@@ -61,9 +61,19 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initiateDataBinding()
-        initiateView()
-        viewModelObservers()
+        val loggedInUser = getObjectFromSharedPref(this@LoginActivity, LOGGED_IN_USER)
+        //Already user is logged in navigate to home page
+        if (loggedInUser != null) {
+            navigateToAnotherActivity(
+                this@LoginActivity,
+                MainActivity::class.java
+            )
+        } else {
+            initiateDataBinding()
+            initiateView()
+            viewModelObservers()
+        }
+
     }
 
     private fun initiateDataBinding() {
@@ -128,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
                "password": "cityslicka"
             */
             if (loginState.isDataValid) {
-                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
+                dialog = showProgressDialog(this, getString(R.string.wait))
                 loginViewModel.login(
                     username.text.toString(),
                     password.text.toString()
@@ -142,16 +152,20 @@ class LoginActivity : AppCompatActivity() {
             dialog?.dismiss()
 
             if (loginResult.success) {
-                val gson= Gson()
-                val  loggedInUser=gson.fromJson(loginResult.data.toString(), User::class.java)
+                val loggedInUser = gson.fromJson(loginResult.data.toString(), User::class.java)
                 val hashMap = HashMap<String, String>()
 
                 // Add values to the HashMap
-                hashMap[LOGGED_IN_USER] =loginResult.data.toString()
+                hashMap[LOGGED_IN_USER] = loginResult.data.toString()
                 hashMap[USER_ROLE] = loggedInUser.userRole
 
-                saveMultipleObjectsInSharedPref(this@LoginActivity,hashMap,
-                    SuccessListener { navigateToAnotherActivity(this@LoginActivity, MainActivity::class.java) })
+                saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,
+                    SuccessListener {
+                        navigateToAnotherActivity(
+                            this@LoginActivity,
+                            MainActivity::class.java
+                        )
+                    })
 
             } else {
                 showErrorDialog(this, loginResult.message)

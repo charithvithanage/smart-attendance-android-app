@@ -2,6 +2,7 @@ package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +21,11 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USERS_LIST
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
@@ -33,6 +36,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
 import java.util.concurrent.Executor
 
 /**
@@ -48,7 +52,7 @@ class HomeFragment : Fragment() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-
+    val gson = Gson()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -127,14 +131,19 @@ class HomeFragment : Fragment() {
         * Update Recycle View Items using Diff Utils
         */
         viewModel.usersList.observe(requireActivity()) {
-            usersListAdapter.submitList(it)
+            //Save users list locally to use in reports
+            saveObjectInSharedPref(
+                requireActivity(),
+                USERS_LIST,
+                gson.toJson(it),
+                SuccessListener { usersListAdapter.submitList(it) })
         }
 
         //Waiting for Api response
         viewModel.attendanceResult.observe(requireActivity()) {
             val apiResult = it
             if (apiResult?.success == true) {
-                val gson = Gson()
+
                 val attendanceData = gson.fromJson(apiResult.data, AttendanceData::class.java)
                 viewModel.setAttendanceData(attendanceData)
                 binding?.btnMarkIn?.visibility = View.GONE
@@ -198,7 +207,7 @@ class HomeFragment : Fragment() {
                         }
 
                         override fun onError(error: String) {
-                            TODO("Not yet implemented")
+                            Log.d(Constants.TAG, error)
                         }
                     })
                 }

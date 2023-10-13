@@ -32,6 +32,7 @@ import java.util.Locale
  */
 class Utils {
     companion object {
+
         /**
          * Deserialize error response.body
          * @param errorBody Error Response
@@ -418,5 +419,15 @@ class Utils {
             listener.onFinished()
         }
 
+        /**
+         * Clear all preference values
+         */
+        fun clearAllPref(context: Context, listener: SuccessListener) {
+            val sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+            sharedPref.edit().clear().apply()
+            listener.onFinished()
+        }
     }
 }
