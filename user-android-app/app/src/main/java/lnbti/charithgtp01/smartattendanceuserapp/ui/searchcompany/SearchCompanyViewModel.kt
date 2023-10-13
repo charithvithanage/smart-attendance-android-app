@@ -54,7 +54,7 @@ class SearchCompanyViewModel @Inject constructor(
 
     fun searchCompanyDataChanged() {
         if (!Validations.isCompanyIDValid(companyID)) {
-            _searchCompanyForm.value = SearchCompanyFormState(companyIDError = R.string.invalid_username)
+            _searchCompanyForm.value = SearchCompanyFormState(companyIDError = R.string.invalid_company_id)
         }  else {
             _searchCompanyForm.value = SearchCompanyFormState(isDataValid = true)
         }

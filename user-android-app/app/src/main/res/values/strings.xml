@@ -89,4 +89,5 @@
     <string name="markin">Mark In</string>
     <string name="markout">Mark Out</string>
     <string name="total_count">Total Count</string>
+    <string name="invalid_company_id">Invalid Company ID</string>
 </resources>

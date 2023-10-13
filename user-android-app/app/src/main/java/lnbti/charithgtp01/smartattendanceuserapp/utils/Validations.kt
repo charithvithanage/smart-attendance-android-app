@@ -14,7 +14,9 @@ class Validations {
             if (id.isNullOrBlank())
                 return false
 
-            return id.length > 5
+            val regex = "^[A-Z]{2}\\d{5}$" // Matches "SA00001" pattern
+
+            return id.matches(Regex(regex))
         }
 
         /**

@@ -12,8 +12,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivitySearchCompanyBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
