@@ -71,7 +71,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                     getString(R.string.device_id_mandatory)
                 )
             } else {
-                dialog = showProgressDialog(this, getString(R.string.wait))
                 viewModel.submitApproval(
                     pendingApprovalUser.nic,
                     viewModel.deviceID,
@@ -87,10 +86,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                 getString(R.string.confirm_reject_message),
                 object : ConfirmDialogButtonClickListener {
                     override fun onPositiveButtonClick() {
-                        dialog = showProgressDialog(
-                            this@PendingApprovalDetailsActivity,
-                            getString(R.string.wait)
-                        )
                         viewModel.rejectApproval(pendingApprovalUser.nic)
                     }
 
@@ -117,7 +112,23 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         pendingApprovalUser = gson.fromJson(objectString, User::class.java)
         viewModel.setPendingApprovalUserData(pendingApprovalUser)
     }
+
     private fun viewModelObservers() {
+        /* Show error message in the custom error dialog */
+        viewModel.errorMessage.observe(this@PendingApprovalDetailsActivity) {
+            showErrorDialog(this@PendingApprovalDetailsActivity, it)
+        }
+
+        viewModel.isDialogVisible.observe(this@PendingApprovalDetailsActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(this@PendingApprovalDetailsActivity, getString(R.string.wait))
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
+
         viewModel.selectedItem.observe(this) { selectedItem ->
             // Handle the selected item here
             if (selectedItem != null) {

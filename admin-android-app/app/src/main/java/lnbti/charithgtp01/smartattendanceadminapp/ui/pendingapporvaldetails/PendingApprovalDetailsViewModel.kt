@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.ApprovalRepository
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 import javax.inject.Inject
 
 /**
@@ -55,31 +57,42 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
     }
 
     fun submitApproval(nic: String, deviceID: String?, userRole: String?, isApprove: Boolean) {
-
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                approvalRepository.submitApproval(
-                    ApprovalRequest(
-                        nic = nic,
-                        deviceID = deviceID,
-                        userRole = userRole,
-                        userStatus = isApprove
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    approvalRepository.submitApproval(
+                        ApprovalRequest(
+                            nic = nic,
+                            deviceID = deviceID,
+                            userRole = userRole,
+                            userStatus = isApprove
+                        )
                     )
-                )
-            _pendingApprovalResult.value = result
+                _pendingApprovalResult.value = result
+                _isDialogVisible.value = false
+
+            }
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 
     fun rejectApproval(nic: String) {
-
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                approvalRepository.rejectApproval(
-                    nic
-                )
-            _pendingApprovalResult.value = result
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    approvalRepository.rejectApproval(
+                        nic
+                    )
+                _pendingApprovalResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 }
