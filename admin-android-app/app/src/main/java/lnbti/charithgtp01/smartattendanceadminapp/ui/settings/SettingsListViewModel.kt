@@ -10,6 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
@@ -34,7 +37,7 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    lateinit var allUsersList: List<SettingsObject>
+    lateinit var allSettings: List<SettingsObject>
 
     /**
      * This will call when the View Model Created
@@ -49,21 +52,17 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
      */
     private fun getSettingsList() {
 
-        allUsersList = listOf(
-            SettingsObject(
-                R.mipmap.device_id,
-                userRepository.context.getString(R.string.get_device_id)
-            ),
+        allSettings = listOf(
             SettingsObject(
                 R.mipmap.other_settings,
-                userRepository.context.getString(R.string.other_settings)
+                OTHER_SETTINGS
             ),
             SettingsObject(
                 R.mipmap.change_password,
-                userRepository.context.getString(R.string.change_password)
+                CHANGE_PASSWORD
             )
         )
-        _settingsList.value = allUsersList
+        _settingsList.value = allSettings
 
     }
 }

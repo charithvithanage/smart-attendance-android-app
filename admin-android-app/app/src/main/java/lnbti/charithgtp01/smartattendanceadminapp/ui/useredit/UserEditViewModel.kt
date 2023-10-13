@@ -20,18 +20,21 @@ import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import javax.inject.Inject
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 
 /**
  * Users Fragment View Model
  */
 @HiltViewModel
-class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
     lateinit var nic: String
     lateinit var deviceID: String
     private var userStatus: Boolean = false
-    lateinit var userRole: String
+    private lateinit var userRole: String
     lateinit var dob: String
-    var gender: String="Male"
+    lateinit var gender: String
     lateinit var email: String
     lateinit var firstName: String
     lateinit var lastName: String
@@ -41,14 +44,13 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     val selectedGender: LiveData<String>
         get() = _gender
 
-    init {
-        // Initialize the gender property with the default value
-        _gender.value = "Male"
-    }
-
     //Gender Radio Button value check
-    var isLeftButtonChecked = false
-    var isRightButtonChecked = false
+    var isLeftGenderButtonChecked = false
+    var isRightGenderButtonChecked = false
+
+    //UserStatus Radio Button value check
+    var isLeftStatusButtonChecked = false
+    var isRightStatusButtonChecked = false
 
     private val _pendingApprovalUser = MutableLiveData<User>()
     val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
@@ -65,9 +67,7 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     private val _serverResult = MutableLiveData<ApiCallResponse?>()
     val serverResult: MutableLiveData<ApiCallResponse?> = _serverResult
 
-    init {
-        gender="Male"
-    }
+
     /**
      * Set User Object to Live Data
      * @param Selected Pending Approval User Object
@@ -83,26 +83,38 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
         email = user.email
         firstName = user.firstName
         lastName = user.lastName
-        setGenderValues(user.gender)
-    }
 
-
-    fun setSelectedGenderRadioButtonValue(selectedValue: String) {
-        gender = selectedValue
-        setGenderValues(selectedValue)
+        setGenderValues(gender)
+        setStatusValues(user.getUserStatusString())
     }
 
     /**
      * Select left and right radio button according to gender value
      */
-    private fun setGenderValues(selectedValue: String) {
-//        if (selectedValue == "Male") {
-//            isLeftButtonChecked = true
-//            isRightButtonChecked = false
-//        } else {
-//            isLeftButtonChecked = false
-//            isRightButtonChecked = true
-//        }
+    fun setGenderValues(selectedValue: String) {
+        gender = selectedValue
+        if (selectedValue == "Male") {
+            isLeftGenderButtonChecked = true
+            isRightGenderButtonChecked = false
+        } else {
+            isLeftGenderButtonChecked = false
+            isRightGenderButtonChecked = true
+        }
+    }
+
+    /**
+     * Select left and right radio button according to status value
+     */
+    fun setStatusValues(selectedValue: String) {
+        if (selectedValue == "Active") {
+            userStatus = true
+            isLeftStatusButtonChecked = true
+            isRightStatusButtonChecked = false
+        } else {
+            userStatus = false
+            isLeftStatusButtonChecked = false
+            isRightStatusButtonChecked = true
+        }
     }
 
     // Function to set the selected item
@@ -111,29 +123,38 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     }
 
     fun updateUser() {
-        val user = UserUpdateRequest(
-            nic,
-            email,
-            firstName,
-            lastName,
-            gender,
-            userRole,
-            dob,
-            true,
-            deviceID,
-            userType = "Android User"
-        )
+        //If Network available call to backend API
+        if (NetworkUtils.isNetworkAvailable()) {
+            //Show Progress Dialog when click on the search view submit button
+            _isDialogVisible.value = true
+            /* View Model Scope - Coroutine */
+            val user = UserUpdateRequest(
+                nic,
+                email,
+                firstName,
+                lastName,
+                gender,
+                userRole,
+                dob,
+                userStatus,
+                deviceID,
+                userType = "Android User"
+            )
 
-        val gson = Gson()
-        Log.d(TAG,"Update Request "+ gson.toJson(user))
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                userRepository.updateUser(
-                    user
-                )
+            val gson = Gson()
+            Log.d(TAG, "Update Request " + gson.toJson(user))
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    userRepository.updateUser(
+                        user
+                    )
 
-            serverResult.value = result
+                serverResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 
