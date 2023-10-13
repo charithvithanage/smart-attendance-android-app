@@ -9,8 +9,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isOnline
 import javax.inject.Inject
 
@@ -59,21 +62,25 @@ class UsersViewModel @Inject constructor(
      * Get Server Response and Set values to live data
      */
     private fun getUsersList() {
-        //Show Progress Dialog when click on the search view submit button
-        _isDialogVisible.value = true
-        /* View Model Scope - Coroutine */
-        viewModelScope.launch {
-            val resource = userRepository.getUsersFromDataSource()
+        if (NetworkUtils.isNetworkAvailable()) {
+            //Show Progress Dialog when click on the search view submit button
+            _isDialogVisible.value = true
+            /* View Model Scope - Coroutine */
+            viewModelScope.launch {
+                val resource = userRepository.getUsersFromDataSource()
 
-            if (resource.data != null) {
-                allUsersList = resource.data.data
-                _usersList.value = allUsersList
-            } else
-                _errorMessage.value = resource?.error?.error
+                if (resource.data != null) {
+                    allUsersList = resource.data.data
+                    _usersList.value = allUsersList
+                } else
+                    _errorMessage.value = resource?.error?.error
 
-            /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-            delay(1000L)
-            _isDialogVisible.value = false
+                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
+                delay(1000L)
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = NO_INTERNET
         }
     }
 

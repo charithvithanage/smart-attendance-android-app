@@ -101,6 +101,16 @@ class DialogUtils {
             }
         }
 
+        fun showErrorDialogInFragment(
+            fragment: Fragment, message: String?
+        ) {
+            val fragmentManager = fragment.fragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment = CustomAlertDialogFragment.newInstance(message)
+                dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
+            }
+        }
+
         /**
          * Custom Confirm Alert Dialog with icon
          * @param message Message body

@@ -54,8 +54,8 @@ class UsersFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog(
-                requireContext(),
+            DialogUtils.showErrorDialogInFragment(
+                this@UsersFragment,
                 it)
         }
 
