@@ -114,8 +114,9 @@ class HomeFragment : Fragment() {
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog =
-                    showProgressDialogInFragment(this@HomeFragment, getString(R.string.wait))
+                if (dialog?.isVisible == false)
+                    dialog =
+                        showProgressDialogInFragment(this@HomeFragment, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()

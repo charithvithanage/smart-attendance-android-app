@@ -57,7 +57,7 @@ class Utils {
 
         fun formatDateWithMonth(inputDate: String): String {
             val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
 
             val date: Date = inputFormat.parse(inputDate) ?: Date()
             return outputFormat.format(date)

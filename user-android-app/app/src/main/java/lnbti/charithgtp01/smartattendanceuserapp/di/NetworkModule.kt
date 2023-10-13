@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import lnbti.charithgtp01.smartattendanceuserapp.SSLSocketFactoryCompat
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.AttendanceService
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.CompanyService
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.UserService
@@ -15,6 +16,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import javax.net.ssl.SSLSocketFactory
 
 /**
  * Singleton Component Class for DI
@@ -56,6 +58,11 @@ object NetworkModule {
     fun provideHttpClient(): OkHttpClient {
         val okHttpClient =
             OkHttpClient.Builder()
+                .sslSocketFactory(
+                    SSLSocketFactoryCompat.createSSLSocketFactory(),
+                    SSLSocketFactoryCompat.trustManager
+                ) // Use custom SSLSocketFactory and TrustManager
+
         return okHttpClient.build()
     }
 

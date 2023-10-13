@@ -98,6 +98,22 @@ class AttendanceDataReportViewModel @Inject constructor(
         }
     }
 
+    fun getAttendancesFromAllUsers(from: String, to: String) {
+        _isDialogVisible.value = true
+        viewModelScope.launch {
+            val result = attendanceRepository.getAttendances(from, to)
+            _responseResult.value = result
+            //Get all users for the spinner
+            val resource = userRepository.getUsersFromDataSource()
+            if (resource.data != null) {
+                val allUsersList = resource.data.data
+                spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
+            }
+            _isDialogVisible.value = false
+        }
+    }
+
+
     fun setCount(count: Int) {
         _dataCountString.value = count.toString()
     }

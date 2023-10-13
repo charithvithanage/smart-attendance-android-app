@@ -3,9 +3,11 @@
     <base-config>
         <trust-anchors>
             <!-- Include any necessary trust anchors -->
+            https://ob297ofh21.execute-api.us-east-1.amazonaws.com
         </trust-anchors>
     </base-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain>192.168.115.120</domain>
+        <domain>https://ob297ofh21.execute-api.us-east-1.amazonaws.com</domain>
     </domain-config>
 </network-security-config>

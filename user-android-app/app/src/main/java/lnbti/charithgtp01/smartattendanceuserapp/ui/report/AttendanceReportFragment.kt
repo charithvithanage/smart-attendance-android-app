@@ -41,6 +41,7 @@ class AttendanceReportFragment : Fragment() {
     private var startDate: Date = Date()
     private var endDate: Date = Utils.getLastDayOfMonth(startDate)
     val gson = Gson()
+    var userRole: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +66,7 @@ class AttendanceReportFragment : Fragment() {
     }
 
     private fun initView() {
-        val userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
 
         /**
          * User filter showing only for back office users
@@ -98,7 +99,10 @@ class AttendanceReportFragment : Fragment() {
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog = showProgressDialogInFragment(this@AttendanceReportFragment, getString(R.string.wait))
+                dialog = showProgressDialogInFragment(
+                    this@AttendanceReportFragment,
+                    getString(R.string.wait)
+                )
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -117,10 +121,8 @@ class AttendanceReportFragment : Fragment() {
                 viewModel.setCount(attendanceList.size)
                 attendanceReportsListAdapter.submitList(attendanceList)
             } else if (apiResult?.data != null) {
-                DialogUtils.showErrorDialog(requireActivity(), apiResult.data.toString())
+                showErrorDialog(requireActivity(), apiResult.data.toString())
             }
-
-//            dialog?.dismiss()
         }
     }
 
@@ -134,7 +136,19 @@ class AttendanceReportFragment : Fragment() {
             getObjectFromSharedPref(requireActivity(), Constants.LOGGED_IN_USER),
             User::class.java
         )
-        viewModel.getAttendancesByUser(loggedInUser.nic, formatDate(startDate), formatDate(endDate))
+
+        if (userRole == getString(R.string.employee)) {
+            viewModel.getAttendancesByUser(
+                loggedInUser.nic,
+                formatDate(startDate),
+                formatDate(endDate)
+            )
+        } else {
+            viewModel.getAttendancesFromAllUsers(
+                formatDate(startDate),
+                formatDate(endDate)
+            )
+        }
         /* Initiate Adapter */
         attendanceReportsListAdapter =
             AttendanceDataReportsListAdapter(object :
