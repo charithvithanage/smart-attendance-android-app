@@ -10,6 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
@@ -52,11 +55,11 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
         allSettings = listOf(
             SettingsObject(
                 R.mipmap.other_settings,
-                userRepository.context.getString(R.string.other_settings)
+                OTHER_SETTINGS
             ),
             SettingsObject(
                 R.mipmap.change_password,
-                userRepository.context.getString(R.string.change_password)
+                CHANGE_PASSWORD
             )
         )
         _settingsList.value = allSettings
