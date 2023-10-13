@@ -24,6 +24,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityLoginBindi
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
@@ -69,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         login = binding.login
 
         username.setText("Charith")
-        password.setText("Charith@123")
+        password.setText("Charith@1234")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
@@ -99,6 +100,28 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun viewModelObservers() {
+
+        /* Show error message in the custom error dialog */
+        loginViewModel.errorMessage.observe(this@LoginActivity) {
+            showErrorDialog(
+                this@LoginActivity,
+                it
+            )
+        }
+
+        loginViewModel.isDialogVisible.observe(this@LoginActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(
+                    this@LoginActivity,
+                    getString(R.string.wait)
+                )
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
+
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
@@ -116,7 +139,6 @@ class LoginActivity : AppCompatActivity() {
                "password": "cityslicka"
             */
             if (loginState.isDataValid) {
-                dialog = showProgressDialog(this, getString(R.string.wait))
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         })
@@ -124,8 +146,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
-
-            dialog?.dismiss()
 
             if (loginResult.success == true) {
                 saveObjectInSharedPref(

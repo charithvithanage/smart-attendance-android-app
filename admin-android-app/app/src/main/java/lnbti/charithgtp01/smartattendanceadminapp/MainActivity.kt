@@ -13,9 +13,12 @@ import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityMainBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ConfirmDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateWithoutHistory
+import okhttp3.internal.Util
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -42,7 +45,11 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.confirm_logout_message),
                 object : ConfirmDialogButtonClickListener {
                     override fun onPositiveButtonClick() {
-                        Utils.navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                        Utils.clearAllPref(this@MainActivity, object : SuccessListener {
+                            override fun onFinished() {
+                                navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
+                            }
+                        })
                     }
 
                     override fun onNegativeButtonClick() {
