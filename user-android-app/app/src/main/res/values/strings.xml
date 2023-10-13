@@ -85,7 +85,6 @@
     <string name="search_company">Search Company</string>
 
     //Dialog Messages
-    <string name="user_registered_successfully">User Registered Successfully</string>
     <string name="markin">Mark In</string>
     <string name="markout">Mark Out</string>
     <string name="total_count">Total Count</string>

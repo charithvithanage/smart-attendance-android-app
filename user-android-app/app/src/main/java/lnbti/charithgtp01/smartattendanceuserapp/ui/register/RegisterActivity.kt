@@ -15,11 +15,14 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SUCCESS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityRegisterBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.Company
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
@@ -29,6 +32,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.normalS
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setErrorBgToSelectLayout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setNormalBgToSelectLayout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -119,6 +123,28 @@ class RegisterActivity : AppCompatActivity() {
         }
 
     private fun viewModelObservers() {
+
+        /* Show error message in the custom error dialog */
+        registerViewModel.errorMessage.observe(this@RegisterActivity) {
+            showErrorDialog(
+                this@RegisterActivity,
+                it
+            )
+        }
+
+        registerViewModel.isDialogVisible.observe(this@RegisterActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(
+                    this@RegisterActivity,
+                    getString(R.string.wait)
+                )
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
+
         //If all fields are correct call the change password api
         registerViewModel.registerForm.observe(this@RegisterActivity, Observer {
             val formState = it ?: return@Observer
@@ -193,8 +219,6 @@ class RegisterActivity : AppCompatActivity() {
                     getString(R.string.confirm_registration),
                     object : ConfirmDialogButtonClickListener {
                         override fun onPositiveButtonClick() {
-                            dialog =
-                                showProgressDialog(this@RegisterActivity, getString(R.string.wait))
                             registerViewModel.register()
                         }
 
@@ -207,31 +231,22 @@ class RegisterActivity : AppCompatActivity() {
         })
 
 
-        //Waiting for Api response
-        registerViewModel.registerResult.observe(this@RegisterActivity) {
-            val apiResult = it
+        //Waiting for Success response
+        registerViewModel.isSuccess.observe(this@RegisterActivity) {
 
-            dialog?.dismiss()
+            showAlertDialog(
+                this, SUCCESS,
+                MessageConstants.USER_REGISTERED_SUCCESS,
+                object : CustomAlertDialogListener {
+                    override fun onDialogButtonClicked() {
+                        navigateWithoutHistory(
+                            this@RegisterActivity,
+                            LoginActivity::class.java
+                        )
 
-            if (apiResult?.success == true) {
-                showAlertDialog(
-                    this, Constants.SUCCESS,
-                    getString(R.string.user_registered_successfully),
-                    object : CustomAlertDialogListener {
-                        override fun onDialogButtonClicked() {
-                            Utils.navigateWithoutHistory(
-                                this@RegisterActivity,
-                                LoginActivity::class.java
-                            )
+                    }
 
-                        }
-
-                    })
-            } else if (apiResult?.data != null) {
-                showErrorDialog(this, apiResult.data.toString())
-
-            }
-
+                })
         }
     }
 }

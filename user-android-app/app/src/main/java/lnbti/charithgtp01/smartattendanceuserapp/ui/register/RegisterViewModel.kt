@@ -9,10 +9,19 @@ import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.USER_REGISTERED_SUCCESS
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.Company
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isEmailValid
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isMobileNumberValid
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isNICValid
@@ -45,31 +54,54 @@ class RegisterViewModel @Inject constructor(
     private val _registerResult = MutableLiveData<ApiCallResponse?>()
     val registerResult: MutableLiveData<ApiCallResponse?> = _registerResult
 
+    //Dialog Visibility Live Data
+    private val _isDialogVisible = MutableLiveData<Boolean>()
+    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
+    //Error Message Live Data
+    private val _isSuccess = MutableLiveData<Boolean?>()
+    val isSuccess: LiveData<Boolean?> get() = _isSuccess
+
     // Function to set the selected RadioButton value
     fun setSelectedRadioButtonValue(value: String) {
         gender = value
     }
 
     fun register() {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                userRepository.register(
-                    RegisterRequest(
-                        employeeID,
-                        firstName,
-                        lastName,
-                        email,
-                        contact,
-                        nic,
-                        gender,
-                        dob,
-                        userName,
-                        newPassword,
-                        false
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    userRepository.register(
+                        RegisterRequest(
+                            employeeID,
+                            firstName,
+                            lastName,
+                            email,
+                            contact,
+                            nic,
+                            gender,
+                            dob,
+                            userName,
+                            newPassword,
+                            false
+                        )
                     )
-                )
-            registerResult.value = result
+
+                if (result?.success == true) {
+                    _isSuccess.value = true
+                } else if (result?.data != null) {
+                    _errorMessage.value = result.data.toString()
+                }
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = NO_INTERNET
         }
     }
 
