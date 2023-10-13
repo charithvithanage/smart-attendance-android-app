@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import lnbti.charithgtp01.smartattendanceadminapp.SSLSocketFactoryCompat
 import lnbti.charithgtp01.smartattendanceadminapp.apiservice.ApiService
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.BASE_URL
 import okhttp3.OkHttpClient
@@ -53,7 +54,10 @@ object NetworkModule {
     @Provides
     fun provideHttpClient(): OkHttpClient {
         val okHttpClient =
-            OkHttpClient.Builder()
+            OkHttpClient.Builder().sslSocketFactory(
+                SSLSocketFactoryCompat.createSSLSocketFactory(),
+                SSLSocketFactoryCompat.trustManager
+            ) // Use custom SSLSocketFactory and TrustManager
         return okHttpClient.build()
     }
 
