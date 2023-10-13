@@ -20,6 +20,8 @@ import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import javax.inject.Inject
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 
 /**
  * Users Fragment View Model
@@ -121,29 +123,38 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     }
 
     fun updateUser() {
-        val user = UserUpdateRequest(
-            nic,
-            email,
-            firstName,
-            lastName,
-            gender,
-            userRole,
-            dob,
-            userStatus,
-            deviceID,
-            userType = "Android User"
-        )
+        //If Network available call to backend API
+        if (NetworkUtils.isNetworkAvailable()) {
+            //Show Progress Dialog when click on the search view submit button
+            _isDialogVisible.value = true
+            /* View Model Scope - Coroutine */
+            val user = UserUpdateRequest(
+                nic,
+                email,
+                firstName,
+                lastName,
+                gender,
+                userRole,
+                dob,
+                userStatus,
+                deviceID,
+                userType = "Android User"
+            )
 
-        val gson = Gson()
-        Log.d(TAG, "Update Request " + gson.toJson(user))
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                userRepository.updateUser(
-                    user
-                )
+            val gson = Gson()
+            Log.d(TAG, "Update Request " + gson.toJson(user))
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    userRepository.updateUser(
+                        user
+                    )
 
-            serverResult.value = result
+                serverResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 

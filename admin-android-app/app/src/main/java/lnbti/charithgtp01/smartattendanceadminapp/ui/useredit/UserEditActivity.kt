@@ -98,7 +98,6 @@ class UserEditActivity : AppCompatActivity() {
 
 
         binding.btnUpdate.setOnClickListener {
-            dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
             viewModel.updateUser()
         }
     }
@@ -117,13 +116,27 @@ class UserEditActivity : AppCompatActivity() {
     }
 
     private fun viewModelObservers() {
+        /* Show error message in the custom error dialog */
+        viewModel.errorMessage.observe(this@UserEditActivity) {
+            DialogUtils.showErrorDialog(this@UserEditActivity, it)
+        }
+
+        viewModel.isDialogVisible.observe(this@UserEditActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = DialogUtils.showProgressDialog(
+                    this@UserEditActivity,
+                    getString(R.string.wait)
+                )
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
 
         //Waiting for Api response
         viewModel.serverResult.observe(this@UserEditActivity) {
             val apiResult = it
-
-            dialog?.dismiss()
-
             if (apiResult?.success == true) {
                 DialogUtils.showAlertDialog(
                     this, Constants.SUCCESS,
