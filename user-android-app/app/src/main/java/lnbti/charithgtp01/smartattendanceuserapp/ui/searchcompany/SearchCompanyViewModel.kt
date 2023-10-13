@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.CompanyRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations
 import javax.inject.Inject
 
@@ -33,22 +35,27 @@ class SearchCompanyViewModel @Inject constructor(
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
-
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
     fun searchCompany() {
 
         //If Network available call to backend API
-        if (true) {
+        if (NetworkUtils.isNetworkAvailable()) {
             //Show Progress Dialog when click on the search view submit button
             _isDialogVisible.value = true
             viewModelScope.launch {
                 // can be launched in a separate asynchronous job
                 val result = companyRepository.getCompanyFromID(companyID)
-                _searchCompanyResult.value = result
+                if (result?.success == true) {
+                    _searchCompanyResult.value = result
+                }else
+                    _errorMessage.value = result?.message
+
                 _isDialogVisible.value = false
             }
         } else {
-            _searchCompanyResult.value =
-                ApiCallResponse(message = NO_INTERNET)
+            _errorMessage.value = NO_INTERNET
         }
     }
 
