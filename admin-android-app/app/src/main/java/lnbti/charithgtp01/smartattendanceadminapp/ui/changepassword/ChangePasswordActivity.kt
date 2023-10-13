@@ -17,6 +17,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityChangePass
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
+import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
@@ -72,6 +73,10 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding.btnSubmit.setOnClickListener {
             changePasswordViewModel.validateFields()
         }
+
+        changePasswordViewModel.setFocusChangeListener(binding.etCurrentPassword)
+        changePasswordViewModel.setFocusChangeListener(binding.etNewPassword)
+        changePasswordViewModel.setFocusChangeListener(binding.etConfirmPassword)
 //
 //        changePasswordViewModel.currentPassword="Charith@123"
 //        changePasswordViewModel.newPassword="Charith@1234"
@@ -79,6 +84,21 @@ class ChangePasswordActivity : AppCompatActivity() {
     }
 
     private fun viewModelObservers() {
+        /* Show error message in the custom error dialog */
+        changePasswordViewModel.errorMessage.observe(this@ChangePasswordActivity) {
+            showErrorDialog(this@ChangePasswordActivity, it)
+        }
+
+        changePasswordViewModel.isDialogVisible.observe(this@ChangePasswordActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(this@ChangePasswordActivity, getString(R.string.wait))
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
+
         //If all fields are correct call the change password api
         changePasswordViewModel.changePasswordForm.observe(this@ChangePasswordActivity, Observer {
             val formState = it ?: return@Observer
@@ -102,7 +122,6 @@ class ChangePasswordActivity : AppCompatActivity() {
                 validState(binding.confirmPasswordInputText, R.drawable.ic_check)
 
             if (formState.isDataValid) {
-                dialog = showProgressDialog(this, getString(R.string.wait))
                 changePasswordViewModel.changePassword(loggedInUser.id)
             }
         })
@@ -111,9 +130,6 @@ class ChangePasswordActivity : AppCompatActivity() {
         //Waiting for Api response
         changePasswordViewModel.changePasswordResult.observe(this@ChangePasswordActivity) {
             val apiResult = it
-
-            dialog?.dismiss()
-
             if (apiResult?.success == true) {
                 showAlertDialog(
                     this, Constants.SUCCESS,
