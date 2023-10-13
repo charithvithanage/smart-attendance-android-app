@@ -12,13 +12,16 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivitySearchCompanyBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.DialogButtonClickListener
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 @AndroidEntryPoint
 class SearchCompanyActivity : AppCompatActivity() {
@@ -46,7 +49,7 @@ class SearchCompanyActivity : AppCompatActivity() {
     }
 
     private fun initiateView() {
-        UIUtils.initiateActionBarWithoutHomeButton(
+        initiateActionBarWithoutHomeButton(
             binding?.actionBar?.mainLayout!!,
             getString(R.string.search_company)
         ) { onBackPressed() }
@@ -57,6 +60,26 @@ class SearchCompanyActivity : AppCompatActivity() {
     }
 
     private fun viewModelObservers() {
+        /* Show error message in the custom error dialog */
+        searchCompanyViewModel.errorMessage.observe(this@SearchCompanyActivity) {
+            showErrorDialog(
+                this@SearchCompanyActivity,
+                it
+            )
+        }
+
+        searchCompanyViewModel.isDialogVisible.observe(this@SearchCompanyActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(
+                    this@SearchCompanyActivity,
+                    getString(R.string.wait)
+                )
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
+            }
+        }
         searchCompanyViewModel.searchCompanyForm.observe(this@SearchCompanyActivity, Observer {
             val formState = it ?: return@Observer
             if (formState.companyIDError != null) {
@@ -66,35 +89,22 @@ class SearchCompanyActivity : AppCompatActivity() {
                 validState(binding.companyIDInputText, R.drawable.ic_check)
 
             if (formState.isDataValid) {
-                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
-                searchCompanyViewModel.searchCompany()
+                 searchCompanyViewModel.searchCompany()
             }
         })
 
 
         //Waiting for Api response
         searchCompanyViewModel.searchCompanyResult.observe(this@SearchCompanyActivity) {
-            val apiResult = it
 
-            dialog?.dismiss()
-
-            if (apiResult?.success == true) {
-                val gson = Gson()
-                val prefMap = HashMap<String, String>()
-                prefMap[Constants.OBJECT_STRING] = gson.toJson(apiResult.data)
-                Utils.navigateToAnotherActivityWithExtras(
-                    this,
-                    RegisterActivity::class.java,
-                    prefMap
-                )
-            } else {
-                DialogUtils.showAlertDialog(this,Constants.FAIL, apiResult?.message,object : CustomAlertDialogListener{
-                    override fun onDialogButtonClicked() {
-
-                    }
-
-                })
-            }
+            val gson = Gson()
+            val prefMap = HashMap<String, String>()
+            prefMap[Constants.OBJECT_STRING] = gson.toJson(it?.data)
+            navigateToAnotherActivityWithExtras(
+                this,
+                RegisterActivity::class.java,
+                prefMap
+            )
 
         }
     }

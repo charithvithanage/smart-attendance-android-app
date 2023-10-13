@@ -54,8 +54,8 @@
     <string name="enter_employee_id">Enter Employee ID</string>
     <string name="enter_dob">Select Date Of Birth</string>
     <string name="select_gender">Select Gender</string>
-    <string name="enter_contact">Enter Contact Number</string>
-    <string name="enter_email">Enter Email</string>
+    <string name="enter_contact">Invalid Contact Number</string>
+    <string name="enter_email">Invalid Email</string>
     <string name="enter_user_name">Enter Username</string>
     <string name="register">Register</string>
     <string name="user_registration">User Registration</string>
@@ -85,8 +85,9 @@
     <string name="search_company">Search Company</string>
 
     //Dialog Messages
-    <string name="user_registered_successfully">User Registered Successfully</string>
     <string name="markin">Mark In</string>
     <string name="markout">Mark Out</string>
     <string name="total_count">Total Count</string>
+    <string name="invalid_company_id">Invalid Company ID</string>
+    <string name="confirm_registration">Are you sure you want to create an account?</string>
 </resources>
