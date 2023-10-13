@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
@@ -52,7 +54,7 @@ class LoginViewModel @Inject constructor(
             }
         } else {
             // Handle the case when the device is not connected to the network
-            _loginResult.value = LoginResponse(false, "No Internet")
+            _loginResult.value = LoginResponse(false, NO_INTERNET)
         }
     }
 

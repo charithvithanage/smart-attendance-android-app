@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.constants
 
-object MESSAGE_CONSTANTS {
+object MessageConstants {
     const val NO_INTERNET = "No Internet"
-
 }

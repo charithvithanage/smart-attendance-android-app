@@ -48,6 +48,7 @@ object Constants {
 
     //Get Attendance By Date Range Endpoint
     const val GET_ATTENDANCE_ENDPOINT = "attendance/attendances"
+
     /**
      * Company Endpoints
      */
@@ -60,6 +61,7 @@ object Constants {
     const val LOGGED_IN_USER = "logged in user"
     const val ACCESS_TOKEN = "access_token"
     const val USER_ROLE = "user_role"
+    const val USERS_LIST = "users_list"
 
     /**
      * Pass Intent keys

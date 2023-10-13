@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
+import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
@@ -25,8 +26,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.sho
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPermissions
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.clearAllPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isLocationEnabled
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
 
 
 @AndroidEntryPoint
@@ -90,10 +93,13 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.confirm_logout_message),
                     object : ConfirmDialogButtonClickListener {
                         override fun onPositiveButtonClick() {
-                            Utils.navigateWithoutHistory(
-                                this@MainActivity,
-                                LoginActivity::class.java
-                            )
+                            clearAllPref(this@MainActivity,
+                                SuccessListener {
+                                    navigateWithoutHistory(
+                                        this@MainActivity,
+                                        LoginActivity::class.java
+                                    )
+                                })
                         }
 
                         override fun onNegativeButtonClick() {

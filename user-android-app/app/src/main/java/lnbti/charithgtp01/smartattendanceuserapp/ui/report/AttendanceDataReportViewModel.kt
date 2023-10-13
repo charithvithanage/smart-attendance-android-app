@@ -9,12 +9,14 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.ResponseWithJSONArray
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getLastDayOfMonth
 import java.util.Date
@@ -34,13 +36,14 @@ class AttendanceDataReportViewModel @Inject constructor(
     private val _dataCountString = MutableLiveData("0")
     val dataCountString: LiveData<String> get() = _dataCountString
 
-    //Users Dropdown values
-    var spinnerOptions: Array<String>? = null
-
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> get() = _usersList
 
-    var selectedSpinnerPosition: Int = 0
+    val selectedUser = MutableLiveData<User>()
+
+    fun onUserSelected(user: User) {
+        selectedUser.value = user
+    }
 
     //Start Date Live Date
     private val _startDateString = MutableLiveData<String>()
@@ -83,33 +86,29 @@ class AttendanceDataReportViewModel @Inject constructor(
 
 
     fun getAttendancesByUser(nic: String, from: String, to: String) {
-        _isDialogVisible.value = true
-        viewModelScope.launch {
-            val result = attendanceRepository.getAttendanceDataByUser(nic, from, to)
-            _responseResult.value = result
-
-            //Get all users for the spinner
-//            val resource = userRepository.getUsersFromDataSource()
-//            if (resource.data != null) {
-//                val allUsersList = resource.data.data
-//                spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
-//            }
-            _isDialogVisible.value = false
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                val result = attendanceRepository.getAttendanceDataByUser(nic, from, to)
+                _responseResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 
     fun getAttendancesFromAllUsers(from: String, to: String) {
-        _isDialogVisible.value = true
-        viewModelScope.launch {
-            val result = attendanceRepository.getAttendances(from, to)
-            _responseResult.value = result
-            //Get all users for the spinner
-            val resource = userRepository.getUsersFromDataSource()
-            if (resource.data != null) {
-                val allUsersList = resource.data.data
-                spinnerOptions = allUsersList.map { it.firstName }.toTypedArray()
+        if (NetworkUtils.isNetworkAvailable()) {
+
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                val result = attendanceRepository.getAttendances(from, to)
+                _responseResult.value = result
+                _isDialogVisible.value = false
             }
-            _isDialogVisible.value = false
+        } else {
+            _errorMessage.value = MessageConstants.NO_INTERNET
         }
     }
 

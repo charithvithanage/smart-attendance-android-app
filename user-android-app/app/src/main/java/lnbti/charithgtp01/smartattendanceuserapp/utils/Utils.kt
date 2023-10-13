@@ -21,6 +21,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
+import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import okhttp3.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,6 +33,16 @@ import java.util.Locale
  */
 class Utils {
     companion object {
+
+        /**
+         * Parse the string containing the list into a user object list
+         */
+        fun parseStringToUserList(stringData: String?): List<User> {
+            val gson = Gson()
+            val listType = object : TypeToken<List<User>>() {}.type
+            return gson.fromJson(stringData, listType)
+        }
+
         /**
          * Deserialize error response.body
          * @param errorBody Error Response
@@ -418,5 +429,15 @@ class Utils {
             listener.onFinished()
         }
 
+        /**
+         * Clear all preference values
+         */
+        fun clearAllPref(context: Context, listener: SuccessListener) {
+            val sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+            sharedPref.edit().clear().apply()
+            listener.onFinished()
+        }
     }
 }

@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -17,13 +19,14 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentAttendanceR
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.parseStringToUserList
 import java.util.Calendar
 import java.util.Date
 
@@ -42,7 +45,13 @@ class AttendanceReportFragment : Fragment() {
     private var endDate: Date = Utils.getLastDayOfMonth(startDate)
     val gson = Gson()
     var userRole: String? = null
+    private lateinit var allAttendanceList: List<AttendanceData>
+    private lateinit var filteredAttendanceList: List<AttendanceData>
 
+    //Users Dropdown values
+    lateinit var spinnerOptions: List<User>
+
+    lateinit var selectedUser: User
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,8 +74,14 @@ class AttendanceReportFragment : Fragment() {
         viewModelObservers()
     }
 
+
     private fun initView() {
         userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
+        val usersListString = getObjectFromSharedPref(requireContext(), Constants.USERS_LIST)
+        spinnerOptions = parseStringToUserList(usersListString)
+        selectedUser = spinnerOptions[0]
+        allAttendanceList = listOf()
+        filteredAttendanceList = listOf()
 
         /**
          * User filter showing only for back office users
@@ -82,6 +97,37 @@ class AttendanceReportFragment : Fragment() {
         binding?.toLayout?.mainLayout?.setOnClickListener {
             openDatePicker(false)
         }
+
+        val adapter = UserSpinnerAdapter(requireContext(), spinnerOptions)
+        binding?.spinner?.adapter = adapter
+
+        binding?.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedUser = spinnerOptions[position]
+                viewModel.onUserSelected(selectedUser)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle nothing selected if needed
+            }
+        }
+    }
+
+    private fun filterList(user: User): List<AttendanceData> {
+        val tempList = mutableListOf<AttendanceData>() // Use a mutable list
+
+        for (item in allAttendanceList) {
+            if (item.userID == user.nic) {
+                tempList.add(item) // Add the matching item to the tempList
+            }
+        }
+
+        return tempList.toList()
     }
 
     /**
@@ -90,8 +136,8 @@ class AttendanceReportFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            showErrorDialog(
-                requireContext(),
+            showErrorDialogInFragment(
+                this@AttendanceReportFragment,
                 it
             )
         }
@@ -117,13 +163,27 @@ class AttendanceReportFragment : Fragment() {
             val apiResult = it
             if (apiResult?.success == true) {
                 val listType = object : TypeToken<List<AttendanceData>>() {}.type
-                val attendanceList: List<AttendanceData> = gson.fromJson(apiResult.data, listType)
-                viewModel.setCount(attendanceList.size)
-                attendanceReportsListAdapter.submitList(attendanceList)
+                allAttendanceList = gson.fromJson(apiResult.data, listType)
+                if (userRole == getString(R.string.employee)) {
+                    allAttendanceList = filteredAttendanceList
+                    viewModel.setCount(filteredAttendanceList.size)
+                    attendanceReportsListAdapter.submitList(filteredAttendanceList)
+                } else {
+                    viewModel.onUserSelected(selectedUser)
+                }
+
             } else if (apiResult?.data != null) {
                 showErrorDialog(requireActivity(), apiResult.data.toString())
             }
         }
+
+        // Observe the selected user in the ViewModel
+        viewModel.selectedUser.observe(requireActivity(), Observer { user ->
+            // Handle the selected user
+            filteredAttendanceList = filterList(user)
+            attendanceReportsListAdapter.submitList(filteredAttendanceList)
+            viewModel.setCount(filteredAttendanceList.size)
+        })
     }
 
     private lateinit var loggedInUser: User
@@ -132,23 +192,14 @@ class AttendanceReportFragment : Fragment() {
      * Recycle View data configuration
      */
     private fun initiateAdapter() {
+
         loggedInUser = gson.fromJson(
             getObjectFromSharedPref(requireActivity(), Constants.LOGGED_IN_USER),
             User::class.java
         )
 
-        if (userRole == getString(R.string.employee)) {
-            viewModel.getAttendancesByUser(
-                loggedInUser.nic,
-                formatDate(startDate),
-                formatDate(endDate)
-            )
-        } else {
-            viewModel.getAttendancesFromAllUsers(
-                formatDate(startDate),
-                formatDate(endDate)
-            )
-        }
+        getDataFromServer()
+
         /* Initiate Adapter */
         attendanceReportsListAdapter =
             AttendanceDataReportsListAdapter(object :
@@ -168,6 +219,21 @@ class AttendanceReportFragment : Fragment() {
         /* Set Adapter to Recycle View */
         binding?.recyclerView.also { it2 ->
             it2?.adapter = attendanceReportsListAdapter
+        }
+    }
+
+    private fun getDataFromServer() {
+        if (userRole == getString(R.string.employee)) {
+            viewModel.getAttendancesByUser(
+                loggedInUser.nic,
+                formatDate(startDate),
+                formatDate(endDate)
+            )
+        } else {
+            viewModel.getAttendancesFromAllUsers(
+                formatDate(startDate),
+                formatDate(endDate)
+            )
         }
     }
 
@@ -196,11 +262,7 @@ class AttendanceReportFragment : Fragment() {
                     endDate = selectedDate
                     viewModel.setDate(startDate, endDate)
                 }
-                viewModel.getAttendancesByUser(
-                    loggedInUser.nic,
-                    formatDate(startDate),
-                    formatDate(endDate)
-                )
+                getDataFromServer()
 
             },
             calendar.get(Calendar.YEAR),
