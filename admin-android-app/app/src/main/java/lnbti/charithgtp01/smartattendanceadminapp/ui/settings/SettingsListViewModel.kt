@@ -34,7 +34,7 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    lateinit var allUsersList: List<SettingsObject>
+    lateinit var allSettings: List<SettingsObject>
 
     /**
      * This will call when the View Model Created
@@ -49,11 +49,7 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
      */
     private fun getSettingsList() {
 
-        allUsersList = listOf(
-            SettingsObject(
-                R.mipmap.device_id,
-                userRepository.context.getString(R.string.get_device_id)
-            ),
+        allSettings = listOf(
             SettingsObject(
                 R.mipmap.other_settings,
                 userRepository.context.getString(R.string.other_settings)
@@ -63,7 +59,7 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
                 userRepository.context.getString(R.string.change_password)
             )
         )
-        _settingsList.value = allUsersList
+        _settingsList.value = allSettings
 
     }
 }

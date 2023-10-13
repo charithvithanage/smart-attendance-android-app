@@ -28,6 +28,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.saveObjectInSharedPref
 
@@ -46,9 +47,18 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initiateDataBinding()
-        initiateView()
-        viewModelObservers()
+        val loggedInUser = getObjectFromSharedPref(this@LoginActivity, LOGGED_IN_USER)
+        //Already user is logged in navigate to home page
+        if (loggedInUser != null) {
+            navigateToAnotherActivity(
+                this@LoginActivity,
+                MainActivity::class.java
+            )
+        } else {
+            initiateDataBinding()
+            initiateView()
+            viewModelObservers()
+        }
     }
 
     private fun initiateDataBinding() {
@@ -147,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            if (loginResult.success == true) {
+            if (loginResult.success) {
                 saveObjectInSharedPref(
                     this,
                     LOGGED_IN_USER,

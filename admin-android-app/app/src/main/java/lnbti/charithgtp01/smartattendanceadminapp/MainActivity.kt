@@ -45,11 +45,8 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.confirm_logout_message),
                 object : ConfirmDialogButtonClickListener {
                     override fun onPositiveButtonClick() {
-                        Utils.clearAllPref(this@MainActivity, object : SuccessListener {
-                            override fun onFinished() {
-                                navigateWithoutHistory(this@MainActivity, LoginActivity::class.java)
-                            }
-                        })
+                        Utils.clearAllPref(this@MainActivity
+                        ) { navigateWithoutHistory(this@MainActivity, LoginActivity::class.java) }
                     }
 
                     override fun onNegativeButtonClick() {

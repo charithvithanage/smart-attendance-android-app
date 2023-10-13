@@ -62,10 +62,6 @@ class SettingsFragment : Fragment() {
             SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
                 override fun itemClick(item: SettingsObject) {
                     when (item.name) {
-                        getString(R.string.get_device_id) -> navigateToAnotherActivity(
-                            requireActivity(),
-                            DeviceIDQRActivity::class.java
-                        )
                         getString(R.string.other_settings) -> {
                             navigateToAnotherActivity(
                                 requireActivity(),
