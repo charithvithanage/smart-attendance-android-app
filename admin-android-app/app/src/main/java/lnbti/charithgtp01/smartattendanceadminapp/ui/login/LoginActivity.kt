@@ -79,8 +79,8 @@ class LoginActivity : AppCompatActivity() {
         passwordInputText = binding.passwordInputText
         login = binding.login
 
-        username.setText("Charith")
-        password.setText("Charith@1234")
+//        username.setText("Charith")
+//        password.setText("Charith@1234")
 
         //UI initiation
         inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {

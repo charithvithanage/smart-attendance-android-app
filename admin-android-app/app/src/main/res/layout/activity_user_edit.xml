@@ -144,8 +144,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dobInputText"
-                    bind:isLeftRadioCheck='@{vm.isLeftButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightButtonChecked}'
+                    bind:isLeftRadioCheck='@{vm.isLeftGenderButtonChecked}'
+                    bind:isRightRadioCheck='@{vm.isRightGenderButtonChecked}'
                     bind:leftButtonValue='@{"Male"}'
                     bind:rightButtonValue='@{"Female"}'
                     bind:layoutLabel='@{"Gender"}'
@@ -198,8 +198,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/deviceIDLayout"
-                    bind:isLeftRadioCheck='@{vm.isLeftButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightButtonChecked}'
+                    bind:isLeftRadioCheck='@{vm.isLeftStatusButtonChecked}'
+                    bind:isRightRadioCheck='@{vm.isRightStatusButtonChecked}'
                     bind:leftButtonValue="@{@string/activate}"
                     bind:rightButtonValue="@{@string/deactivate}"
                     bind:layoutLabel="@{@string/userstatus}"/>

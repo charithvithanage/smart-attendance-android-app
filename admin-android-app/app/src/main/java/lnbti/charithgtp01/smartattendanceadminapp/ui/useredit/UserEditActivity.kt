@@ -67,7 +67,7 @@ class UserEditActivity : AppCompatActivity() {
             run {
                 val radioButton: RadioButton = findViewById(checkedId)
                 val selectedValue = radioButton.text.toString()
-                viewModel.setSelectedGenderRadioButtonValue(selectedValue)
+                viewModel.setGenderValues(selectedValue)
             }
         }
 
@@ -75,7 +75,7 @@ class UserEditActivity : AppCompatActivity() {
             run {
                 val radioButton: RadioButton = findViewById(checkedId)
                 val selectedValue = radioButton.text.toString()
-                viewModel.setSelectedGenderRadioButtonValue(selectedValue)
+                viewModel.setStatusValues(selectedValue)
             }
         }
 

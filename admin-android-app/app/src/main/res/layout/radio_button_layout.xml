@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@{leftButtonValue}"
-                        android:checked='@{selectedGender == "Male"}'/>
+                        android:checked='@{isLeftRadioCheck}'/>
 
                     <RadioButton
                         android:id="@+id/radioButton2"
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@{rightButtonValue}"
-                        android:checked='@{selectedGender == "Female"}'/>
+                        android:checked='@{isRightRadioCheck}'/>
 
                 </RadioGroup>
 

@@ -3,6 +3,7 @@ package lnbti.charithgtp01.smartattendanceadminapp.utils
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.PROGRESS_DIALOG_FRAGMENT_TAG
 import lnbti.charithgtp01.smartattendanceadminapp.dialogs.CustomAlertDialogFragment
 import lnbti.charithgtp01.smartattendanceadminapp.dialogs.CustomConfirmAlertDialogFragment
@@ -48,6 +49,16 @@ class DialogUtils {
             }
         }
 
+        fun showErrorDialogInFragment(
+            fragment: Fragment, message: String?
+        ) {
+            val fragmentManager = fragment.fragmentManager
+            if (fragmentManager != null) {
+                val dialogFragment = CustomAlertDialogFragment.newInstance(message)
+                dialogFragment.show(fragmentManager, "CustomDialogFragmentTag")
+            }
+        }
+
         /**
          * Custom Confirm Alert Dialog with icon
          * @param message Message body
@@ -76,6 +87,23 @@ class DialogUtils {
             var dialogFragment: DialogFragment? = null
             if (context != null) {
                 val fragmentManager = (context as? AppCompatActivity)?.supportFragmentManager
+                if (fragmentManager != null) {
+                    dialogFragment =
+                        CustomProgressDialogFragment.newInstance(message)
+                    dialogFragment.show(fragmentManager, PROGRESS_DIALOG_FRAGMENT_TAG)
+                }
+            }
+            return dialogFragment
+        }
+
+        /**
+         * Progress Dialog in Fragment
+         * @param message progress message
+         */
+        fun showProgressDialogInFragment(activity: Fragment, message: String?): DialogFragment? {
+            var dialogFragment: DialogFragment? = null
+            if (activity != null) {
+                val fragmentManager = activity.fragmentManager
                 if (fragmentManager != null) {
                     dialogFragment =
                         CustomProgressDialogFragment.newInstance(message)

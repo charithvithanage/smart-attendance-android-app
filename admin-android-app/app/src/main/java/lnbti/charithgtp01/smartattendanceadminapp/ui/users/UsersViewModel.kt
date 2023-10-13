@@ -75,8 +75,6 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
                 } else
                     _errorMessage.value = resource?.error?.error
 
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
                 _isDialogVisible.value = false
             }
         } else {

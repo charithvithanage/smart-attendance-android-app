@@ -25,13 +25,14 @@ import androidx.databinding.PropertyChangeRegistry
  * Users Fragment View Model
  */
 @HiltViewModel
-class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) :
+    ViewModel() {
     lateinit var nic: String
     lateinit var deviceID: String
     private var userStatus: Boolean = false
-    lateinit var userRole: String
+    private lateinit var userRole: String
     lateinit var dob: String
-    var gender: String="Male"
+    lateinit var gender: String
     lateinit var email: String
     lateinit var firstName: String
     lateinit var lastName: String
@@ -41,14 +42,13 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     val selectedGender: LiveData<String>
         get() = _gender
 
-    init {
-        // Initialize the gender property with the default value
-        _gender.value = "Male"
-    }
-
     //Gender Radio Button value check
-    var isLeftButtonChecked = false
-    var isRightButtonChecked = false
+    var isLeftGenderButtonChecked = false
+    var isRightGenderButtonChecked = false
+
+    //UserStatus Radio Button value check
+    var isLeftStatusButtonChecked = false
+    var isRightStatusButtonChecked = false
 
     private val _pendingApprovalUser = MutableLiveData<User>()
     val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
@@ -65,9 +65,7 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     private val _serverResult = MutableLiveData<ApiCallResponse?>()
     val serverResult: MutableLiveData<ApiCallResponse?> = _serverResult
 
-    init {
-        gender="Male"
-    }
+
     /**
      * Set User Object to Live Data
      * @param Selected Pending Approval User Object
@@ -83,26 +81,38 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
         email = user.email
         firstName = user.firstName
         lastName = user.lastName
-        setGenderValues(user.gender)
-    }
 
-
-    fun setSelectedGenderRadioButtonValue(selectedValue: String) {
-        gender = selectedValue
-        setGenderValues(selectedValue)
+        setGenderValues(gender)
+        setStatusValues(user.getUserStatusString())
     }
 
     /**
      * Select left and right radio button according to gender value
      */
-    private fun setGenderValues(selectedValue: String) {
-//        if (selectedValue == "Male") {
-//            isLeftButtonChecked = true
-//            isRightButtonChecked = false
-//        } else {
-//            isLeftButtonChecked = false
-//            isRightButtonChecked = true
-//        }
+    fun setGenderValues(selectedValue: String) {
+        gender = selectedValue
+        if (selectedValue == "Male") {
+            isLeftGenderButtonChecked = true
+            isRightGenderButtonChecked = false
+        } else {
+            isLeftGenderButtonChecked = false
+            isRightGenderButtonChecked = true
+        }
+    }
+
+    /**
+     * Select left and right radio button according to status value
+     */
+    fun setStatusValues(selectedValue: String) {
+        if (selectedValue == "Active") {
+            userStatus = true
+            isLeftStatusButtonChecked = true
+            isRightStatusButtonChecked = false
+        } else {
+            userStatus = false
+            isLeftStatusButtonChecked = false
+            isRightStatusButtonChecked = true
+        }
     }
 
     // Function to set the selected item
@@ -119,13 +129,13 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
             gender,
             userRole,
             dob,
-            true,
+            userStatus,
             deviceID,
             userType = "Android User"
         )
 
         val gson = Gson()
-        Log.d(TAG,"Update Request "+ gson.toJson(user))
+        Log.d(TAG, "Update Request " + gson.toJson(user))
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
             val result =
