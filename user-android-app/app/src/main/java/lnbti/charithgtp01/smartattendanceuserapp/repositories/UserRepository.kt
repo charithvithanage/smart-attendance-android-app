@@ -10,7 +10,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorResponse
-import lnbti.charithgtp01.smartattendanceuserapp.model.JSONResource
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.RegisterRequest
@@ -43,14 +42,17 @@ class UserRepository @Inject constructor(
         val gson = Gson()
         Log.d(TAG, gson.toJson(loginRequest))
 
-        val response = userService.loginUser(loginRequest)
-        Log.d(TAG, "Response Object "+response.body().toString())
-
-        return if (response.isSuccessful) {
-            response.body()
-        } else {
-            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            LoginResponse(false, errorObject.message)
+        return try {
+            val response = userService.loginUser(loginRequest)
+            Log.d(TAG, "Response Object " + response.body().toString())
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+                LoginResponse(false, errorObject.message)
+            }
+        } catch (e: Exception) {
+            LoginResponse(false, e.message)
         }
     }
 
@@ -72,17 +74,18 @@ class UserRepository @Inject constructor(
         val gson = Gson()
         Log.d(TAG, gson.toJson(registerRequest))
 
-        val apiCallResponse: ApiCallResponse
-        val response = userService.register(registerRequest)
+        return try {
+            val response = userService.register(registerRequest)
 
-        apiCallResponse = if (response.isSuccessful) {
-            ApiCallResponse(true, response.body().toString())
-        } else {
-            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            ApiCallResponse(false, errorObject.message)
+            if (response.isSuccessful) {
+                ApiCallResponse(true, response.body().toString())
+            } else {
+                val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+                ApiCallResponse(false, errorObject.message)
+            }
+        } catch (e: Exception) {
+            ApiCallResponse(false, e.message)
         }
-
-        return apiCallResponse
     }
 
 
@@ -111,36 +114,6 @@ class UserRepository @Inject constructor(
     }
 
     /**
-     * Get User from the server
-     */
-    suspend fun getUserFromDataSource(): JSONResource {
-        return withContext(Dispatchers.IO) {
-            return@withContext getUserFromRemoteService()
-        }
-    }
-
-
-    /**
-     * @return ServerResponse Object
-     */
-    private suspend fun getUserFromRemoteService(): JSONResource {
-
-        val response = userService.getUser()
-
-        return if (response.isSuccessful) {
-            JSONResource.Success(data = response.body()!!)
-        } else {
-            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
-            JSONResource.Error(
-                ErrorResponse(
-                    errorObject.message,
-                    response.code()
-                )
-            )
-        }
-    }
-
-    /**
      * Get Users from the server
      */
     suspend fun getUsersFromDataSource(): Resource {
@@ -154,18 +127,28 @@ class UserRepository @Inject constructor(
      */
     private suspend fun getUsersFromRemoteService(): Resource {
 
-        /* Get Server Response */
-        val response = userService.getUsers()
-        return if (response.isSuccessful) {
-            Resource.Success(data = response.body()!!)
-        } else {
-            val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+        return try {
+            /* Get Server Response */
+            val response = userService.getUsers()
+            return if (response.isSuccessful) {
+                Resource.Success(data = response.body()!!)
+            } else {
+                val errorObject: ErrorBody = getErrorBodyFromResponse(response.errorBody())
+                Resource.Error(
+                    ErrorResponse(
+                        errorObject.message,
+                        response.code()
+                    )
+                )
+            }
+        } catch (e: Exception) {
             Resource.Error(
                 ErrorResponse(
-                    errorObject.message,
-                    response.code()
+                    e.toString(),
+                    404
                 )
             )
         }
+
     }
 }

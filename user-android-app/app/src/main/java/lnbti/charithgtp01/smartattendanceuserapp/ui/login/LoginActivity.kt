@@ -27,7 +27,9 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
@@ -49,6 +51,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: TextInputEditText
     private lateinit var passwordInputText: TextInputLayout
     private lateinit var login: Button
+
+    private lateinit var networkUtils: NetworkUtils
+
 
     //This counter is using for catch the app logo click event counter
     private var atomicInteger = AtomicInteger(0)
@@ -149,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
                     SuccessListener { navigateToAnotherActivity(this@LoginActivity, MainActivity::class.java) })
 
             } else {
-                DialogUtils.showErrorDialog(this, loginResult.message)
+                showErrorDialog(this, loginResult.message)
             }
 
         })

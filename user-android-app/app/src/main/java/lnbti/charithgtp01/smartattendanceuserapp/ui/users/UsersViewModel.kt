@@ -19,8 +19,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class UsersViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val context: Context
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
@@ -60,32 +59,22 @@ class UsersViewModel @Inject constructor(
      * Get Server Response and Set values to live data
      */
     private fun getUsersList() {
+        //Show Progress Dialog when click on the search view submit button
+        _isDialogVisible.value = true
+        /* View Model Scope - Coroutine */
+        viewModelScope.launch {
+            val resource = userRepository.getUsersFromDataSource()
 
-        val isNetworkAvailable = isOnline(context)
+            if (resource.data != null) {
+                allUsersList = resource.data.data
+                _usersList.value = allUsersList
+            } else
+                _errorMessage.value = resource?.error?.error
 
-        //If Network available call to backend API
-        if (isNetworkAvailable) {
-            //Show Progress Dialog when click on the search view submit button
-            _isDialogVisible.value = true
-            /* View Model Scope - Coroutine */
-            viewModelScope.launch {
-                val resource = userRepository.getUsersFromDataSource()
-
-                if (resource?.data != null) {
-                    allUsersList = resource.data.data
-                    _usersList.value = allUsersList
-                } else
-                    _errorMessage.value = resource?.error?.error
-
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
-                _isDialogVisible.value = false
-            }
-        } else {
-            //Show Error Alert
-            _errorMessage.value = context.getString(R.string.no_internet)
+            /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
+            delay(1000L)
+            _isDialogVisible.value = false
         }
-
     }
 
     /**

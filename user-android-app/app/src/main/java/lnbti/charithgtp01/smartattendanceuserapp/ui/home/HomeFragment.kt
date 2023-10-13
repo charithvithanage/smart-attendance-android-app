@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
@@ -29,7 +28,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
@@ -92,6 +91,7 @@ class HomeFragment : Fragment() {
         } else {
             binding?.userLayout?.visibility = View.GONE
             binding?.businessUserLayout?.visibility = View.VISIBLE
+            viewModel.getUsersList()
         }
 
         initiateAdapter()
@@ -114,7 +114,9 @@ class HomeFragment : Fragment() {
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog = DialogUtils.showProgressDialog(context, getString(R.string.wait))
+                if (dialog?.isVisible == false)
+                    dialog =
+                        showProgressDialogInFragment(this@HomeFragment, getString(R.string.wait))
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -136,9 +138,9 @@ class HomeFragment : Fragment() {
                 val attendanceData = gson.fromJson(apiResult.data, AttendanceData::class.java)
                 viewModel.setAttendanceData(attendanceData)
                 binding?.btnMarkIn?.visibility = View.GONE
-                if(attendanceData.inTime!=null&&attendanceData.outTime==null){
+                if (attendanceData.inTime != null && attendanceData.outTime == null) {
                     binding?.btnMarkOut?.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding?.btnMarkOut?.visibility = View.GONE
 
                 }
@@ -146,8 +148,6 @@ class HomeFragment : Fragment() {
                 binding?.btnMarkIn?.visibility = View.VISIBLE
                 binding?.btnMarkOut?.visibility = View.GONE
             }
-            dialog?.dismiss()
-
         }
     }
 
