@@ -54,11 +54,11 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
 
         allSettings = listOf(
             SettingsObject(
-                R.mipmap.other_settings,
+                R.mipmap.admin_settings,
                 OTHER_SETTINGS
             ),
             SettingsObject(
-                R.mipmap.change_password,
+                R.mipmap.admin_password,
                 CHANGE_PASSWORD
             )
         )
