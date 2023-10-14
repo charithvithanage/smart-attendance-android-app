@@ -1,9 +1,12 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.login
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
@@ -34,6 +37,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+
     fun login(email: String, password: String) {
         if (NetworkUtils.isNetworkAvailable()) {
             _isDialogVisible.value = true
@@ -57,5 +61,21 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }
+
+    /**
+     * When focus on the edit text error state changed to normal state
+     */
+    fun setFocusChangeListener(editText: TextInputEditText,inputLayout: TextInputLayout) {
+        editText.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            run {
+                if(hasFocus){
+                    val textInputLayout = view.parent as? TextInputLayout
+                    textInputLayout?.error = null
+                    textInputLayout?.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+                }
+            }
+        }
+    }
+
 
 }

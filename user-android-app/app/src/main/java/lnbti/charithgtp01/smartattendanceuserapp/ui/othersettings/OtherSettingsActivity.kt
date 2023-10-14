@@ -9,6 +9,8 @@ import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettings
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityOtherSettingsBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 
@@ -25,7 +27,7 @@ class OtherSettingsActivity : AppCompatActivity() {
     private fun initView() {
         initiateActionBar(
             binding?.actionBar?.mainLayout!!,
-            getString(R.string.other_settings),
+            OTHER_SETTINGS,
             object : ActionBarListener {
                 override fun backPressed() {
                     onBackPressed()

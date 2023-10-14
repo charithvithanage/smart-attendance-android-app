@@ -77,9 +77,7 @@ class AttendanceReportFragment : Fragment() {
 
     private fun initView() {
         userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
-        val usersListString = getObjectFromSharedPref(requireContext(), Constants.USERS_LIST)
-        spinnerOptions = parseStringToUserList(usersListString)
-        selectedUser = spinnerOptions[0]
+
         allAttendanceList = listOf()
         filteredAttendanceList = listOf()
 
@@ -88,6 +86,28 @@ class AttendanceReportFragment : Fragment() {
          */
         if (userRole == getString(R.string.employee)) {
             binding?.spinner?.visibility = View.GONE
+        }else{
+            val usersListString = getObjectFromSharedPref(requireContext(), Constants.USERS_LIST)
+            spinnerOptions = parseStringToUserList(usersListString)
+            selectedUser = spinnerOptions[0]
+            val adapter = UserSpinnerAdapter(requireContext(), spinnerOptions)
+            binding?.spinner?.adapter = adapter
+
+            binding?.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    selectedUser = spinnerOptions[position]
+                    viewModel.onUserSelected(selectedUser)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Handle nothing selected if needed
+                }
+            }
         }
 
         binding?.fromLayout?.mainLayout?.setOnClickListener {
@@ -96,25 +116,6 @@ class AttendanceReportFragment : Fragment() {
 
         binding?.toLayout?.mainLayout?.setOnClickListener {
             openDatePicker(false)
-        }
-
-        val adapter = UserSpinnerAdapter(requireContext(), spinnerOptions)
-        binding?.spinner?.adapter = adapter
-
-        binding?.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                selectedUser = spinnerOptions[position]
-                viewModel.onUserSelected(selectedUser)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle nothing selected if needed
-            }
         }
     }
 

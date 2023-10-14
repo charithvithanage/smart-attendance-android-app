@@ -21,6 +21,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
@@ -53,6 +54,9 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     lateinit var loggedInUser: User
     private fun initiateView() {
+
+        UIUtils.changeUiSize(this@ChangePasswordActivity, binding.iconView, 2, 3)
+
         val gson = Gson()
         val loggedInUserString = Utils.getObjectFromSharedPref(this, LOGGED_IN_USER)
         loggedInUser = gson.fromJson(loggedInUserString, User::class.java)

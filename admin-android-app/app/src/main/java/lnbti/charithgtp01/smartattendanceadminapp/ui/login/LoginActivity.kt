@@ -82,31 +82,14 @@ class LoginActivity : AppCompatActivity() {
 //        username.setText("Charith")
 //        password.setText("Charith@1234")
 
-        //UI initiation
-        inputTextInitiateMethod(usernameInputText, username, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
-        inputTextInitiateMethod(passwordInputText, password, object : InputTextListener {
-            override fun validateUI() {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        })
-
         login.setOnClickListener {
             loginViewModel.loginDataChanged(
                 username.text.toString(),
                 password?.text.toString()
             )
         }
+
+        binding.vm?.setFocusChangeListener(binding.etPassword, binding.passwordInputText)
     }
 
     private fun viewModelObservers() {
