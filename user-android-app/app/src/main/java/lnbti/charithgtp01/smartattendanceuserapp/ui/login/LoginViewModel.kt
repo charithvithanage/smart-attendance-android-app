@@ -44,12 +44,12 @@ class LoginViewModel @Inject constructor(
     private val _isDialogVisible = MutableLiveData<Boolean>()
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
 
-    fun login(email: String, password: String) {
+    fun login(deviceID: String, email: String, password: String) {
         if (NetworkUtils.isNetworkAvailable()) {
             // Handle the case when the device is connected to the network
             viewModelScope.launch {
                 // can be launched in a separate asynchronous job
-                val result = userRepository.login(LoginRequest(email, password))
+                val result = userRepository.login(LoginRequest(deviceID, email, password))
                 _loginResult.value = result
             }
         } else {

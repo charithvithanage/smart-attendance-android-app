@@ -34,6 +34,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
@@ -139,7 +140,8 @@ class LoginActivity : AppCompatActivity() {
             */
             if (loginState.isDataValid) {
                 dialog = showProgressDialog(this, getString(R.string.wait))
-                loginViewModel.login(
+                val deviceID = getAndroidId(this@LoginActivity)
+                loginViewModel.login(deviceID,
                     username.text.toString(),
                     password.text.toString()
                 )
