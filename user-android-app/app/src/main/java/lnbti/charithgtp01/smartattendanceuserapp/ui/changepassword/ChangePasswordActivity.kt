@@ -12,6 +12,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.CHANGE_PASSWORD
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePasswordBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
@@ -57,7 +59,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
         UIUtils.initiateActionBar(
             binding?.actionBar?.mainLayout!!,
-            getString(R.string.change_password),
+            CHANGE_PASSWORD,
             object : ActionBarListener {
                 override fun backPressed() {
                     onBackPressed()

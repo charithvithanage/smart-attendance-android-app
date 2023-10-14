@@ -6,6 +6,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.GET_DEVICE_ID
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivitySettingsBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.SettingsObject
@@ -78,19 +82,19 @@ class SettingsActivity : AppCompatActivity() {
             SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
                 override fun itemClick(item: SettingsObject) {
                     when (item.name) {
-                        getString(R.string.get_device_id) -> Utils.navigateToAnotherActivity(
+                        GET_DEVICE_ID -> Utils.navigateToAnotherActivity(
                             this@SettingsActivity,
                             DeviceIDQRActivity::class.java
                         )
 
-                        getString(R.string.other_settings) -> {
+                        OTHER_SETTINGS -> {
                             Utils.navigateToAnotherActivity(
                                 this@SettingsActivity,
                                 OtherSettingsActivity::class.java
                             )
                         }
 
-                        getString(R.string.change_password) -> {
+                        CHANGE_PASSWORD -> {
                             Utils.navigateToAnotherActivity(
                                 this@SettingsActivity,
                                 ChangePasswordActivity::class.java

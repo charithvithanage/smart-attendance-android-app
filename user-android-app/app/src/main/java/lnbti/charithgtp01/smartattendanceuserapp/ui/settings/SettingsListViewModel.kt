@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import javax.inject.Inject
@@ -15,8 +16,6 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SettingsListViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val context: Context
 ) :
     ViewModel() {
 
@@ -49,15 +48,15 @@ class SettingsListViewModel @Inject constructor(
         allUsersList = listOf(
             SettingsObject(
                 R.mipmap.device_id,
-                context.getString(R.string.get_device_id)
+                MessageConstants.GET_DEVICE_ID
             ),
             SettingsObject(
-                R.mipmap.other_settings,
-                context.getString(R.string.other_settings)
+                R.mipmap.settings,
+                MessageConstants.OTHER_SETTINGS
             ),
             SettingsObject(
                 R.mipmap.change_password,
-                context.getString(R.string.change_password)
+                MessageConstants.CHANGE_PASSWORD
             )
         )
         _settingsList.value = allUsersList
