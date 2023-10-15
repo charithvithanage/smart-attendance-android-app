@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkInRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkOutRequest
@@ -14,6 +15,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.ChangePasswordRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject
 
@@ -26,26 +28,45 @@ class ScanViewModel @Inject constructor(private val attendanceRepository: Attend
     private val _attendanceMarkResult = MutableLiveData<ApiCallResponse?>()
     val attendanceMarkResult: MutableLiveData<ApiCallResponse?> = _attendanceMarkResult
 
+    //Dialog Visibility Live Data
+    private val _isDialogVisible = MutableLiveData<Boolean>()
+    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
 
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
     fun markIn(attendanceMarkInRequest: AttendanceMarkInRequest) {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                attendanceRepository.attendanceMarkIn(
-                    attendanceMarkInRequest
-                )
-            attendanceMarkResult.value = result
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    attendanceRepository.attendanceMarkIn(
+                        attendanceMarkInRequest
+                    )
+                attendanceMarkResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
+
     }
 
     fun markOut(attendanceMarkOutRequest: AttendanceMarkOutRequest) {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                attendanceRepository.attendanceMarkOut(
-                    attendanceMarkOutRequest
-                )
-            attendanceMarkResult.value = result
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    attendanceRepository.attendanceMarkOut(
+                        attendanceMarkOutRequest
+                    )
+                attendanceMarkResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 
