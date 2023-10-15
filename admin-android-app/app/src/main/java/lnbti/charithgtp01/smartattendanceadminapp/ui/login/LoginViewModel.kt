@@ -10,9 +10,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.NO_INTERNET
-import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository

@@ -87,9 +87,10 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="378dp"
-            android:layout_height="210dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerInside"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toTopOf="@+id/usernameInputText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

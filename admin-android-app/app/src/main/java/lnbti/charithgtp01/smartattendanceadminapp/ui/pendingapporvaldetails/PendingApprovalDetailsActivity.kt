@@ -22,7 +22,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.goToHomeActivity
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.spinnerItems
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
 
 /**
  * Pending Approval Details View/Approve/Reject page
@@ -55,7 +55,7 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val selectedItem = spinnerItems[position]
+                val selectedItem = userRoles[position]
                 viewModel.updateSelectedItem(selectedItem)
             }
 

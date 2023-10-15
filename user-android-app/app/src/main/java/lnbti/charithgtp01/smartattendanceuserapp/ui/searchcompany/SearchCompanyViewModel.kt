@@ -7,8 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.CompanyRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils

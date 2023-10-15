@@ -3,6 +3,7 @@ package lnbti.charithgtp01.smartattendanceadminapp.bindingadapters
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import lnbti.charithgtp01.smartattendanceadminapp.R
@@ -124,9 +125,9 @@ object BindingAdapters {
         return colorCode
     }
 
-    //User status binding adapter
-    @BindingAdapter("booleanToString")
-    fun setBooleanToString(textView: TextView, isTrue: Boolean) {
-        textView.text = if (isTrue) "True String" else "False String"
+    @BindingAdapter("app:visibility")
+    @JvmStatic
+    fun setVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

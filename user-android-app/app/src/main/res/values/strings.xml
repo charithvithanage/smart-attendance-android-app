@@ -88,4 +88,5 @@
     <string name="invalid_company_id">Invalid Company ID</string>
     <string name="confirm_registration">Are you sure you want to create an account?</string>
     <string name="change_password">Change Password</string>
+    <string name="no_permission_to_use">You are not an Android User. Please contact Admin</string>
 </resources>

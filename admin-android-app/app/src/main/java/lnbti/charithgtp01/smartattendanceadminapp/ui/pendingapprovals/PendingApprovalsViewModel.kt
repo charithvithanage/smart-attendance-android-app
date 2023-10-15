@@ -1,20 +1,15 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals
 
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import javax.inject.Inject
 
 /**
@@ -80,7 +75,7 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
 
     }

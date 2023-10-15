@@ -1,14 +1,12 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.settings
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.SettingsObject
-import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import javax.inject.Inject
 
 /**
@@ -48,15 +46,15 @@ class SettingsListViewModel @Inject constructor(
         allUsersList = listOf(
             SettingsObject(
                 R.mipmap.device_id,
-                MessageConstants.GET_DEVICE_ID
+                ResourceConstants.GET_DEVICE_ID
             ),
             SettingsObject(
                 R.mipmap.settings,
-                MessageConstants.OTHER_SETTINGS
+                ResourceConstants.OTHER_SETTINGS
             ),
             SettingsObject(
                 R.mipmap.change_password,
-                MessageConstants.CHANGE_PASSWORD
+                ResourceConstants.CHANGE_PASSWORD
             )
         )
         _settingsList.value = allUsersList

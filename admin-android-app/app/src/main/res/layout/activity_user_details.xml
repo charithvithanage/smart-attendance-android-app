@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants" />
+
         <variable
             name="vm"
             type="lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsViewModel" />
@@ -46,13 +48,13 @@
                     android:id="@+id/clientLetter"
                     android:layout_width="@dimen/profile_bg_size"
                     android:layout_height="@dimen/profile_bg_size"
+                    android:layout_marginTop="@dimen/page_top_margin"
                     android:gravity="center"
                     android:textSize="@dimen/profile_letter_text_size"
-                    app:profileCircularBg="@{vm.pendingApprovalUser}"
-                    android:layout_marginTop="@dimen/page_top_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:profileCircularBg="@{vm.pendingApprovalUser}" />
 
                 <include
                     android:id="@+id/include"
@@ -151,6 +153,20 @@
                     app:layout_constraintTop_toBottomOf="@+id/include6"
                     bind:label='@{"Device ID"}'
                     bind:value='@{vm.pendingApprovalUser.deviceID}' />
+
+                <include
+                    android:id="@+id/include8"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include7"
+                    bind:label='@{ResourceConstants.USERTYPE}'
+                    bind:value='@{vm.pendingApprovalUser.userType}' />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

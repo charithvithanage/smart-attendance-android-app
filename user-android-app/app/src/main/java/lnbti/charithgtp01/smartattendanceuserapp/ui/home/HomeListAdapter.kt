@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.R
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.ANDROID_USER
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutHomeListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutUserListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
@@ -30,7 +32,7 @@ class HomeListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
         val user = getItem(position)
         //QR generate and should scan from the Employee
-        if (user.userType == "Android User") {
+        if (user.userType == ANDROID_USER) {
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.generate)
         } else {
@@ -57,7 +59,7 @@ class HomeListAdapter @Inject constructor(
             binding.setVariable(BR.item, user)
             //QR generate and should scan from the Employee
             binding.btnProceed.setOnClickListener {
-                if (user.userType == "Android User") {
+                if (user.userType == ANDROID_USER) {
                     itemClickListener.generate(user)
                 } else {
                     //Other devices users has printed QR
