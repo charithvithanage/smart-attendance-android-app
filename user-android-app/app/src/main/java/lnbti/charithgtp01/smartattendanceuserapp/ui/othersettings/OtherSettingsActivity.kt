@@ -9,8 +9,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettings
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.OTHER_SETTINGS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityOtherSettingsBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 

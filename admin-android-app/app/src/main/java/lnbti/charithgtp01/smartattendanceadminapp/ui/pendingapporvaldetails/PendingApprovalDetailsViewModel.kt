@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
@@ -75,7 +75,7 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
 
             }
         } else {
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 
@@ -92,7 +92,7 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
                 _isDialogVisible.value = false
             }
         } else {
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 }

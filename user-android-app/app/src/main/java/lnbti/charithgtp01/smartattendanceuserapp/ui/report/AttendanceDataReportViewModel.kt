@@ -4,14 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
-import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.ResponseWithJSONArray
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
@@ -94,7 +89,7 @@ class AttendanceDataReportViewModel @Inject constructor(
                 _isDialogVisible.value = false
             }
         } else {
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 
@@ -108,7 +103,7 @@ class AttendanceDataReportViewModel @Inject constructor(
                 _isDialogVisible.value = false
             }
         } else {
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 

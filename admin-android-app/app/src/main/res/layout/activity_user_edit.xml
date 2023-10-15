@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="utils"
             type="lnbti.charithgtp01.smartattendanceadminapp.utils.Utils" />
+
         <variable
             name="vm"
             type="lnbti.charithgtp01.smartattendanceadminapp.ui.useredit.UserEditViewModel" />
@@ -48,13 +50,14 @@
                     android:id="@+id/clientLetter"
                     android:layout_width="@dimen/profile_bg_size"
                     android:layout_height="@dimen/profile_bg_size"
+                    android:layout_marginTop="@dimen/page_top_margin"
                     android:gravity="center"
                     android:textSize="@dimen/profile_letter_text_size"
-                    app:profileCircularBg="@{vm.pendingApprovalUser}"
-                    android:layout_marginTop="@dimen/page_top_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:profileCircularBg="@{vm.pendingApprovalUser}" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/firstNameInputText"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -144,12 +147,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dobInputText"
-                    bind:isLeftRadioCheck='@{vm.isLeftGenderButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightGenderButtonChecked}'
-                    bind:leftButtonValue='@{"Male"}'
-                    bind:rightButtonValue='@{"Female"}'
+                    bind:isMaleRadioCheck='@{vm.isLeftGenderButtonChecked}'
+                    bind:isFemaleRadioCheck='@{vm.isRightGenderButtonChecked}'
                     bind:layoutLabel='@{"Gender"}'
-                    bind:selectedGender='@{vm.selectedGender}'/>
+                    bind:buttonType='@{"gender"}' />
 
 
                 <Spinner
@@ -160,12 +161,30 @@
                     android:layout_marginTop="@dimen/vertical_margin"
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
                     android:background="@drawable/select_layout_bg"
-                    android:entries="@{utils.Companion.spinnerItems}"
+                    android:entries="@{vm.userRoleSpinnerItems}"
                     android:paddingLeft="@dimen/content_mini_margin"
                     android:paddingRight="@dimen/content_mini_margin"
+                    android:selection="@{vm.selectedUserRolePosition}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/selectGenderLayout" />
+
+
+                <Spinner
+                    android:id="@+id/spinnerUserType"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/vertical_margin"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    android:background="@drawable/select_layout_bg"
+                    android:entries="@{vm.userTypeSpinnerItems}"
+                    android:paddingLeft="@dimen/content_mini_margin"
+                    android:paddingRight="@dimen/content_mini_margin"
+                    android:selection="@{vm.selectedUserTypePosition}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/deviceIDLayout"
@@ -178,7 +197,7 @@
                     android:hint="@string/device_id"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner">
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerUserType">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNewPassword"
@@ -198,11 +217,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/deviceIDLayout"
-                    bind:isLeftRadioCheck='@{vm.isLeftStatusButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightStatusButtonChecked}'
-                    bind:leftButtonValue="@{@string/activate}"
-                    bind:rightButtonValue="@{@string/deactivate}"
-                    bind:layoutLabel="@{@string/userstatus}"/>
+                    bind:isActiveRadioCheck='@{vm.isLeftStatusButtonChecked}'
+                    bind:isDeactivateRadioCheck='@{vm.isRightStatusButtonChecked}'
+                    bind:layoutLabel="@{@string/userstatus}"
+                    bind:buttonType='@{"userStatus"}' />
 
                 <Button
                     android:id="@+id/btnUpdate"
