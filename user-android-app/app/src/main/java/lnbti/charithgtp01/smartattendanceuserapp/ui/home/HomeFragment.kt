@@ -19,8 +19,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.compress
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USERS_LIST
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentHomeBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
@@ -37,6 +40,8 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurren
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executor
 
 /**
@@ -198,7 +203,10 @@ class HomeFragment : Fragment() {
                             val prefMap = HashMap<String, String>()
                             item.lat = location.latitude
                             item.long = location.longitude
-                            prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
+
+                            val encryptedValue = encryptString(gson.toJson(item))
+                            prefMap[Constants.OBJECT_STRING] = encryptedValue.toString()
+
                             navigateToAnotherActivityWithExtras(
                                 requireActivity(),
                                 AttendanceQRActivity::class.java,
@@ -217,6 +225,25 @@ class HomeFragment : Fragment() {
         binding?.recyclerView.also { it2 ->
             it2?.adapter = usersListAdapter
         }
+    }
+
+    private fun encryptString(value: String): String? {
+        var encryptedCredential: String? = null
+        try {
+            val compressed: ByteArray = compress(value)
+            val decoded = String(compressed, StandardCharsets.ISO_8859_1)
+            val secureKey = SECURE_KEY
+            try {
+                encryptedCredential = encrypt(decoded, secureKey)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            Log.d(Constants.TAG, "Compressed string $encryptedCredential")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return encryptedCredential
     }
 
     private fun qrHandshake(qrHandshakeListener: QRHandshakeListener) {
