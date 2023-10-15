@@ -1,8 +1,6 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.useredit
 
-import android.provider.SyncStateContract.Constants
 import android.util.Log
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,19 +9,16 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.ACTIVE
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.INACTIVE
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
-import lnbti.charithgtp01.smartattendanceadminapp.model.ApprovalRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.model.UserUpdateRequest
-import lnbti.charithgtp01.smartattendanceadminapp.repositories.ApprovalRepository
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import javax.inject.Inject
-import androidx.databinding.Observable
-import androidx.databinding.PropertyChangeRegistry
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.NO_INTERNET
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userTypes
 
@@ -41,11 +36,6 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     lateinit var email: String
     lateinit var firstName: String
     lateinit var lastName: String
-
-    private val _gender = MutableLiveData<String>()
-
-    val selectedGender: LiveData<String>
-        get() = _gender
 
     //Gender Radio Button value check
     var isLeftGenderButtonChecked = false
@@ -119,11 +109,11 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
      * Select left and right radio button according to status value
      */
     fun setStatusValues(selectedValue: String) {
-        if (selectedValue == "Active") {
+        if (selectedValue == ACTIVE) {
             userStatus = true
             isLeftStatusButtonChecked = true
             isRightStatusButtonChecked = false
-        } else if (selectedValue == "Inactive") {
+        } else if (selectedValue == INACTIVE) {
             userStatus = false
             isLeftStatusButtonChecked = false
             isRightStatusButtonChecked = true

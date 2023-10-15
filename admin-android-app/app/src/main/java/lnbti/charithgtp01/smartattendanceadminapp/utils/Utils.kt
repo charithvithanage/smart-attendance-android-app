@@ -23,7 +23,8 @@ class Utils {
 
         val userRoles:  MutableList<String> = mutableListOf("Office User", "Employee")
         val userTypes:  MutableList<String> = mutableListOf("Android User", "Other")
-
+        val ACTIVE = "Active"
+        val INACTIVE = "Inactive"
         /**
          * Deserialize error response.body
          * @param errorBody Error Response

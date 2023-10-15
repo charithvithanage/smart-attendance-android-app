@@ -147,12 +147,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dobInputText"
-                    bind:isLeftRadioCheck='@{vm.isLeftGenderButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightGenderButtonChecked}'
+                    bind:isMaleRadioCheck='@{vm.isLeftGenderButtonChecked}'
+                    bind:isFemaleRadioCheck='@{vm.isRightGenderButtonChecked}'
                     bind:layoutLabel='@{"Gender"}'
-                    bind:leftButtonValue='@{"Male"}'
-                    bind:rightButtonValue='@{"Female"}'
-                    bind:selectedGender='@{vm.selectedGender}' />
+                    bind:buttonType='@{"gender"}' />
 
 
                 <Spinner
@@ -219,11 +217,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/deviceIDLayout"
-                    bind:isLeftRadioCheck='@{vm.isLeftStatusButtonChecked}'
-                    bind:isRightRadioCheck='@{vm.isRightStatusButtonChecked}'
+                    bind:isActiveRadioCheck='@{vm.isLeftStatusButtonChecked}'
+                    bind:isDeactivateRadioCheck='@{vm.isRightStatusButtonChecked}'
                     bind:layoutLabel="@{@string/userstatus}"
-                    bind:leftButtonValue="@{@string/activate}"
-                    bind:rightButtonValue="@{@string/deactivate}" />
+                    bind:buttonType='@{"userStatus"}' />
 
                 <Button
                     android:id="@+id/btnUpdate"

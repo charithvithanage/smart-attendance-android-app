@@ -49,13 +49,13 @@
     <string name="confirm_reject_message">Do you want to reject this approval</string>
     <string name="device_id_mandatory">Incorrect device ID</string>
     <string name="userstatus">User Status</string>
-    <string name="activate">Activate</string>
-    <string name="deactivate">Deactivate</string>
     <string name="gender">Gender</string>
     <string name="dob">Date of Birth</string>
     <string name="date_format">dd.MM.yyyy</string>
     <string name="firstname">First Name</string>
     <string name="lastname">Last Name</string>
     <string name="email">Email</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 
 </resources>
