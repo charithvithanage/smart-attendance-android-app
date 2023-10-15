@@ -21,7 +21,11 @@ import javax.inject.Inject
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userTypes
 
 /**
  * Users Fragment View Model
@@ -32,7 +36,6 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     lateinit var nic: String
     lateinit var deviceID: String
     private var userStatus: Boolean = false
-    private lateinit var userRole: String
     lateinit var dob: String
     lateinit var gender: String
     lateinit var email: String
@@ -67,6 +70,14 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     private val _serverResult = MutableLiveData<ApiCallResponse?>()
     val serverResult: MutableLiveData<ApiCallResponse?> = _serverResult
 
+    val selectedUserTypePosition = MutableLiveData<Int>()
+    val selectedUserRolePosition = MutableLiveData<Int>()
+
+    val userTypeSpinnerItems = userTypes
+    val selectedUserType = MutableLiveData<String>()
+
+    val userRoleSpinnerItems = userRoles
+    val selectedUserRole = MutableLiveData<String>()
 
     /**
      * Set User Object to Live Data
@@ -77,13 +88,15 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
         nic = user.nic
         deviceID = user.deviceID
         userStatus = user.userStatus
-        userRole = user.userRole
+        selectedUserRole.value = user.userRole
         dob = user.dob
         gender = user.gender
         email = user.email
         firstName = user.firstName
         lastName = user.lastName
-
+        selectedUserType.value = user.userType
+        selectedUserTypePosition.value = findPositionInList(userTypeSpinnerItems, user.userType)
+        selectedUserRolePosition.value = findPositionInList(userRoleSpinnerItems, user.userRole)
         setGenderValues(gender)
         setStatusValues(user.getUserStatusString())
     }
@@ -110,16 +123,21 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
             userStatus = true
             isLeftStatusButtonChecked = true
             isRightStatusButtonChecked = false
-        } else {
+        } else if (selectedValue == "Inactive") {
             userStatus = false
             isLeftStatusButtonChecked = false
             isRightStatusButtonChecked = true
         }
     }
 
-    // Function to set the selected item
+    // Function to set the selected user role
     fun selectUserRole(item: String) {
-        userRole = item
+        selectedUserRole.value = item
+    }
+
+    // Function to set the selected user type
+    fun selectUserType(item: String) {
+        selectedUserType.value = item
     }
 
     fun updateUser() {
@@ -129,16 +147,16 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
             _isDialogVisible.value = true
             /* View Model Scope - Coroutine */
             val user = UserUpdateRequest(
-                nic,
-                email,
-                firstName,
-                lastName,
-                gender,
-                userRole,
-                dob,
-                userStatus,
-                deviceID,
-                userType = "Android User"
+                nic = nic,
+                email = email,
+                firstName = firstName,
+                lastName = lastName,
+                gender = gender,
+                userRole = selectedUserRole.value,
+                dob = dob,
+                userStatus = userStatus,
+                deviceID = deviceID,
+                userType = selectedUserType.value
             )
 
             val gson = Gson()
@@ -154,8 +172,16 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
                 _isDialogVisible.value = false
             }
         } else {
-            _errorMessage.value = MessageConstants.NO_INTERNET
+            _errorMessage.value = NO_INTERNET
         }
     }
 
+    private fun findPositionInList(list: List<String>, targetValue: String): Int {
+        for ((index, item) in list.withIndex()) {
+            if (item == targetValue) {
+                return index
+            }
+        }
+        return -1  // Return -1 if the value is not found in the list
+    }
 }

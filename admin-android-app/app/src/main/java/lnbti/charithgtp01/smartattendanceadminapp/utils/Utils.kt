@@ -21,7 +21,8 @@ import okhttp3.ResponseBody
 class Utils {
     companion object {
 
-        val spinnerItems:  MutableList<String> = mutableListOf("Office User", "Employee")
+        val userRoles:  MutableList<String> = mutableListOf("Office User", "Employee")
+        val userTypes:  MutableList<String> = mutableListOf("Android User", "Other")
 
         /**
          * Deserialize error response.body

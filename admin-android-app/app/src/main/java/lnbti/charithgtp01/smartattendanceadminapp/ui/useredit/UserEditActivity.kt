@@ -2,30 +2,28 @@ package lnbti.charithgtp01.smartattendanceadminapp.ui.useredit
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.OBJECT_STRING
-import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.TAG
-import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityUserDetailsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityUserEditBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
-import lnbti.charithgtp01.smartattendanceadminapp.ui.userdetails.UserDetailsViewModel
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.goToHomeActivity
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userTypes
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -34,7 +32,7 @@ import java.util.Locale
 class UserEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserEditBinding
     private lateinit var viewModel: UserEditViewModel
-    lateinit var pendingApprovalUser:User
+    lateinit var pendingApprovalUser: User
     private val gson = Gson()
     private val cal = Calendar.getInstance()
     private var dialog: DialogFragment? = null
@@ -62,6 +60,7 @@ class UserEditActivity : AppCompatActivity() {
             ).show()
         }
 
+
         // Observe data from the inner ViewModel (RadioGroup) using the outer ViewModel
         binding.selectGenderLayout.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             run {
@@ -79,7 +78,6 @@ class UserEditActivity : AppCompatActivity() {
             }
         }
 
-
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -87,7 +85,7 @@ class UserEditActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val selectedItem = Utils.spinnerItems[position]
+                val selectedItem = viewModel.userRoleSpinnerItems[position]
                 viewModel.selectUserRole(selectedItem)
             }
 
@@ -96,6 +94,22 @@ class UserEditActivity : AppCompatActivity() {
             }
         }
 
+        binding.spinnerUserType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = viewModel.userTypeSpinnerItems[position]
+                    viewModel.selectUserType(selectedItem)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Handle nothing selected if needed
+                }
+            }
 
         binding.btnUpdate.setOnClickListener {
             viewModel.updateUser()

@@ -20,7 +20,8 @@ data class User(
     val deviceID: String,
     val employeeID:String,
     var lat: Double,
-    var long: Double
+    var long: Double,
+    var userType:String
 ) : Parcelable{
     fun getUserStatusString(): String {
         val isActive = userStatus ?: false // Default to false if null
