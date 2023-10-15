@@ -7,4 +7,5 @@ object  ResourceConstants {
     const val CHANGE_PASSWORD = "Change Password"
     const val ACTIVE = "Active"
     const val INACTIVE = "Inactive"
+    const val USERTYPE = "User Type"
 }
