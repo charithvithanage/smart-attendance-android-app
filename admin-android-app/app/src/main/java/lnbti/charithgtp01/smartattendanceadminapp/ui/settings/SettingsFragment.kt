@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.MessageConstants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword.ChangePasswordActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsActivity
-import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
 
 class SettingsFragment : Fragment() {
