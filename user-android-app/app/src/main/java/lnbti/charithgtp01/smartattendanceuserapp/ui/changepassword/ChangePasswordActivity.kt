@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.changepassword
 
-import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -12,8 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.CHANGE_PASSWORD
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePasswordBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener

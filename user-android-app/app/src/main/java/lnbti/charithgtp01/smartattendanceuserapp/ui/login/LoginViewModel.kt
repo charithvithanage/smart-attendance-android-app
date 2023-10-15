@@ -1,8 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
-import android.content.Context
-import android.graphics.Bitmap.Config
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,15 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.NO_INTERNET
-import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject

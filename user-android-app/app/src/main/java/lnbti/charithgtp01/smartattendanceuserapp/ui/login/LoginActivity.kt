@@ -18,6 +18,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
@@ -141,7 +142,8 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.isDataValid) {
                 dialog = showProgressDialog(this, getString(R.string.wait))
                 val deviceID = getAndroidId(this@LoginActivity)
-                loginViewModel.login(deviceID,
+                loginViewModel.login(
+                    deviceID,
                     username.text.toString(),
                     password.text.toString()
                 )
@@ -161,13 +163,17 @@ class LoginActivity : AppCompatActivity() {
                 hashMap[LOGGED_IN_USER] = loginResult.data.toString()
                 hashMap[USER_ROLE] = loggedInUser.userRole
 
-                saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,
-                    SuccessListener {
-                        navigateToAnotherActivity(
-                            this@LoginActivity,
-                            MainActivity::class.java
-                        )
-                    })
+                if (loggedInUser.userType == ResourceConstants.ANDROID_USER) {
+                    saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,
+                        SuccessListener {
+                            navigateToAnotherActivity(
+                                this@LoginActivity,
+                                MainActivity::class.java
+                            )
+                        })
+                } else {
+                    showErrorDialog(this, getString(R.string.no_permission_to_use))
+                }
 
             } else {
                 showErrorDialog(this, loginResult.message)

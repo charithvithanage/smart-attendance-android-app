@@ -1,10 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.register
 
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.os.Bundle
-import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,13 +13,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SUCCESS
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityRegisterBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.Company
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
@@ -31,7 +27,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiat
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.normalState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setErrorBgToSelectLayout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setNormalBgToSelectLayout
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -236,7 +231,7 @@ class RegisterActivity : AppCompatActivity() {
 
             showAlertDialog(
                 this, SUCCESS,
-                MessageConstants.USER_REGISTERED_SUCCESS,
+                ResourceConstants.USER_REGISTERED_SUCCESS,
                 object : CustomAlertDialogListener {
                     override fun onDialogButtonClicked() {
                         navigateWithoutHistory(

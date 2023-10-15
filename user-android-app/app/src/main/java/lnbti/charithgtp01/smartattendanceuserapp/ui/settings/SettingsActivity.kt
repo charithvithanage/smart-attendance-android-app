@@ -6,10 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.CHANGE_PASSWORD
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.GET_DEVICE_ID
-import lnbti.charithgtp01.smartattendanceuserapp.constants.MessageConstants.OTHER_SETTINGS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.GET_DEVICE_ID
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivitySettingsBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.SettingsObject
