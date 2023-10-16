@@ -29,6 +29,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPerm
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.clearAllPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isLocationEnabled
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.logout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
 
 
@@ -93,13 +94,13 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.confirm_logout_message),
                     object : ConfirmDialogButtonClickListener {
                         override fun onPositiveButtonClick() {
-                            clearAllPref(this@MainActivity,
-                                SuccessListener {
-                                    navigateWithoutHistory(
-                                        this@MainActivity,
-                                        LoginActivity::class.java
-                                    )
-                                })
+                            logout(this@MainActivity) {
+                                navigateWithoutHistory(
+                                    this@MainActivity,
+                                    LoginActivity::class.java
+                                )
+                            }
+
                         }
 
                         override fun onNegativeButtonClick() {

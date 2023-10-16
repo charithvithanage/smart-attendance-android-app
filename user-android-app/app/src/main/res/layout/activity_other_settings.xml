@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsViewModel" />
+            type="lnbti.charithgtp01.smartattendanceuserapp.ui.othersettings.OtherSettingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

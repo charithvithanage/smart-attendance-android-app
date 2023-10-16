@@ -19,6 +19,17 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
+        <ImageButton
+            android:id="@+id/bioMetricAuthentication"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/finger_print"
+            android:background="@drawable/image_button_bg"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameInputText"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

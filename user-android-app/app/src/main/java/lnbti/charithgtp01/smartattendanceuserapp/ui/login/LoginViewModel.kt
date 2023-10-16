@@ -42,7 +42,14 @@ class LoginViewModel @Inject constructor(
             // Handle the case when the device is connected to the network
             viewModelScope.launch {
                 // can be launched in a separate asynchronous job
-                val result = userRepository.login(LoginRequest(deviceID, email, password))
+                val result =
+                    userRepository.login(
+                        LoginRequest(
+                            deviceID = deviceID,
+                            username = email,
+                            password = password
+                        )
+                    )
                 _loginResult.value = result
             }
         } else {
