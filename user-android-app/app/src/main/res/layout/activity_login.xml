@@ -21,7 +21,8 @@
 
         <ImageButton
             android:id="@+id/bioMetricAuthentication"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/action_button_size"
+            android:padding="@dimen/fingerprint_button_padding"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"

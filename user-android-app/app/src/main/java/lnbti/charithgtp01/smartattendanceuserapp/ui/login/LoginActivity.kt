@@ -19,6 +19,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
@@ -124,7 +125,7 @@ class LoginActivity : AppCompatActivity() {
 
                         var decryptedCredential: String? = null
                         try {
-                            decryptedCredential = decrypt(lastSignInObject)
+                            decryptedCredential = decrypt(SECURE_KEY, lastSignInObject)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -210,12 +211,16 @@ class LoginActivity : AppCompatActivity() {
                 hashMap[USER_ROLE] = loggedInUser.userRole
 
                 try {
-                    val credential=Credential(username.text.toString(),
-                        password.text.toString())
+                    val credential = Credential(
+                        username.text.toString(),
+                        password.text.toString()
+                    )
 
-//                    val encryptedCredential= encrypt(gson.toJson(credential))
+                    val encryptedCredential = encrypt(SECURE_KEY, gson.toJson(credential))
+                    hashMap[ResourceConstants.LAST_LOGGED_IN_CREDENTIAL] =
+                        encryptedCredential.toString()
 
-                }catch (e:Exception){
+                } catch (e: Exception) {
 
                 }
 
