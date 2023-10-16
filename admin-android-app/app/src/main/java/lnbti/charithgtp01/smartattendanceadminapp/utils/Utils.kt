@@ -29,7 +29,7 @@ class Utils {
          * @param targetValue Value need to compare
          * @return target value containing position
          */
-        fun findPositionInList(list: List<String>, targetValue: String): Int {
+        fun findPositionInList(list: List<String>, targetValue: String?): Int {
             for ((index, item) in list.withIndex()) {
                 if (item == targetValue) {
                     return index

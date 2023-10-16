@@ -44,10 +44,10 @@ class PendingApprovalDetailsViewModel @Inject constructor(private val approvalRe
     val selectedUserRolePosition = MutableLiveData<Int>()
 
     val userTypeSpinnerItems = Utils.userTypes
-    private val selectedUserType = MutableLiveData<String>()
+    private val selectedUserType = MutableLiveData<String?>()
 
     val userRoleSpinnerItems = Utils.userRoles
-    private val selectedUserRole = MutableLiveData<String>()
+    private val selectedUserRole = MutableLiveData<String?>()
 
     /**
      * Set Pending Approval User Object to Live Data

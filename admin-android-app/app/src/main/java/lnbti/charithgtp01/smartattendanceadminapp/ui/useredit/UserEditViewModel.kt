@@ -30,7 +30,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userType
 class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
     lateinit var nic: String
-    lateinit var deviceID: String
+    var deviceID: String? = null
     private var userStatus: Boolean = false
     lateinit var dob: String
     lateinit var gender: String
@@ -65,10 +65,10 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     val selectedUserRolePosition = MutableLiveData<Int>()
 
     val userTypeSpinnerItems = userTypes
-    private val selectedUserType = MutableLiveData<String>()
+    private val selectedUserType = MutableLiveData<String?>()
 
     val userRoleSpinnerItems = userRoles
-    private val selectedUserRole = MutableLiveData<String>()
+    private val selectedUserRole = MutableLiveData<String?>()
 
     /**
      * Set User Object to Live Data
