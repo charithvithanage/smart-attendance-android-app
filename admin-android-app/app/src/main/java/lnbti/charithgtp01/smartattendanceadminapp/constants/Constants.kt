@@ -45,5 +45,8 @@ object Constants {
     const val WARN = "warn"
     const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
 
-
+    /**
+     * Encryption Secure Key
+     */
+    const val SECURE_KEY = "12345"
 }

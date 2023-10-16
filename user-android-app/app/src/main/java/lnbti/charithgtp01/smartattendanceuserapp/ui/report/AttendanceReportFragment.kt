@@ -166,7 +166,7 @@ class AttendanceReportFragment : Fragment() {
                 val listType = object : TypeToken<List<AttendanceData>>() {}.type
                 allAttendanceList = gson.fromJson(apiResult.data, listType)
                 if (userRole == getString(R.string.employee)) {
-                    allAttendanceList = filteredAttendanceList
+                    filteredAttendanceList = allAttendanceList
                     viewModel.setCount(filteredAttendanceList.size)
                     attendanceReportsListAdapter.submitList(filteredAttendanceList)
                 } else {

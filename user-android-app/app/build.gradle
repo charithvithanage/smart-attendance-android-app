@@ -85,4 +85,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
+    //Security Encryption Library
+//    implementation 'javax.crypto:javax.crypto-api:1.0.1'
+    // Bouncy Castle library for AES
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 }

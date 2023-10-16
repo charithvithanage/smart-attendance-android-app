@@ -1,7 +1,7 @@
-package lnbti.charithgtp01.smartattendanceuserapp
+package lnbti.charithgtp01.smartattendanceadminapp
 
 import android.util.Base64
-import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
+import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants.SECURE_KEY
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
