@@ -1,6 +1,7 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails
 
 import android.os.Bundle
+import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -55,14 +56,32 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val selectedItem = userRoles[position]
-                viewModel.updateSelectedItem(selectedItem)
+                val selectedItem = viewModel.userRoleSpinnerItems[position]
+                viewModel.selectUserRole(selectedItem)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Handle when nothing is selected (optional)
             }
         }
+
+        binding.spinnerUserType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = viewModel.userTypeSpinnerItems[position]
+                    viewModel.selectUserType(selectedItem)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Handle nothing selected if needed
+                }
+            }
+
 
         binding.btnApprove.setOnClickListener {
             if (binding.deviceIDLayout.editText?.text.isNullOrBlank()) {
@@ -126,13 +145,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
-            }
-        }
-
-        viewModel.selectedItem.observe(this) { selectedItem ->
-            // Handle the selected item here
-            if (selectedItem != null) {
-                pendingApprovalUser.userRole = selectedItem
             }
         }
 

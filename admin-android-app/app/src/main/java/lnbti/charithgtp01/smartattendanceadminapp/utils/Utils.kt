@@ -21,10 +21,23 @@ import okhttp3.ResponseBody
 class Utils {
     companion object {
 
-        val userRoles:  MutableList<String> = mutableListOf("Office User", "Employee")
-        val userTypes:  MutableList<String> = mutableListOf("Android User", "Other")
-        val ACTIVE = "Active"
-        val INACTIVE = "Inactive"
+        val userRoles: MutableList<String> = mutableListOf("Office User", "Employee")
+        val userTypes: MutableList<String> = mutableListOf("Android User", "Other")
+
+        /**
+         * @param list String List
+         * @param targetValue Value need to compare
+         * @return target value containing position
+         */
+        fun findPositionInList(list: List<String>, targetValue: String): Int {
+            for ((index, item) in list.withIndex()) {
+                if (item == targetValue) {
+                    return index
+                }
+            }
+            return -1  // Return -1 if the value is not found in the list
+        }
+
         /**
          * Deserialize error response.body
          * @param errorBody Error Response

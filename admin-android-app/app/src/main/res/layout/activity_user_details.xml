@@ -125,6 +125,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/include4"
                     bind:label='@{"User Role"}'
                     bind:value='@{vm.pendingApprovalUser.userRole}' />
+                <include
+                    android:id="@+id/include9"
+                    layout="@layout/text_view_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include5"
+                    bind:label='@{"User Type"}'
+                    bind:value='@{vm.pendingApprovalUser.userType}' />
 
                 <include
                     android:id="@+id/include6"
@@ -136,7 +149,7 @@
                     android:layout_marginEnd="@dimen/content_horizontal_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include5"
+                    app:layout_constraintTop_toBottomOf="@+id/include9"
                     bind:label='@{"Status"}'
                     bind:value='@{vm.pendingApprovalUser.getUserStatusString()}' />
 

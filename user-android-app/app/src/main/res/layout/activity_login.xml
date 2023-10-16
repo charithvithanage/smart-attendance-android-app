@@ -46,7 +46,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
-                android:text="Kalana"
                 android:inputType="textPostalAddress"
                 android:selectAllOnFocus="true" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -67,7 +66,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
-                android:text="Kalana@1234"
                 android:inputType="textPassword"
                 android:selectAllOnFocus="true" />
         </com.google.android.material.textfield.TextInputLayout>
