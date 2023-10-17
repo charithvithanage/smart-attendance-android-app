@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "954070666883",
+    "project_id": "smart-attendance-admin-app",
+    "storage_bucket": "smart-attendance-admin-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954070666883:android:d5483e328064d3605955b6",
+        "android_client_info": {
+          "package_name": "lnbti.charithgtp01.smartattendanceadminapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzvAfF4aMqR-8fJ5Tu3xV0L61r2WVzaWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
