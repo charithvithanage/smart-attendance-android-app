@@ -11,6 +11,8 @@ import com.google.gson.reflect.TypeToken
 import lnbti.charithgtp01.smartattendanceadminapp.MainActivity
 import lnbti.charithgtp01.smartattendanceadminapp.R
 import lnbti.charithgtp01.smartattendanceadminapp.constants.Constants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.BIO_METRIC_ENABLE_STATUS
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceadminapp.model.ErrorBody
 import okhttp3.ResponseBody
@@ -21,10 +23,23 @@ import okhttp3.ResponseBody
 class Utils {
     companion object {
 
-        val userRoles:  MutableList<String> = mutableListOf("Office User", "Employee")
-        val userTypes:  MutableList<String> = mutableListOf("Android User", "Other")
-        val ACTIVE = "Active"
-        val INACTIVE = "Inactive"
+        val userRoles: MutableList<String> = mutableListOf("Office User", "Employee")
+        val userTypes: MutableList<String> = mutableListOf("Android User", "Other")
+
+        /**
+         * @param list String List
+         * @param targetValue Value need to compare
+         * @return target value containing position
+         */
+        fun findPositionInList(list: List<String>, targetValue: String?): Int {
+            for ((index, item) in list.withIndex()) {
+                if (item == targetValue) {
+                    return index
+                }
+            }
+            return -1  // Return -1 if the value is not found in the list
+        }
+
         /**
          * Deserialize error response.body
          * @param errorBody Error Response
@@ -207,5 +222,26 @@ class Utils {
             listener.onFinished()
         }
 
+        fun logout(context: Context, listener: SuccessListener) {
+            val sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+
+            val savedPref1 = sharedPref.getString(LAST_LOGGED_IN_CREDENTIAL, null)
+            val savedPref2 = sharedPref.getBoolean(BIO_METRIC_ENABLE_STATUS, false)
+
+            clearAllPref(
+                context
+            ) {
+                val editor = sharedPref.edit()
+                editor.putString(LAST_LOGGED_IN_CREDENTIAL, savedPref1)
+                editor.putBoolean(BIO_METRIC_ENABLE_STATUS, savedPref2)
+                editor.apply()
+                listener.onFinished()
+            }
+        }
+
     }
+
+
 }

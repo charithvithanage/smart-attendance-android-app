@@ -19,6 +19,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
 import javax.inject.Inject
 import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.findPositionInList
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userTypes
 
@@ -29,7 +30,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userType
 class UserEditViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
     lateinit var nic: String
-    lateinit var deviceID: String
+    var deviceID: String? = null
     private var userStatus: Boolean = false
     lateinit var dob: String
     lateinit var gender: String
@@ -64,10 +65,10 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
     val selectedUserRolePosition = MutableLiveData<Int>()
 
     val userTypeSpinnerItems = userTypes
-    val selectedUserType = MutableLiveData<String>()
+    private val selectedUserType = MutableLiveData<String?>()
 
     val userRoleSpinnerItems = userRoles
-    val selectedUserRole = MutableLiveData<String>()
+    private val selectedUserRole = MutableLiveData<String?>()
 
     /**
      * Set User Object to Live Data
@@ -78,12 +79,12 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
         nic = user.nic
         deviceID = user.deviceID
         userStatus = user.userStatus
-        selectedUserRole.value = user.userRole
         dob = user.dob
         gender = user.gender
         email = user.email
         firstName = user.firstName
         lastName = user.lastName
+        selectedUserRole.value = user.userRole
         selectedUserType.value = user.userType
         selectedUserTypePosition.value = findPositionInList(userTypeSpinnerItems, user.userType)
         selectedUserRolePosition.value = findPositionInList(userRoleSpinnerItems, user.userRole)
@@ -166,12 +167,5 @@ class UserEditViewModel @Inject constructor(private val userRepository: UserRepo
         }
     }
 
-    private fun findPositionInList(list: List<String>, targetValue: String): Int {
-        for ((index, item) in list.withIndex()) {
-            if (item == targetValue) {
-                return index
-            }
-        }
-        return -1  // Return -1 if the value is not found in the list
-    }
+
 }

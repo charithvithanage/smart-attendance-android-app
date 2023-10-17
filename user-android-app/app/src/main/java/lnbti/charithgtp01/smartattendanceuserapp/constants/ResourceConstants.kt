@@ -8,5 +8,11 @@ object ResourceConstants {
     const val CHANGE_PASSWORD = "Change Password"
     const val ANDROID_USER = "Android User"
     const val OTHER = "Other"
+    const val BIO_METRIC_ENABLE_STATUS = "Bio Metric Enable Status"
+    const val ENABLED = "Enabled"
+    const val DISABLED = "Disabled"
+    const val LAST_LOGGED_IN_CREDENTIAL = "Last logged in credential"
+
+
 
 }

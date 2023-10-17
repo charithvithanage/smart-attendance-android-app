@@ -4,6 +4,11 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
+    // Add the Crashlytics Gradle plugin
+    id("com.google.firebase.crashlytics")
+
 }
 
 android {
@@ -89,4 +94,11 @@ dependencies {
 //    implementation 'javax.crypto:javax.crypto-api:1.0.1'
     // Bouncy Castle library for AES
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 }

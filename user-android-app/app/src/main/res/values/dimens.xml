@@ -63,4 +63,5 @@
     <dimen name="contact_letter_text_size">26sp</dimen>
     <dimen name="contact_bg_size">50sp</dimen>
     <dimen name="rounded_corner_radius">50dp</dimen>
+    <dimen name="fingerprint_button_padding">8dp</dimen>
 </resources>

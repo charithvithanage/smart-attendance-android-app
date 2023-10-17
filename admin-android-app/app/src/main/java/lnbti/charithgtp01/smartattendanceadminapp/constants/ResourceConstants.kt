@@ -8,4 +8,7 @@ object  ResourceConstants {
     const val ACTIVE = "Active"
     const val INACTIVE = "Inactive"
     const val USERTYPE = "User Type"
+    const val LAST_LOGGED_IN_CREDENTIAL = "Last logged in credential"
+    const val BIO_METRIC_ENABLE_STATUS = "Bio Metric Enable Status"
+
 }

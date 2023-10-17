@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.ANDROID_USER
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.OTHER
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutHomeListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutUserListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
@@ -35,7 +36,7 @@ class HomeListAdapter @Inject constructor(
         if (user.userType == ANDROID_USER) {
             holder.binding.btnProceed.text =
                 holder.binding.root.context.getString(R.string.generate)
-        } else {
+        } else if (user.userType == OTHER){
             //Other devices users has printed QR
             //Office User cam scan printed QR
             holder.binding.btnProceed.text =

@@ -1,5 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -11,37 +12,31 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.BiometricAuthenticationHelper
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.decrypt
+import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.ACCESS_TOKEN
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ValueSubmitDialogListener
+import lnbti.charithgtp01.smartattendanceuserapp.model.Credential
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
-import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.valueSubmitDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
-import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.inputTextInitiateMethod
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjectInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
 
 @AndroidEntryPoint
@@ -103,6 +98,58 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
+        binding.bioMetricAuthentication.setOnClickListener {
+            val sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key),
+                Context.MODE_PRIVATE
+            )
+
+            val bioMetricAuthenticationEnableStatus =
+                sharedPref.getBoolean(ResourceConstants.BIO_METRIC_ENABLE_STATUS, false)
+            val lastSignInObject =
+                getObjectFromSharedPref(
+                    this@LoginActivity,
+                    ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
+                )
+            if (bioMetricAuthenticationEnableStatus && lastSignInObject != null) {
+                val biometricHelper =
+                    BiometricAuthenticationHelper(this) // 'this' should be a valid context
+                biometricHelper.authenticateBiometric(
+                    "Biometric Authentication",
+                    "Verify your identity",
+                    "Place your finger on the sensor",
+                    {
+                        // Biometric authentication successful
+                        // You can perform your actions here
+
+
+                        var decryptedCredential: String? = null
+                        try {
+                            decryptedCredential = decrypt(SECURE_KEY, lastSignInObject)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        val credential = gson.fromJson(decryptedCredential, Credential::class.java)
+
+                        dialog = showProgressDialog(this, getString(R.string.wait))
+                        val deviceID = getAndroidId(this@LoginActivity)
+                        loginViewModel.login(
+                            deviceID,
+                            credential.username,
+                            credential.password
+                        )
+
+                    },
+                    { error ->
+                        // Handle authentication error, e.g., show an error message
+                        showErrorDialog(this@LoginActivity, "Login Error")
+                    }
+                )
+            } else {
+                showErrorDialog(this@LoginActivity, getString(R.string.bio_metric_disabled))
+            }
+        }
+
         //After 4 click on the logo navigate to Device ID qr activity
         binding.appLogo.setOnClickListener {
             i = atomicInteger.getAndIncrement()
@@ -162,6 +209,20 @@ class LoginActivity : AppCompatActivity() {
                 // Add values to the HashMap
                 hashMap[LOGGED_IN_USER] = loginResult.data.toString()
                 hashMap[USER_ROLE] = loggedInUser.userRole
+
+                try {
+                    val credential = Credential(
+                        username.text.toString(),
+                        password.text.toString()
+                    )
+
+                    val encryptedCredential = encrypt(SECURE_KEY, gson.toJson(credential))
+                    hashMap[ResourceConstants.LAST_LOGGED_IN_CREDENTIAL] =
+                        encryptedCredential.toString()
+
+                } catch (e: Exception) {
+
+                }
 
                 if (loggedInUser.userType == ResourceConstants.ANDROID_USER) {
                     saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,

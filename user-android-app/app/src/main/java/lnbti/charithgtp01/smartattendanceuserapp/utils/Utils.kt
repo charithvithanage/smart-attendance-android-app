@@ -18,6 +18,9 @@ import com.google.gson.reflect.TypeToken
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.BIO_METRIC_ENABLE_STATUS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.ErrorBody
@@ -438,6 +441,25 @@ class Utils {
             )
             sharedPref.edit().clear().apply()
             listener.onFinished()
+        }
+
+        fun logout(context: Context, listener: SuccessListener) {
+            val sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+
+            val savedPref1 = sharedPref.getString(LAST_LOGGED_IN_CREDENTIAL, null)
+            val savedPref2 = sharedPref.getBoolean(BIO_METRIC_ENABLE_STATUS, false)
+
+            clearAllPref(
+                context
+            ) {
+                val editor = sharedPref.edit()
+                editor.putString(LAST_LOGGED_IN_CREDENTIAL, savedPref1)
+                editor.putBoolean(BIO_METRIC_ENABLE_STATUS, savedPref2)
+                editor.apply()
+                listener.onFinished()
+            }
         }
     }
 }
