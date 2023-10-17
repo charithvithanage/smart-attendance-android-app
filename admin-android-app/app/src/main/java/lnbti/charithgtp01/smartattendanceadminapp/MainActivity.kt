@@ -17,6 +17,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.logout
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateWithoutHistory
 import okhttp3.internal.Util
 
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.confirm_logout_message),
                 object : ConfirmDialogButtonClickListener {
                     override fun onPositiveButtonClick() {
-                        Utils.clearAllPref(this@MainActivity
+                        logout(this@MainActivity
                         ) { navigateWithoutHistory(this@MainActivity, LoginActivity::class.java) }
                     }
 

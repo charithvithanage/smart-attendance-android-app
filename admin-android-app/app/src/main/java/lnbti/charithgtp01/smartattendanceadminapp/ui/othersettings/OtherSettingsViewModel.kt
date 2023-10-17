@@ -15,5 +15,14 @@ class OtherSettingsViewModel @Inject constructor() : ViewModel() {
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
     val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+    private val biometricEnabledLiveData = MutableLiveData<Boolean>()
 
+    fun getBiometricEnabledLiveData(): LiveData<Boolean> {
+        return biometricEnabledLiveData
+    }
+
+    // Create a function to update the LiveData when needed
+    fun setBiometricEnabled(value: Boolean) {
+        biometricEnabledLiveData.value = value
+    }
 }

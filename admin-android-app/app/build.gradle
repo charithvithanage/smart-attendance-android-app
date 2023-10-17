@@ -80,4 +80,11 @@ dependencies {
     //Live Data Library
     implementation "androidx.lifecycle:lifecycle-livedata:2.4.0"
 
+    // Bouncy Castle library for AES
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+
+    //Biometric Library
+    implementation 'androidx.biometric:biometric-ktx:1.2.0-alpha05'
+
+
 }

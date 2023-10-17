@@ -57,5 +57,6 @@
     <string name="email">Email</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="bio_metric_disabled">Finger Print Authentication Disabled. Enable finger print authentication from Settings</string>
 
 </resources>
