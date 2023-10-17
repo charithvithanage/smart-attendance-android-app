@@ -134,8 +134,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                         val credential = gson.fromJson(decryptedCredential, Credential::class.java)
 
-                        dialog = showProgressDialog(this, getString(R.string.wait))
-                        loginViewModel.login(
+                         loginViewModel.login(
                             credential.username,
                             credential.password
                         )
