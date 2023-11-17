@@ -30,6 +30,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.changeUiSize
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
@@ -38,7 +39,28 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateT
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
-
+/**
+ * Activity for user login and authentication.
+ *
+ * This activity handles user authentication, including regular username/password login
+ * and biometric authentication if enabled. After a successful login, the user is navigated
+ * to the main application screen. If the user is already logged in, they are redirected to
+ * the main screen without going through the login process.
+ *
+ * @constructor Creates an instance of LoginActivity.
+ *
+ * @property ViewModel responsible for handling login-related data and actions.
+ * @property binding Data binding instance for the activity.
+ * @property dialog DialogFragment used to display progress dialogs during login.
+ * @property username EditText for entering the username.
+ * @property usernameInputText TextInputLayout for the username input, used for error handling and UI styling.
+ * @property password EditText for entering the password.
+ * @property passwordInputText TextInputLayout for the password input, used for error handling and UI styling.
+ * @property login Button used to initiate the login process.
+ * @property gson Gson instance for handling JSON serialization and deserialization.
+ * @property atomicInteger Counter for catching app logo click event
+ * @property i Counter cycle value
+ */
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
@@ -76,6 +98,9 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Initializes data binding for the activity and sets up UI components.
+     */
     private fun initiateDataBinding() {
         ViewModelProvider(this)[LoginViewModel::class.java].apply {
             //Data binding
@@ -89,6 +114,7 @@ class LoginActivity : AppCompatActivity() {
                     vm = loginViewModel
                     lifecycleOwner = this@LoginActivity
 
+                    // Additional UI setup and event listeners
                     changeUiSize(this@LoginActivity, binding.appLogo, 1, 1, 30)
                     this@LoginActivity.username = binding.username
                     this@LoginActivity.usernameInputText = binding.usernameInputText
@@ -103,60 +129,77 @@ class LoginActivity : AppCompatActivity() {
                         )
                     }
 
+                    // Event listener for biometric authentication button
                     bioMetricAuthentication.setOnClickListener {
-                        val sharedPref = getSharedPreferences(
-                            getString(R.string.preference_file_key),
-                            Context.MODE_PRIVATE
-                        )
-
-                        val bioMetricAuthenticationEnableStatus =
-                            sharedPref.getBoolean(ResourceConstants.BIO_METRIC_ENABLE_STATUS, false)
-                        val lastSignInObject =
-                            getObjectFromSharedPref(
-                                this@LoginActivity,
-                                ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
+                        if (NetworkUtils.isNetworkAvailable()) {
+                            val sharedPref = getSharedPreferences(
+                                getString(R.string.preference_file_key),
+                                Context.MODE_PRIVATE
                             )
-                        if (bioMetricAuthenticationEnableStatus && lastSignInObject != null) {
-                            val biometricHelper =
-                                BiometricAuthenticationHelper(this@LoginActivity) // 'this' should be a valid context
-                            biometricHelper.authenticateBiometric(
-                                "Biometric Authentication",
-                                "Verify your identity",
-                                "Place your finger on the sensor",
-                                {
-                                    // Biometric authentication successful
-                                    // You can perform your actions here
+
+                            val bioMetricAuthenticationEnableStatus =
+                                sharedPref.getBoolean(
+                                    ResourceConstants.BIO_METRIC_ENABLE_STATUS,
+                                    false
+                                )
+                            val lastSignInObject =
+                                getObjectFromSharedPref(
+                                    this@LoginActivity,
+                                    ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
+                                )
+                            if (bioMetricAuthenticationEnableStatus && lastSignInObject != null) {
+                                val biometricHelper =
+                                    BiometricAuthenticationHelper(this@LoginActivity) // 'this' should be a valid context
+                                biometricHelper.authenticateBiometric(
+                                    "Biometric Authentication",
+                                    "Verify your identity",
+                                    "Place your finger on the sensor",
+                                    {
+                                        // Biometric authentication successful
+                                        // You can perform your actions here
 
 
-                                    var decryptedCredential: String? = null
-                                    try {
-                                        decryptedCredential = decrypt(SECURE_KEY, lastSignInObject)
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
+                                        var decryptedCredential: String? = null
+                                        try {
+                                            decryptedCredential =
+                                                decrypt(SECURE_KEY, lastSignInObject)
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                        val credential =
+                                            gson.fromJson(
+                                                decryptedCredential,
+                                                Credential::class.java
+                                            )
+
+                                        dialog = showProgressDialog(
+                                            this@LoginActivity,
+                                            getString(R.string.wait)
+                                        )
+                                        val deviceID = getAndroidId(this@LoginActivity)
+                                        login(
+                                            deviceID,
+                                            credential.username,
+                                            credential.password
+                                        )
+
+                                    },
+                                    {
+                                        // Handle authentication error, e.g., show an error message
+                                        showErrorDialog(this@LoginActivity, "Login Error")
                                     }
-                                    val credential =
-                                        gson.fromJson(decryptedCredential, Credential::class.java)
-
-                                    dialog = showProgressDialog(this@LoginActivity, getString(R.string.wait))
-                                    val deviceID = getAndroidId(this@LoginActivity)
-                                    login(
-                                        deviceID,
-                                        credential.username,
-                                        credential.password
-                                    )
-
-                                },
-                                {
-                                    // Handle authentication error, e.g., show an error message
-                                    showErrorDialog(this@LoginActivity, "Login Error")
-                                }
-                            )
+                                )
+                            } else {
+                                showErrorDialog(
+                                    this@LoginActivity,
+                                    getString(R.string.bio_metric_disabled)
+                                )
+                            }
                         } else {
-                            showErrorDialog(
-                                this@LoginActivity,
-                                getString(R.string.bio_metric_disabled)
-                            )
+                            showErrorDialog(this@LoginActivity, getString(R.string.no_internet))
                         }
+
+
                     }
 
                     //After 4 click on the logo navigate to Device ID qr activity
@@ -180,9 +223,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Observes changes in the ViewModel and takes appropriate actions.
+     */
     private fun viewModelObservers() {
 
         loginViewModel.apply {
+            // Observer for login form state changes
             loginFormState.observe(this@LoginActivity, Observer {
                 val loginState = it ?: return@Observer
 
@@ -202,14 +249,20 @@ class LoginActivity : AppCompatActivity() {
                 if (loginState.isDataValid) {
                     dialog = showProgressDialog(this@LoginActivity, getString(R.string.wait))
                     val deviceID = getAndroidId(this@LoginActivity)
-                    loginViewModel.login(
-                        deviceID,
-                        username.text.toString(),
-                        password.text.toString()
-                    )
+                    if (NetworkUtils.isNetworkAvailable()) {
+                        loginViewModel.login(
+                            deviceID,
+                            username.text.toString(),
+                            password.text.toString()
+                        )
+                    } else {
+                        showErrorDialog(this@LoginActivity, getString(R.string.no_internet))
+                    }
+
                 }
             })
 
+            // Observer for login result changes
             loginResult.observe(this@LoginActivity, Observer {
                 val loginResult = it ?: return@Observer
 
@@ -246,7 +299,10 @@ class LoginActivity : AppCompatActivity() {
                                 )
                             })
                     } else {
-                        showErrorDialog(this@LoginActivity, getString(R.string.no_permission_to_use))
+                        showErrorDialog(
+                            this@LoginActivity,
+                            getString(R.string.no_permission_to_use)
+                        )
                     }
 
                 } else {
@@ -259,7 +315,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Navigate to QR activity with generated Device ID
+     * Navigates to the QR activity with the provided data.
+     *
+     * @param data The data to be passed to the QR activity.
      */
     private fun goToQRActivity(data: String) {
         val navigationPathMap = HashMap<String, String>()
