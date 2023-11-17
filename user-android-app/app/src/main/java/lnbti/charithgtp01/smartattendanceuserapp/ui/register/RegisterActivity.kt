@@ -23,6 +23,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.sho
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.normalState
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.setErrorBgToSelectLayout
@@ -42,65 +43,76 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initiateDataBinding()
-        initiateView()
         viewModelObservers()
     }
 
     private fun initiateDataBinding() {
-        binding =
-            DataBindingUtil.setContentView(this, R.layout.activity_register)
-
         //Data binding
-        registerViewModel = ViewModelProvider(this)[RegisterViewModel::class.java]
-        binding.vm = registerViewModel
-        binding.lifecycleOwner = this
-    }
+        ViewModelProvider(this)[RegisterViewModel::class.java].apply {
+            registerViewModel = this
+            DataBindingUtil.setContentView<ActivityRegisterBinding?>(
+                this@RegisterActivity,
+                R.layout.activity_register
+            ).apply {
+                binding = this
+                vm = registerViewModel
+                lifecycleOwner = this@RegisterActivity
 
-    private fun initiateView() {
-        val gson = Gson()
-        val company =
-            gson.fromJson(intent.getStringExtra(Constants.OBJECT_STRING), Company::class.java)
-        registerViewModel.setCompany(company)
+                Gson().apply {
+                    fromJson(
+                        intent.getStringExtra(Constants.OBJECT_STRING),
+                        Company::class.java
+                    ).apply {
+                        registerViewModel.setCompany(this)
+                    }
+                }
 
-        binding.etEmployeeID.isEnabled = false
 
-        initiateActionBarWithoutHomeButton(
-            binding.actionBar.mainLayout,
-            getString(R.string.user_registration)
-        ) { onBackPressed() }
+                etEmployeeID.isEnabled = false
 
-        binding.btnSubmit.setOnClickListener {
-            registerViewModel.validateFields()
-        }
+                initiateActionBarWithoutHomeButton(
+                    actionBar.mainLayout,
+                    getString(R.string.user_registration)
+                ) { onBackPressed() }
 
-        binding.etDOB.setOnClickListener {
-            DatePickerDialog(
-                this@RegisterActivity, dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
+                btnSubmit.setOnClickListener {
+                    validateFields()
+                }
 
-        // Observe data from the inner ViewModel (RadioGroup) using the outer ViewModel
-        binding.selectGenderLayout.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            run {
-                val radioButton: RadioButton = findViewById(checkedId)
-                val selectedValue = radioButton.text.toString()
-                registerViewModel.setSelectedRadioButtonValue(selectedValue)
+                etDOB.setOnClickListener {
+                    DatePickerDialog(
+                        this@RegisterActivity, dateSetListener,
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
+
+                // Observe data from the inner ViewModel (RadioGroup) using the outer ViewModel
+                selectGenderLayout.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                    run {
+                        findViewById<RadioButton?>(checkedId).apply {
+                            text.toString().apply {
+                                setSelectedRadioButtonValue(this)
+                            }
+                        }
+                    }
+                }
+
+                setFocusChangeListener(etFirstName)
+                setFocusChangeListener(etLastName)
+                setFocusChangeListener(etNIC)
+                setFocusChangeListener(etEmail)
+                setFocusChangeListener(etContact)
+                setFocusChangeListener(etUserName)
+                setFocusChangeListener(etPassword)
+                setFocusChangeListener(etConfirmPassword)
             }
+
+
         }
 
-        registerViewModel.setFocusChangeListener(binding.etFirstName)
-        registerViewModel.setFocusChangeListener(binding.etLastName)
-        registerViewModel.setFocusChangeListener(binding.etNIC)
-        registerViewModel.setFocusChangeListener(binding.etEmail)
-        registerViewModel.setFocusChangeListener(binding.etContact)
-        registerViewModel.setFocusChangeListener(binding.etUserName)
-        registerViewModel.setFocusChangeListener(binding.etPassword)
-        registerViewModel.setFocusChangeListener(binding.etConfirmPassword)
     }
 
     /**
@@ -119,130 +131,130 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun viewModelObservers() {
 
-        /* Show error message in the custom error dialog */
-        registerViewModel.errorMessage.observe(this@RegisterActivity) {
-            showErrorDialog(
-                this@RegisterActivity,
-                it
-            )
-        }
+        registerViewModel.apply {
+            /* Show error message in the custom error dialog */
+            errorMessage.observe(this@RegisterActivity) {
+                showErrorDialog(
+                    this@RegisterActivity,
+                    it
+                )
+            }
 
-        registerViewModel.isDialogVisible.observe(this@RegisterActivity) {
-            if (it) {
+            isDialogVisible.observe(this@RegisterActivity) {
+                when {
+                    it -> dialog = showProgressDialog(
+                        this@RegisterActivity,
+                        getString(R.string.wait)
+                    )
+
+                    else -> dialog?.dismiss()
+                }
                 /* Show dialog when calling the API */
-                dialog = showProgressDialog(
-                    this@RegisterActivity,
-                    getString(R.string.wait)
-                )
-            } else {
                 /* Dismiss dialog after updating the data list to recycle view */
-                dialog?.dismiss()
-            }
-        }
-
-        //If all fields are correct call the change password api
-        registerViewModel.registerForm.observe(this@RegisterActivity, Observer {
-            val formState = it ?: return@Observer
-
-            if (formState.firstNameError != null) {
-                binding.firstNameInputText.error =
-                    getString(formState.firstNameError!!)
-            } else
-                normalState(binding.firstNameInputText)
-
-            if (formState.lastNameError != null) {
-                binding.lastNameInputText.error =
-                    getString(formState.lastNameError!!)
-            } else
-                normalState(binding.lastNameInputText)
-
-            if (formState.nicError != null) {
-                binding.nicInputText.error =
-                    getString(formState.nicError!!)
-            } else
-                normalState(binding.nicInputText)
-
-            if (formState.dobError != null) {
-                binding.dobInputText.error =
-                    getString(formState.dobError!!)
-            } else
-                normalState(binding.dobInputText)
-
-            if (formState.genderError != null) {
-                setErrorBgToSelectLayout(
-                    this@RegisterActivity,
-                    binding.selectGenderLayout,
-                    getString(formState.genderError!!)
-                )
-            } else {
-                setNormalBgToSelectLayout(this, binding.selectGenderLayout)
             }
 
-            if (formState.contactError != null) {
-                binding.contactInputText.error =
-                    getString(formState.contactError!!)
-            } else
-                normalState(binding.contactInputText)
+            //If all fields are correct call the change password api
+            registerForm.observe(this@RegisterActivity, Observer { state ->
+                val formState = state ?: return@Observer
+                formState.apply {
+                    binding.apply {
+                        firstNameError?.let {
+                            firstNameInputText.error = getString(it)
+                        } ?: normalState(firstNameInputText)
 
-            if (formState.emailError != null) {
-                binding.emailInputText.error =
-                    getString(formState.emailError!!)
-            } else
-                normalState(binding.emailInputText)
-
-            if (formState.userNameError != null) {
-                binding.usernameInputText.error =
-                    getString(formState.userNameError!!)
-            } else
-                normalState(binding.usernameInputText)
-
-            if (formState.newPasswordError != null) {
-                binding.passwordInputText.error =
-                    getString(formState.newPasswordError!!)
-            } else
-                normalState(binding.passwordInputText)
-
-            if (formState.confirmPasswordError != null) {
-                binding.confirmPasswordInputText.error =
-                    getString(formState.confirmPasswordError!!)
-            } else
-                normalState(binding.confirmPasswordInputText)
-
-            if (formState.isDataValid) {
-                showConfirmAlertDialog(
-                    this@RegisterActivity,
-                    getString(R.string.confirm_registration),
-                    object : ConfirmDialogButtonClickListener {
-                        override fun onPositiveButtonClick() {
-                            registerViewModel.register()
-                        }
-
-                        override fun onNegativeButtonClick() {
-
-                        }
-                    })
-
-            }
-        })
+                        lastNameError?.let {
+                            lastNameInputText.error = getString(it)
+                        } ?: normalState(lastNameInputText)
 
 
-        //Waiting for Success response
-        registerViewModel.isSuccess.observe(this@RegisterActivity) {
+                        nicError?.let {
+                            nicInputText.error = getString(it)
+                        } ?: normalState(nicInputText)
 
-            showAlertDialog(
-                this, SUCCESS,
-                ResourceConstants.USER_REGISTERED_SUCCESS,
-                object : CustomAlertDialogListener {
-                    override fun onDialogButtonClicked() {
-                        navigateWithoutHistory(
+                        dobError?.let {
+                            dobInputText.error = getString(it)
+                        } ?: normalState(dobInputText)
+
+                        genderError?.let {
+                            setErrorBgToSelectLayout(
+                                this@RegisterActivity,
+                                selectGenderLayout,
+                                getString(it)
+                            )
+                        } ?: setNormalBgToSelectLayout(
                             this@RegisterActivity,
-                            LoginActivity::class.java
+                            selectGenderLayout
                         )
 
-                    }
+                        contactError?.let {
+                            contactInputText.error =
+                                getString(it)
+                        } ?: normalState(contactInputText)
 
-                })
+                        emailError?.let {
+                            emailInputText.error =
+                                getString(it)
+                        } ?: normalState(emailInputText)
+
+                        userNameError?.let {
+                            usernameInputText.error =
+                                getString(it)
+                        } ?: normalState(usernameInputText)
+
+                        newPasswordError?.let {
+                            passwordInputText.error =
+                                getString(it)
+                        } ?: normalState(passwordInputText)
+
+                        confirmPasswordError?.let {
+                            confirmPasswordInputText.error =
+                                getString(it)
+                        } ?: normalState(confirmPasswordInputText)
+
+
+
+                        when {
+                            isDataValid -> showConfirmAlertDialog(
+                                this@RegisterActivity,
+                                getString(R.string.confirm_registration),
+                                object : ConfirmDialogButtonClickListener {
+                                    override fun onPositiveButtonClick() {
+                                        if (NetworkUtils.isNetworkAvailable()) {
+                                            register()
+                                        } else {
+                                            registerViewModel.setErrorMessage(getString(R.string.no_internet))
+                                        }
+                                    }
+
+                                    override fun onNegativeButtonClick() {
+
+                                    }
+                                })
+                        }
+                    }
+                }
+            })
+
+
+            //Waiting for Success response
+            isSuccess.observe(this@RegisterActivity) {
+                showAlertDialog(
+                    this@RegisterActivity, SUCCESS,
+                    ResourceConstants.USER_REGISTERED_SUCCESS,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            navigateWithoutHistory(
+                                this@RegisterActivity,
+                                LoginActivity::class.java
+                            )
+
+                        }
+
+                    })
+            }
         }
+
+
     }
 }
 
