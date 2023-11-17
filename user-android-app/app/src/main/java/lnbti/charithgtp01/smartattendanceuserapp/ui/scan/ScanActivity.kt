@@ -21,8 +21,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.FAIL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.PERMISSION_ALL
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SCANNER_PERMISSIONS
+import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SUCCESS
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.USER_ROLE
+import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.DECRYPTION_ERROR
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityScanBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
@@ -40,6 +42,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import java.text.SimpleDateFormat
 import java.util.Calendar.getInstance
@@ -143,7 +146,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
 
             try {
-                val selectedUserString = Keystore.decrypt(Constants.SECURE_KEY, barCodeString)
+                val selectedUserString = Keystore.decrypt(SECURE_KEY, barCodeString)
 
                 var scannedUser = gson.fromJson(selectedUserString, User::class.java)
 
@@ -156,15 +159,6 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
                 if (isValidLocation) {
                     if (scannedUser.nic == loggedInUser.nic) {
-                        showAlertDialog(
-                            this@ScanActivity,
-                            SUCCESS,
-                            "Success",
-                            object : CustomAlertDialogListener {
-                                override fun onDialogButtonClicked() {
-
-                                }
-                            })
                         val calendar = getInstance()
                         val dateFormat =
                             SimpleDateFormat(getString(R.string.date_format), Locale.getDefault())
@@ -228,10 +222,43 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                     })
             }
         } else {
-            navigateToAnotherActivity(
-                this@ScanActivity,
-                EmployeeAuthorizationActivity::class.java
-            )
+
+            try {
+                val decryptedValue = Keystore.decrypt(SECURE_KEY, barCodeString)
+                val selectedUserString = intent.getStringExtra(OBJECT_STRING)
+                val selectedUser = gson.fromJson(selectedUserString, User::class.java)
+
+                if (decryptedValue == selectedUser.nic) {
+                    val prefMap = HashMap<String, String>()
+                    prefMap[OBJECT_STRING] = decryptedValue
+                    navigateToAnotherActivityWithExtras(
+                        this@ScanActivity,
+                        EmployeeAuthorizationActivity::class.java, prefMap
+                    )
+                } else {
+                    showAlertDialog(
+                        this@ScanActivity,
+                        FAIL,
+                        "Invalid User",
+                        object : CustomAlertDialogListener {
+                            override fun onDialogButtonClicked() {
+                                startCamera()
+                            }
+                        })
+                }
+            } catch (e: Exception) {
+                showAlertDialog(
+                    this@ScanActivity,
+                    FAIL,
+                    DECRYPTION_ERROR,
+                    object : CustomAlertDialogListener {
+                        override fun onDialogButtonClicked() {
+                            startCamera()
+                        }
+                    })
+            }
+
+
         }
 
     }
