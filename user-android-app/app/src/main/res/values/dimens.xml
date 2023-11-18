@@ -7,6 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="input_text_margin_top">16dp</dimen>
     <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="mini_vertical_margin">8dp</dimen>
     <dimen name="content_margin_top">8dp</dimen>
     <dimen name="content_horizontal_margin">16dp</dimen>
     <dimen name="recycle_view_margin">8dp</dimen>

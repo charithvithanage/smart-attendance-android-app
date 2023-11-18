@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceuserapp
+package lnbti.charithgtp01.smartattendanceuserapp.other
 
 import android.content.Context
 import android.os.Build

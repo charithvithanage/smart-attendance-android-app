@@ -100,21 +100,6 @@ class DialogUtils {
                 }
             }
         }
-
-        /**
-         * Show a progress dialog inside a fragment.
-         *
-         * @param activity The fragment in which the progress dialog should be shown.
-         * @param message The progress message to be displayed.
-         * @return The created progress dialog fragment.
-         */
-        fun showProgressDialogInFragment(fragment: Fragment?, message: String?): DialogFragment? {
-            return fragment?.parentFragmentManager?.let { fragmentManager ->
-                CustomProgressDialogFragment.newInstance(message).apply {
-                    show(fragmentManager, PROGRESS_DIALOG_FRAGMENT_TAG)
-                }
-            }
-        }
     }
 
 }

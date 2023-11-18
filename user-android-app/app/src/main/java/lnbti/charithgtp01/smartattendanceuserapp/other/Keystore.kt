@@ -1,4 +1,4 @@
-package lnbti.charithgtp01.smartattendanceuserapp
+package lnbti.charithgtp01.smartattendanceuserapp.other
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.MessageDigest

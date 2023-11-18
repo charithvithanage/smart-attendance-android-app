@@ -12,9 +12,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.BiometricAuthenticationHelper
-import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.decrypt
-import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
+import lnbti.charithgtp01.smartattendanceuserapp.other.BiometricAuthenticationHelper
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.decrypt
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.encrypt
 import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER

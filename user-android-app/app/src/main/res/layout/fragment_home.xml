@@ -46,8 +46,8 @@
                     android:layout_marginStart="@dimen/content_mini_margin"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:text="@string/markin" />
+                    android:text="@string/markin"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnMarkOut"
@@ -56,9 +56,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/content_mini_margin"
                     android:layout_weight="1"
-                    android:visibility="gone"
                     android:gravity="center"
-                    android:text="@string/markout" />
+                    android:text="@string/markout"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -97,7 +97,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDate" />
-
 
 
             <android.widget.TextClock
@@ -141,6 +140,8 @@
             android:id="@+id/businessUserLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/content_mini_horizontal_margin"
+            android:layout_marginEnd="@dimen/content_mini_horizontal_margin"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -194,6 +195,7 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="@dimen/recycle_view_margin"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
