@@ -17,6 +17,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.othersettings.OtherSettingsA
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivity
 
 /**
  * Settings Page
@@ -38,7 +39,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initiateView() {
         UIUtils.initiateActionBar(
-            binding?.actionBar?.mainLayout!!,
+            binding.actionBar.mainLayout,
             getString(R.string.action_settings),
             object : ActionBarListener {
                 override fun backPressed() {
@@ -54,10 +55,12 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initiateDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
-        viewModel = ViewModelProvider(this)[SettingsListViewModel::class.java]
-        binding.vm = viewModel
-        binding.lifecycleOwner = this@SettingsActivity
+        binding = DataBindingUtil.setContentView<ActivitySettingsBinding?>(this, R.layout.activity_settings).apply {
+            viewModel = ViewModelProvider(this@SettingsActivity)[SettingsListViewModel::class.java]
+            vm = viewModel
+            lifecycleOwner = this@SettingsActivity
+        }
+
     }
 
     /**
@@ -81,20 +84,20 @@ class SettingsActivity : AppCompatActivity() {
             SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
                 override fun itemClick(item: SettingsObject) {
                     when (item.name) {
-                        GET_DEVICE_ID -> Utils.navigateToAnotherActivity(
+                        GET_DEVICE_ID -> navigateToAnotherActivity(
                             this@SettingsActivity,
                             DeviceIDQRActivity::class.java
                         )
 
                         OTHER_SETTINGS -> {
-                            Utils.navigateToAnotherActivity(
+                            navigateToAnotherActivity(
                                 this@SettingsActivity,
                                 OtherSettingsActivity::class.java
                             )
                         }
 
                         CHANGE_PASSWORD -> {
-                            Utils.navigateToAnotherActivity(
+                            navigateToAnotherActivity(
                                 this@SettingsActivity,
                                 ChangePasswordActivity::class.java
                             )
@@ -104,8 +107,8 @@ class SettingsActivity : AppCompatActivity() {
             })
 
         /* Set Adapter to Recycle View */
-        binding?.recyclerView.also { it2 ->
-            it2?.adapter = settingsAdapterListAdapter
+        binding.recyclerView.also { it2 ->
+            it2.adapter = settingsAdapterListAdapter
         }
     }
 

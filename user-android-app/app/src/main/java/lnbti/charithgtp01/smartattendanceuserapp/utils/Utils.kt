@@ -41,7 +41,6 @@ import java.util.Locale
  */
 class Utils {
     companion object {
-
         /**
          * Parse the string containing the list into a user object list
          */
@@ -69,6 +68,17 @@ class Utils {
         fun formatDate(date: Date): String {
             val format = SimpleDateFormat(
                 "dd.MM.yyyy",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
+       /**
+         * Format time to string
+         */
+        fun formatTime(date: Date): String {
+            val format = SimpleDateFormat(
+                "hh:mm:ss a",
                 Locale.getDefault()
             )
             return format.format(date)

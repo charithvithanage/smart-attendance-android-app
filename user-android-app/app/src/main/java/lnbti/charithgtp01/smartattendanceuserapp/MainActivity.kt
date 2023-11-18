@@ -7,31 +7,25 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
-import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPermissions
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.clearAllPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.isLocationEnabled
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.logout
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateWithoutHistory
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -57,6 +51,10 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
         }
 
+        getLocationPermissionAvailability()
+    }
+
+    fun getLocationPermissionAvailability() {
         /**
          * User Must enable location access to continue the attendance flow
          */

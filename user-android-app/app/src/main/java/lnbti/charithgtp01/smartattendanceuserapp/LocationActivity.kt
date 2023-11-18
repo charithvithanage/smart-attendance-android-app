@@ -78,7 +78,7 @@ class LocationActivity : AppCompatActivity() {
 //        getLocation()
     }
 
-    fun requestPermissions(activity: Activity) {
+    private fun requestPermissions(activity: Activity) {
         ActivityCompat.requestPermissions(
             activity,
             arrayOf(

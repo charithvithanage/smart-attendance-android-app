@@ -1,7 +1,9 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
+import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
@@ -34,6 +37,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
@@ -78,7 +82,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         /*
          * Initiate Data Binding and View Model
         */
@@ -186,20 +190,20 @@ class HomeFragment : Fragment() {
             attendanceResult.observe(requireActivity()) {
                 binding.apply {
                     val apiResult = it
-                    when (apiResult?.success) {
-                        // Logic for handling attendance data
-                        true -> gson.fromJson(apiResult.data, AttendanceData::class.java).run {
-                            setAttendanceData(this)
-                            btnMarkIn.isVisible = false
-
-                            when (outTime) {
-                                else -> btnMarkOut.isVisible = false
+                    apiResult?.run {
+                        gson.fromJson(data, AttendanceData::class.java).apply {
+                            if (success == true) {
+                                setAttendanceData(this)
+                                run {
+                                    btnMarkIn.isVisible = false
+                                    btnMarkOut.isVisible = inTime != null && outTime == null
+                                }
+                            } else {
+                                run {
+                                    btnMarkIn.isVisible = true
+                                    btnMarkOut.isVisible = false
+                                }
                             }
-                        }
-
-                        else -> {
-                            btnMarkIn.isVisible = true
-                            btnMarkOut.isVisible = false
                         }
                     }
                 }
@@ -237,7 +241,6 @@ class HomeFragment : Fragment() {
                         }
                     })
 
-
                 }
 
                 override fun generate(item: User) {
@@ -267,7 +270,7 @@ class HomeFragment : Fragment() {
 
         // Set the adapter to the RecyclerView
         binding.recyclerView.also { it2 ->
-            it2?.adapter = usersListAdapter
+            it2.adapter = usersListAdapter
         }
     }
 
@@ -285,15 +288,17 @@ class HomeFragment : Fragment() {
             }
 
             override fun requestPermission() {
-                TODO("Not yet implemented")
+                (activity as? MainActivity)?.getLocationPermissionAvailability()
             }
 
             override fun onError(error: String) {
-                TODO("Not yet implemented")
+                showErrorDialog(requireActivity(), error)
             }
 
             override fun openSettings() {
-                TODO("Not yet implemented")
+                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).run {
+                    startActivity(this)
+                }
             }
 
         })
@@ -333,10 +338,11 @@ class HomeFragment : Fragment() {
                                     Constants.LOGGED_IN_USER
                                 ), User::class.java
                             ).apply {
-                                lat = location.latitude
-                                long = location.longitude
+                                val loggedInUser = this
+                                loggedInUser.lat = location.latitude
+                                loggedInUser.long = location.longitude
                                 HashMap<String, String>().apply {
-                                    this[Constants.OBJECT_STRING] = gson.toJson(this)
+                                    this[Constants.OBJECT_STRING] = gson.toJson(loggedInUser)
                                     this[Constants.ATTENDANCE_TYPE] = attendanceType
                                     navigateToAnotherActivityWithExtras(
                                         requireActivity(),
