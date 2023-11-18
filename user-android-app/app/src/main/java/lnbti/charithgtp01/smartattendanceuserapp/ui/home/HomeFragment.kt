@@ -44,11 +44,28 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveObjec
 import java.util.concurrent.Executor
 
 /**
- * Users Fragment
+ * A [Fragment] representing the home screen of the application. This fragment
+ * handles user interface logic, including displaying attendance information
+ * for employees and managing a list of users for business users.
+ *
+ * The [HomeFragment] uses View Binding to interact with the UI components and
+ * communicates with a [HomeViewModel] to fetch and update data.
+ *
+ * @constructor Creates a new instance of [HomeFragment].
+ *
+ * @property binding View Binding for the Fragment
+ * @property viewModel ViewModel for managing data and business logic
+ * @property usersListAdapter Adapter for displaying the list of users
+ * @property dialog Dialog for displaying loading or error messages
+ * @property executor Executor for handling asynchronous tasks
+ * @property biometricPrompt BiometricPrompt for fingerprint authentication
+ * @property promptInfo PromptInfo for configuring the BiometricPrompt
+ * @property mFusedLocationClient FusedLocationProviderClient for obtaining the device's location
+ * @property gson Gson instance for JSON serialization and deserialization
  */
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private var binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
     private lateinit var usersListAdapter: HomeListAdapter
     private var dialog: DialogFragment? = null
@@ -73,7 +90,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,9 +101,10 @@ class HomeFragment : Fragment() {
         val userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
         val loggedInUserString = getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
         viewModel.apply {
-            binding?.apply {
+            binding.apply {
                 when (userRole) {
                     getString(R.string.employee) -> {
+                        // Logic for displaying UI elements for employees
                         userLayout.isVisible = true
                         businessUserLayout.isVisible = false
                         gson.fromJson(loggedInUserString, User::class.java).apply {
@@ -105,6 +123,7 @@ class HomeFragment : Fragment() {
                     }
 
                     else -> {
+                        // Logic for displaying UI elements for business users
                         userLayout.isVisible = false
                         businessUserLayout.isVisible = true
                         if (NetworkUtils.isNetworkAvailable()) {
@@ -116,18 +135,20 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
+        // Initialize the RecyclerView adapter
         initiateAdapter()
+
+        // Set up observers for LiveData updates
         viewModelObservers()
 
     }
 
     /**
-     * Live Data Updates
+     * Observes changes in ViewModel's LiveData and updates the UI accordingly.
      */
     private fun viewModelObservers() {
         viewModel.apply {
-            /* Show error message in the custom error dialog */
+            // Observe error messages and display them in a dialog
             errorMessage.observe(requireActivity()) {
                 DialogUtils.showErrorDialogInFragment(
                     this@HomeFragment,
@@ -135,9 +156,10 @@ class HomeFragment : Fragment() {
                 )
             }
 
+            // Observe loading state and show/hide a progress dialog
             isDialogVisible.observe(requireActivity()) {
                 if (it) {
-                    /* Show dialog when calling the API */
+                    // Show dialog when calling the API
                     if (dialog?.isVisible == false)
                         dialog =
                             showProgressDialogInFragment(
@@ -145,16 +167,14 @@ class HomeFragment : Fragment() {
                                 getString(R.string.wait)
                             )
                 } else {
-                    /* Dismiss dialog after updating the data list to recycle view */
+                    // Dismiss dialog after updating the data list
                     dialog?.dismiss()
                 }
             }
 
-            /* Observer to catch list data
-            * Update Recycle View Items using Diff Utils
-            */
+            // Observe the list of users and update the RecyclerView
             usersList.observe(requireActivity()) {
-                //Save users list locally to use in reports
+                // Save users list locally for later use
                 saveObjectInSharedPref(
                     requireActivity(),
                     USERS_LIST,
@@ -162,11 +182,12 @@ class HomeFragment : Fragment() {
                     SuccessListener { usersListAdapter.submitList(it) })
             }
 
-            //Waiting for Api response
+            // Observe API response for attendance and update UI
             attendanceResult.observe(requireActivity()) {
-                binding?.apply {
+                binding.apply {
                     val apiResult = it
                     when (apiResult?.success) {
+                        // Logic for handling attendance data
                         true -> gson.fromJson(apiResult.data, AttendanceData::class.java).run {
                             setAttendanceData(this)
                             btnMarkIn.isVisible = false
@@ -189,14 +210,14 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Recycle View data configuration
+     * Configures and initializes the RecyclerView adapter.
      */
     private fun initiateAdapter() {
         /* Initiate Adapter */
         usersListAdapter =
             HomeListAdapter(object : HomeListAdapter.OnItemClickListener {
                 override fun scan(selectedUser: User) {
-
+                    // Logic for handling user scan action
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
                             HashMap<String, String>().apply {
@@ -220,6 +241,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun generate(item: User) {
+                    // Logic for handling QR code generation action
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
                             HashMap<String, String>().apply {
@@ -243,12 +265,17 @@ class HomeFragment : Fragment() {
                 }
             })
 
-        /* Set Adapter to Recycle View */
-        binding?.recyclerView.also { it2 ->
+        // Set the adapter to the RecyclerView
+        binding.recyclerView.also { it2 ->
             it2?.adapter = usersListAdapter
         }
     }
 
+    /**
+     * Initiates the QR handshake process for obtaining location information.
+     *
+     * @param qrHandshakeListener Listener for QR handshake events.
+     */
     private fun qrHandshake(qrHandshakeListener: QRHandshakeListener) {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getCurrentLocation(requireActivity(), mFusedLocationClient, object :
@@ -271,11 +298,6 @@ class HomeFragment : Fragment() {
 
         })
 
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 
     /**
@@ -350,5 +372,4 @@ class HomeFragment : Fragment() {
 
         biometricPrompt.authenticate(promptInfo)
     }
-
 }

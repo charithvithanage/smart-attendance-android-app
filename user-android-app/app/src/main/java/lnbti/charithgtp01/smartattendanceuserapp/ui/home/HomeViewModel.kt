@@ -18,7 +18,10 @@ import java.util.Locale
 import javax.inject.Inject
 
 /**
- * Users Fragment View Model
+ * ViewModel for the home screen, responsible for managing user data and attendance information.
+ *
+ * @property userRepository Repository for accessing user data.
+ * @property attendanceRepository Repository for accessing attendance data.
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -53,15 +56,16 @@ class HomeViewModel @Inject constructor(
     val attendanceData = _attendanceData
 
     /**
-     * This will call when the View Model Created
+     * Initializes the ViewModel and sets the current date as the default value for [_dateString].
      */
     init {
         _dateString.value = formatDate(today)
     }
 
     /**
-     * Search View on text change listener
-     * @param searchString Entering value
+     * Listener for changes in the search view's text. Updates the [_usersList] accordingly.
+     *
+     * @param searchString The entered search string.
      */
     fun onSearchViewTextChanged(searchString: CharSequence?) {
         val value = searchString.toString()
@@ -71,7 +75,7 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Get Server Response and Set values to live data
+     * Fetches the list of users from the repository and updates [_usersList].
      */
     fun getUsersList() {
         _isDialogVisible.value = true
@@ -92,8 +96,10 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * @param searchString Search View entered value
-     * @return Data list filtered by user's full name
+     * Filters the list of users based on the provided search string.
+     *
+     * @param searchString The search string entered in the search view.
+     * @return The filtered list of users.
      */
     private fun filterApprovalList(searchString: String): List<User>? {
         return allUsersList?.filter { user ->
@@ -108,7 +114,10 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Get attendance data from nic and date
+     * Fetches the attendance data for a specific user on a given date.
+     *
+     * @param nic The NIC (National Identity Card) of the user.
+     * @param date The date for which attendance is requested.
      */
     fun getTodayAttendanceByUser(nic: String, date: String) {
         _isDialogVisible.value = true
@@ -124,12 +133,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Sets the attendance data for the ViewModel.
+     *
+     * @param attendanceData The attendance data to be set.
+     */
     fun setAttendanceData(attendanceData: AttendanceData?) {
         _attendanceData.value = attendanceData
     }
 
+    /**
+     * Sets the error message for the ViewModel.
+     *
+     * @param errorMessage The error message to be set.
+     */
     fun setErrorMessage(errorMessage: String?) {
         _errorMessage.value = errorMessage
     }
-
 }

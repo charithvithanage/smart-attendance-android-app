@@ -14,7 +14,11 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import javax.inject.Inject
 
 /**
- * User Fragment List Adapter
+ * Adapter for displaying a list of [User] items in the home screen.
+ *
+ * This adapter extends [ListAdapter] and uses a [DiffUtil] callback for efficient item updates.
+ *
+ * @property itemClickListener The click listener for handling item interactions.
  */
 class HomeListAdapter @Inject constructor(
     private val itemClickListener: OnItemClickListener
@@ -45,10 +49,21 @@ class HomeListAdapter @Inject constructor(
     }
 
     /**
-     * On Item Click Listener
+     * Interface definition for handling item clicks.
      */
     interface OnItemClickListener {
+        /**
+         * Handles the event when a user item should be scanned.
+         *
+         * @param item The [User] item to be scanned.
+         */
         fun scan(item: User)
+
+        /**
+         * Handles the event when a user item should be generated.
+         *
+         * @param item The [User] item to be generated.
+         */
         fun generate(item: User)
     }
 
@@ -74,7 +89,7 @@ class HomeListAdapter @Inject constructor(
 }
 
 /**
- * Diff Util Interface
+ * Diff Util callback for the [HomeListAdapter].
  */
 val diffUtil = object : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
