@@ -20,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AttendanceDataReportViewModel @Inject constructor(
     private val attendanceRepository: AttendanceRepository
-) :
-    ViewModel() {
+) : ViewModel() {
 
     //Date Count Live Date
     private val _dataCountString = MutableLiveData("0")
@@ -37,16 +36,19 @@ class AttendanceDataReportViewModel @Inject constructor(
     }
 
     //Start Date Live Date
-    private val _startDateString = MutableLiveData<String>()
+    private val _startDate = MutableLiveData(Date())
+    val startDate: LiveData<Date> get() = _startDate
+
+    //End Date Live Date
+    private val _endDate = MutableLiveData(getLastDayOfMonth(Date()))
+    val endDate: LiveData<Date> get() = _endDate
+
+    private val _startDateString = MutableLiveData(formatDate(Date()))
     val startDateString: LiveData<String> get() = _startDateString
 
     //End Date Live Date
-    private val _endDateString = MutableLiveData<String>()
+    private val _endDateString = MutableLiveData(formatDate(getLastDayOfMonth(Date())))
     val endDateString: LiveData<String> get() = _endDateString
-
-    //Dialog Visibility Live Data
-    private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
 
     //Error Message Live Data
     private val _errorMessage = MutableLiveData<String?>()
@@ -56,35 +58,27 @@ class AttendanceDataReportViewModel @Inject constructor(
     private val _responseResult = MutableLiveData<ResponseWithJSONArray?>()
     val responseResult: MutableLiveData<ResponseWithJSONArray?> = _responseResult
 
-
-    /**
-     * This will call when the View Model Created
-     */
-    init {
-        val startDate = Date()
-        val endDate: Date = getLastDayOfMonth(startDate)
+    fun setStartDate(startDate: Date) {
+        _startDate.value = startDate
         _startDateString.value = formatDate(startDate)
+    }
+
+    fun setEndDate(endDate: Date) {
+        _endDate.value = endDate
         _endDateString.value = formatDate(endDate)
     }
 
-    fun setDate(startDate: Date, endDate: Date) {
-        _startDateString.value = formatDate(startDate)
-        _endDateString.value = formatDate(endDate)
-    }
-
-    fun getAttendancesByUser(nic: String, from: String, to: String) {
-        _isDialogVisible.value = true
+    fun getAttendancesByUser(nic: String) {
         viewModelScope.launch {
-            _responseResult.value = attendanceRepository.getAttendanceDataByUser(nic, from, to)
-            _isDialogVisible.value = false
+            _responseResult.value =
+                attendanceRepository.getAttendanceDataByUser(nic, startDateString.value, endDateString.value)
         }
     }
 
-    fun getAttendancesFromAllUsers(from: String, to: String) {
-        _isDialogVisible.value = true
+    fun getAttendancesFromAllUsers() {
         viewModelScope.launch {
-            _responseResult.value = attendanceRepository.getAttendances(from, to)
-            _isDialogVisible.value = false
+            _responseResult.value =
+                attendanceRepository.getAttendances(startDateString.value, endDateString.value)
         }
     }
 

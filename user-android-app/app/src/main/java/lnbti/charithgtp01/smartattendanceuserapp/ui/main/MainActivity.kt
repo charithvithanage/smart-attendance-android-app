@@ -1,24 +1,29 @@
-package lnbti.charithgtp01.smartattendanceuserapp
+package lnbti.charithgtp01.smartattendanceuserapp.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityMainBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonClickListener
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.checkPermissions
@@ -32,26 +37,45 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     var locationPermissionGranted = false
+    private lateinit var sharedViewModel: MainActivityViewModel
+    private var dialog: DialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView<ActivityMainBinding?>(this, R.layout.activity_main)
+            .apply {
+                lifecycleOwner = this@MainActivity
 
-        setSupportActionBar(binding.toolbar)
+                setSupportActionBar(toolbar)
+                //If the logged in user's user role is Employee
+                val navController = findNavController(R.id.navHostFragmentUser)
+                bottomNavigationUser.setupWithNavController(navController)
+                val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
+                if (userRole == getString(R.string.employee)) {
+                    //Bottom menu without users menu
+                    // Hide a menu item by ID
+                    bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
+                }
+                getLocationPermissionAvailability()
 
-        //If the logged in user's user role is Employee
-        val navController = findNavController(R.id.navHostFragmentUser)
-        binding.bottomNavigationUser.setupWithNavController(navController)
+            }
 
-        val userRole = getObjectFromSharedPref(this@MainActivity, Constants.USER_ROLE)
-        if (userRole == getString(R.string.employee)) {
-            //Bottom menu without users menu
-            // Hide a menu item by ID
-            binding.bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
-        }
+        sharedViewModel =
+            ViewModelProvider(this@MainActivity)[MainActivityViewModel::class.java].apply {
+                // Observe loading state and show/hide a progress dialog
+                isDialogVisible.observe(this@MainActivity) {
+                    if (it) {
+                        Log.d("DIALOG TEST","Show Dialog")
+                        dialog = showProgressDialog(this@MainActivity, getString(R.string.wait))
+                    } else {
+                        /* Dismiss dialog after updating the data list to recycle view */
+                        Log.d("DIALOG TEST","Dismiss Dialog")
+                        dialog?.dismiss()
+                    }
+                }
 
-        getLocationPermissionAvailability()
+            }
     }
 
     fun getLocationPermissionAvailability() {

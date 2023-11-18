@@ -89,6 +89,8 @@ object Constants {
     const val FAIL = "fail"
     const val WARN = "warn"
     const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
+    const val ALERT_DIALOG_FRAGMENT_TAG = "CustomAlertDialogFragmentTag"
+    const val CONFIRM_DIALOG_FRAGMENT_TAG = "CustomConfirmDialogFragmentTag"
 
     /**
      * Encryption Secure Key

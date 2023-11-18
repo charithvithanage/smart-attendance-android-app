@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentUsersBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
@@ -26,13 +24,13 @@ class UsersFragment : Fragment() {
     private lateinit var binding: FragmentUsersBinding
     private lateinit var viewModel: UsersViewModel
     private lateinit var usersListAdapter: UsersListAdapter
-    private var dialog: DialogFragment? = null
+    private lateinit var sharedViewModel: MainActivityViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         /*
          * Initiate Data Binding and View Model
         */
@@ -40,6 +38,12 @@ class UsersFragment : Fragment() {
             viewModel = ViewModelProvider(requireActivity())[UsersViewModel::class.java]
             vm = viewModel
             lifecycleOwner = this@UsersFragment
+        }
+
+        // Initializing and setting up MainActivityViewModel
+        ViewModelProvider(requireActivity())[MainActivityViewModel::class.java].apply {
+            sharedViewModel = this
+            setDialogVisibility(true)
         }
 
         return binding.root
@@ -64,25 +68,15 @@ class UsersFragment : Fragment() {
                 )
             }
 
-            isDialogVisible.observe(requireActivity()) {
-                when {
-                    it -> dialog = DialogUtils.showProgressDialogInFragment(
-                        this@UsersFragment,
-                        getString(R.string.wait)
-                    )
-
-                    else -> dialog?.dismiss()
-                }
-                /* Show dialog when calling the API */
-                /* Dismiss dialog after updating the data list to recycle view */
-            }
-
             /* Observer to catch list data
            * Update Recycle View Items using Diff Utils
            */
             usersList.observe(requireActivity()) { it ->
-                //Get Active users
-                usersListAdapter.submitList(it.filter { it.userStatus })
+                it.run {
+                    //Get Active users
+                    usersListAdapter.submitList(it.filter { it.userStatus })
+                    sharedViewModel.setDialogVisibility(false)
+                }
             }
         }
 
@@ -110,7 +104,7 @@ class UsersFragment : Fragment() {
 
         /* Set Adapter to Recycle View */
         binding.recyclerView.also { it2 ->
-            it2?.adapter = usersListAdapter
+            it2.adapter = usersListAdapter
         }
     }
 }

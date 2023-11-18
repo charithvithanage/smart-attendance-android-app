@@ -32,10 +32,6 @@ class HomeViewModel @Inject constructor(
     private val _usersList = MutableLiveData<List<User>>()
     val usersList get() = _usersList
 
-    //Dialog Visibility Live Data
-    private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible get() = _isDialogVisible
-
     //Error Message Live Data
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage get() = _errorMessage
@@ -78,7 +74,6 @@ class HomeViewModel @Inject constructor(
      * Fetches the list of users from the repository and updates [_usersList].
      */
     fun getUsersList() {
-        _isDialogVisible.value = true
         /* View Model Scope - Coroutine */
         viewModelScope.launch {
             userRepository.getUsersFromDataSource().run {
@@ -89,9 +84,6 @@ class HomeViewModel @Inject constructor(
                     _errorMessage.value = error?.error
                 }
             }
-
-            /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-            _isDialogVisible.value = false
         }
     }
 
@@ -120,7 +112,6 @@ class HomeViewModel @Inject constructor(
      * @param date The date for which attendance is requested.
      */
     fun getTodayAttendanceByUser(nic: String, date: String) {
-        _isDialogVisible.value = true
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
             val result =
@@ -128,8 +119,6 @@ class HomeViewModel @Inject constructor(
                     nic, date
                 )
             _attendanceResult.value = result
-            _isDialogVisible.value = false
-
         }
     }
 

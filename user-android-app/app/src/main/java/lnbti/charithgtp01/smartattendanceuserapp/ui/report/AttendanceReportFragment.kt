@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
@@ -15,22 +14,18 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
-import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentAttendanceReportBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.parseStringToUserList
 import java.util.Calendar
-import java.util.Date
 
 /**
  * Attendance Report Fragment
@@ -40,11 +35,6 @@ class AttendanceReportFragment : Fragment() {
     private lateinit var binding: FragmentAttendanceReportBinding
     private lateinit var viewModel: AttendanceDataReportViewModel
     private lateinit var attendanceReportsListAdapter: AttendanceDataReportsListAdapter
-    private var dialog: DialogFragment? = null
-
-    //Initially Start Date Set to Today and End Date Set to Last Day of the current month
-    private var startDate: Date = Date()
-    private var endDate: Date = Utils.getLastDayOfMonth(startDate)
     val gson = Gson()
     var userRole: String? = null
     private lateinit var allAttendanceList: List<AttendanceData>
@@ -54,6 +44,9 @@ class AttendanceReportFragment : Fragment() {
     lateinit var spinnerOptions: List<User>
 
     lateinit var selectedUser: User
+
+    private lateinit var sharedViewModel: MainActivityViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,6 +70,11 @@ class AttendanceReportFragment : Fragment() {
                     openDatePicker(false)
                 }
             }
+        }
+
+        // Initializing and setting up MainActivityViewModel
+        ViewModelProvider(requireActivity())[MainActivityViewModel::class.java].apply {
+            sharedViewModel = this
         }
 
         return binding.root
@@ -154,28 +152,15 @@ class AttendanceReportFragment : Fragment() {
                 )
             }
 
-            isDialogVisible.observe(requireActivity()) {
-                when {
-                    it -> dialog = showProgressDialogInFragment(
-                        this@AttendanceReportFragment,
-                        getString(R.string.wait)
-                    )
-
-                    else -> dialog?.dismiss()
-                }
-                /* Show dialog when calling the API */
-                /* Dismiss dialog after updating the data list to recycle view */
-            }
-
             /* Observer to catch list data
             * Update Recycle View Items using Diff Utils
             */
             responseResult.observe(requireActivity()) {
-                it?.let { response ->
+                it?.run {
                     when {
-                        response.success == true -> {
+                        success == true -> {
                             val type = object : TypeToken<List<AttendanceData>>() {}.type
-                            allAttendanceList = gson.fromJson(response.data, type)
+                            allAttendanceList = gson.fromJson(data, type)
 
                             when (userRole) {
                                 getString(R.string.employee) -> allAttendanceList.run {
@@ -184,13 +169,18 @@ class AttendanceReportFragment : Fragment() {
                                     attendanceReportsListAdapter.submitList(this)
                                 }
 
-                                else -> onUserSelected(this@AttendanceReportFragment.selectedUser)
+                                else -> {
+                                    onUserSelected(this@AttendanceReportFragment.selectedUser)
+                                }
                             }
                         }
 
-                        response.data != null ->
-                            showErrorDialog(requireActivity(), response.data.toString())
+                        data != null -> {
+                            showErrorDialog(requireActivity(), data.toString())
+                        }
                     }
+                }?.let {
+                    sharedViewModel.setDialogVisibility(false)
                 }
             }
 
@@ -246,17 +236,13 @@ class AttendanceReportFragment : Fragment() {
 
     private fun getDataFromServer() {
         if (NetworkUtils.isNetworkAvailable()) {
+            sharedViewModel.setDialogVisibility(true)
             when (userRole) {
                 getString(R.string.employee) -> viewModel.getAttendancesByUser(
-                    loggedInUser.nic,
-                    formatDate(startDate),
-                    formatDate(endDate)
+                    loggedInUser.nic
                 )
 
-                else -> viewModel.getAttendancesFromAllUsers(
-                    formatDate(startDate),
-                    formatDate(endDate)
-                )
+                else -> viewModel.getAttendancesFromAllUsers()
             }
         } else {
             viewModel.setErrorMessage(getString(R.string.no_internet))
@@ -269,8 +255,8 @@ class AttendanceReportFragment : Fragment() {
      */
     private fun openDatePicker(isStartDate: Boolean) {
         val initialDate = when {
-            isStartDate -> startDate
-            else -> endDate
+            isStartDate -> viewModel.startDate
+            else -> viewModel.endDate
         }
 
         Calendar.getInstance().apply {
@@ -282,13 +268,11 @@ class AttendanceReportFragment : Fragment() {
 
                     when {
                         isStartDate -> {
-                            startDate = selectedDate
-                            viewModel.setDate(startDate, endDate)
+                            viewModel.setStartDate(selectedDate)
                         }
 
                         else -> {
-                            endDate = selectedDate
-                            viewModel.setDate(startDate, endDate)
+                            viewModel.setEndDate(selectedDate)
                         }
                     }
                     getDataFromServer()

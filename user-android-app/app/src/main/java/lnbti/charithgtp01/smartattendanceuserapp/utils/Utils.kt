@@ -20,10 +20,9 @@ import com.google.gson.reflect.TypeToken
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
-import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.BIO_METRIC_ENABLE_STATUS
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener

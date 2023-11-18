@@ -37,6 +37,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiat
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTime
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.hasPermissions
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
@@ -130,11 +131,15 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         stopCamera()
 
         val barCodeString = rawResult.text
-        val userRole = Utils.getObjectFromSharedPref(this, USER_ROLE)
+        val userRole = getObjectFromSharedPref(this, USER_ROLE)
 
         when (userRole) {
-            getString(R.string.employee) -> handleEmployeeRole(barCodeString)
-            else -> handleOtherRoles(barCodeString)
+            getString(R.string.employee) -> {
+                handleEmployeeRole(barCodeString)
+            }
+            else -> {
+                handleOtherRoles(barCodeString)
+            }
         }
     }
 

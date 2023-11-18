@@ -16,9 +16,9 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityChangePassw
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils.Companion.isNetworkAvailable
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBar
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
@@ -157,7 +157,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
             isDialogVisible.observe(this@ChangePasswordActivity) {
                 when {
-                    it -> dialog = showProgressDialog(
+                    it -> dialog = DialogUtils.showProgressDialog(
                         this@ChangePasswordActivity,
                         getString(R.string.wait)
                     )

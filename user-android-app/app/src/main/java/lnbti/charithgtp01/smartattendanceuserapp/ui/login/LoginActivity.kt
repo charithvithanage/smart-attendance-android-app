@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.BiometricAuthenticationHelper
 import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.decrypt
 import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
-import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING

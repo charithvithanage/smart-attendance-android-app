@@ -15,7 +15,6 @@ import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -23,7 +22,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.encrypt
-import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
@@ -34,11 +32,12 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
@@ -72,11 +71,12 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
     private lateinit var usersListAdapter: HomeListAdapter
-    private var dialog: DialogFragment? = null
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var sharedViewModel: MainActivityViewModel
+
     val gson = Gson()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,12 +86,18 @@ class HomeFragment : Fragment() {
         /*
          * Initiate Data Binding and View Model
         */
-        ViewModelProvider(requireActivity())[HomeViewModel::class.java].apply {
-            viewModel = this
-            binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
-                vm = viewModel
-                lifecycleOwner = this@HomeFragment
-            }
+
+        binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
+            viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+            vm = viewModel
+            lifecycleOwner = this@HomeFragment
+        }
+
+        // Initializing and setting up MainActivityViewModel
+        ViewModelProvider(requireActivity())[MainActivityViewModel::class.java].apply {
+            sharedViewModel = this
+            setDialogVisibility(true)
+            Log.d("DIALOG TEST", "Home Fragment Show Dialog")
         }
 
         return binding.root
@@ -160,30 +166,19 @@ class HomeFragment : Fragment() {
                 )
             }
 
-            // Observe loading state and show/hide a progress dialog
-            isDialogVisible.observe(requireActivity()) {
-                if (it) {
-                    // Show dialog when calling the API
-                    if (dialog?.isVisible == false)
-                        dialog =
-                            showProgressDialogInFragment(
-                                this@HomeFragment,
-                                getString(R.string.wait)
-                            )
-                } else {
-                    // Dismiss dialog after updating the data list
-                    dialog?.dismiss()
-                }
-            }
-
             // Observe the list of users and update the RecyclerView
             usersList.observe(requireActivity()) {
+                Log.d("DIALOG TEST", "Home Fragment Show Dismiss")
+
                 // Save users list locally for later use
                 saveObjectInSharedPref(
                     requireActivity(),
                     USERS_LIST,
                     gson.toJson(it),
-                    SuccessListener { usersListAdapter.submitList(it) })
+                    SuccessListener {
+                        usersListAdapter.submitList(it)
+                        sharedViewModel.setDialogVisibility(false)
+                    })
             }
 
             // Observe API response for attendance and update UI
@@ -205,6 +200,9 @@ class HomeFragment : Fragment() {
                                 }
                             }
                         }
+                    }?.let {
+                        sharedViewModel.setDialogVisibility(false)
+                        Log.d("DIALOG TEST", "Home Fragment Show Dismiss")
                     }
                 }
 
