@@ -25,23 +25,22 @@ class CustomConfirmAlertDialogFragment : DialogFragment() {
             message: String?,
             dialogButtonClickListener: ConfirmDialogButtonClickListener
         ): CustomConfirmAlertDialogFragment {
-            val fragment = CustomConfirmAlertDialogFragment()
+        return  CustomConfirmAlertDialogFragment().apply {
             Companion.dialogButtonClickListener = dialogButtonClickListener
-            val args = Bundle().apply {
+            arguments = Bundle().apply {
                 putString(ARG_MESSAGE, message)
             }
-            fragment.arguments = args
-            return fragment
+          }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = Dialog(requireContext(), theme)
-        //Remove dialog unwanted bg color in the corners
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-        //Disable outside click dialog dismiss event
-        dialog.setCanceledOnTouchOutside(false)
-        return dialog
+      return Dialog(requireContext(), theme).apply {
+          //Remove dialog unwanted bg color in the corners
+          window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+          //Disable outside click dialog dismiss event
+          setCanceledOnTouchOutside(false)
+      }
     }
 
     override fun onCreateView(
@@ -49,33 +48,32 @@ class CustomConfirmAlertDialogFragment : DialogFragment() {
     ): View? {
         //Disable back button pressed dialog dismiss event
         isCancelable = false;
-        binding = FragmentCustomConfirmAlertDialogBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding = FragmentCustomConfirmAlertDialogBinding.inflate(inflater, container, false).apply {
+            binding.lifecycleOwner = this@CustomConfirmAlertDialogFragment
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val message = arguments?.getString(ARG_MESSAGE)
-        //Dialog Width with horizontal margin
-        changeUiSize(context, binding.dialogMainLayout, 1, 1, 30)
-        //Icon width=(Device Width/5)
-        changeUiSize(context, binding.icon, 1, 5)
-        // Set data to the data binding variables
-        binding.dialogMessage = message
-        binding.buttonYes.setOnClickListener {
-            dialogButtonClickListener.onPositiveButtonClick()
-            dismiss()
+        binding.apply {
+            //Dialog Width with horizontal margin
+            changeUiSize(context, dialogMainLayout, 1, 1, 30)
+            //Icon width=(Device Width/5)
+            changeUiSize(context, icon, 1, 5)
+            // Set data to the data binding variables
+            dialogMessage =   arguments?.getString(ARG_MESSAGE)
+
+            buttonYes.setOnClickListener {
+                dialogButtonClickListener.onPositiveButtonClick()
+                dismiss()
+            }
+
+            buttonNo.setOnClickListener {
+                dialogButtonClickListener.onNegativeButtonClick()
+                dismiss()
+            }
         }
-
-
-        binding.buttonNo.setOnClickListener {
-            dialogButtonClickListener.onNegativeButtonClick()
-            dismiss()
-        }
-
-
     }
-
 }
