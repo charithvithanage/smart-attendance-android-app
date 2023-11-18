@@ -16,6 +16,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isM
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isNICValid
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject
+
 /**
  * [ViewModel] class for handling registration-related logic and data manipulation.
  *
@@ -134,7 +135,7 @@ class RegisterViewModel @Inject constructor(
      */
 
     fun validateFields() {
-        _registerForm.value.apply {
+        _registerForm.value = run {
             when {
                 firstName.isNullOrBlank() -> RegisterFormState(firstNameError = R.string.enter_first_name)
                 lastName.isNullOrBlank() -> RegisterFormState(lastNameError = R.string.enter_last_name)

@@ -219,10 +219,9 @@ class RegisterActivity : AppCompatActivity() {
                                 getString(R.string.confirm_registration),
                                 object : ConfirmDialogButtonClickListener {
                                     override fun onPositiveButtonClick() {
-                                        if (NetworkUtils.isNetworkAvailable()) {
-                                            register()
-                                        } else {
-                                            registerViewModel.setErrorMessage(getString(R.string.no_internet))
+                                        when {
+                                            NetworkUtils.isNetworkAvailable() -> register()
+                                            else -> registerViewModel.setErrorMessage(getString(R.string.no_internet))
                                         }
                                     }
 
