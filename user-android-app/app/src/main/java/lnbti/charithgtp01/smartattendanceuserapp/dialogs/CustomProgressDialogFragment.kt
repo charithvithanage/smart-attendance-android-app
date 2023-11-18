@@ -46,7 +46,7 @@ class CustomProgressDialogFragment : DialogFragment() {
         //Disable back button pressed dialog dismiss event
         isCancelable = false;
         binding = FragmentCustomProgressDialogBinding.inflate(inflater, container, false).apply {
-            binding.lifecycleOwner = this@CustomProgressDialogFragment
+            lifecycleOwner = this@CustomProgressDialogFragment
         }
         return binding.root
     }

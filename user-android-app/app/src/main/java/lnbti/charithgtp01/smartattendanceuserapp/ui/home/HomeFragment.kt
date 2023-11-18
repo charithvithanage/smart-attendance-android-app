@@ -12,6 +12,7 @@ import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRAc
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialogInFragment
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
@@ -63,10 +65,14 @@ class HomeFragment : Fragment() {
         /*
          * Initiate Data Binding and View Model
         */
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        binding?.vm = viewModel
-        binding?.lifecycleOwner = this
+        ViewModelProvider(requireActivity())[HomeViewModel::class.java].apply {
+            viewModel = this
+            binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
+                vm = viewModel
+                lifecycleOwner = this@HomeFragment
+            }
+        }
+
         return binding?.root
     }
 
@@ -77,27 +83,38 @@ class HomeFragment : Fragment() {
         //Else need to show fab button to scan the qr
         val userRole = getObjectFromSharedPref(requireContext(), Constants.USER_ROLE)
         val loggedInUserString = getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
-        val gson = Gson()
-        val loggedInUser: User = gson.fromJson(loggedInUserString, User::class.java)
-        if (userRole == getString(R.string.employee)) {
-            binding?.userLayout?.visibility = View.VISIBLE
-            binding?.businessUserLayout?.visibility = View.GONE
-            viewModel.name = loggedInUser.firstName + " " + loggedInUser.lastName
+        viewModel.apply {
+            binding?.apply {
+                when (userRole) {
+                    getString(R.string.employee) -> {
+                        userLayout.isVisible = true
+                        businessUserLayout.isVisible = false
+                        gson.fromJson(loggedInUserString, User::class.java).apply {
+                            name = "$firstName $lastName"
 
-            binding?.btnMarkIn?.setOnClickListener {
-                onClickScan("in")
+                            btnMarkIn.setOnClickListener {
+                                onClickScan("in")
+                            }
+
+                            btnMarkOut.setOnClickListener {
+                                onClickScan("out")
+                            }
+
+                            getTodayAttendanceByUser(nic, formatTodayDate(requireContext()))
+                        }
+                    }
+
+                    else -> {
+                        userLayout.isVisible = false
+                        businessUserLayout.isVisible = true
+                        if (NetworkUtils.isNetworkAvailable()) {
+                            getUsersList()
+                        } else {
+                            viewModel.setErrorMessage(getString(R.string.no_internet))
+                        }
+                    }
+                }
             }
-
-            binding?.btnMarkOut?.setOnClickListener {
-                onClickScan("out")
-            }
-
-            viewModel.getTodayAttendanceByUser(loggedInUser.nic, formatTodayDate(requireContext()))
-
-        } else {
-            binding?.userLayout?.visibility = View.GONE
-            binding?.businessUserLayout?.visibility = View.VISIBLE
-            viewModel.getUsersList()
         }
 
         initiateAdapter()
@@ -109,57 +126,66 @@ class HomeFragment : Fragment() {
      * Live Data Updates
      */
     private fun viewModelObservers() {
-        /* Show error message in the custom error dialog */
-        viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialogInFragment(
-                this@HomeFragment,
-                it
-            )
-        }
-
-        viewModel.isDialogVisible.observe(requireActivity()) {
-            if (it) {
-                /* Show dialog when calling the API */
-                if (dialog?.isVisible == false)
-                    dialog =
-                        showProgressDialogInFragment(this@HomeFragment, getString(R.string.wait))
-            } else {
-                /* Dismiss dialog after updating the data list to recycle view */
-                dialog?.dismiss()
+        viewModel.apply {
+            /* Show error message in the custom error dialog */
+            errorMessage.observe(requireActivity()) {
+                DialogUtils.showErrorDialogInFragment(
+                    this@HomeFragment,
+                    it
+                )
             }
-        }
 
-        /* Observer to catch list data
-        * Update Recycle View Items using Diff Utils
-        */
-        viewModel.usersList.observe(requireActivity()) {
-            //Save users list locally to use in reports
-            saveObjectInSharedPref(
-                requireActivity(),
-                USERS_LIST,
-                gson.toJson(it),
-                SuccessListener { usersListAdapter.submitList(it) })
-        }
-
-        //Waiting for Api response
-        viewModel.attendanceResult.observe(requireActivity()) {
-            val apiResult = it
-            if (apiResult?.success == true) {
-
-                val attendanceData = gson.fromJson(apiResult.data, AttendanceData::class.java)
-                viewModel.setAttendanceData(attendanceData)
-                binding?.btnMarkIn?.visibility = View.GONE
-                if (attendanceData.inTime != null && attendanceData.outTime == null) {
-                    binding?.btnMarkOut?.visibility = View.VISIBLE
+            isDialogVisible.observe(requireActivity()) {
+                if (it) {
+                    /* Show dialog when calling the API */
+                    if (dialog?.isVisible == false)
+                        dialog =
+                            showProgressDialogInFragment(
+                                this@HomeFragment,
+                                getString(R.string.wait)
+                            )
                 } else {
-                    binding?.btnMarkOut?.visibility = View.GONE
-
+                    /* Dismiss dialog after updating the data list to recycle view */
+                    dialog?.dismiss()
                 }
-            } else {
-                binding?.btnMarkIn?.visibility = View.VISIBLE
-                binding?.btnMarkOut?.visibility = View.GONE
+            }
+
+            /* Observer to catch list data
+            * Update Recycle View Items using Diff Utils
+            */
+            usersList.observe(requireActivity()) {
+                //Save users list locally to use in reports
+                saveObjectInSharedPref(
+                    requireActivity(),
+                    USERS_LIST,
+                    gson.toJson(it),
+                    SuccessListener { usersListAdapter.submitList(it) })
+            }
+
+            //Waiting for Api response
+            attendanceResult.observe(requireActivity()) {
+                binding?.apply {
+                    val apiResult = it
+                    when (apiResult?.success) {
+                        true -> gson.fromJson(apiResult.data, AttendanceData::class.java).run {
+                            setAttendanceData(this)
+                            btnMarkIn.isVisible = false
+
+                            when (outTime) {
+                                else -> btnMarkOut.isVisible = false
+                            }
+                        }
+
+                        else -> {
+                            btnMarkIn.isVisible = true
+                            btnMarkOut.isVisible = false
+                        }
+                    }
+                }
+
             }
         }
+
     }
 
     /**
@@ -173,16 +199,16 @@ class HomeFragment : Fragment() {
 
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
-                            val gson = Gson()
-                            val prefMap = HashMap<String, String>()
-                            selectedUser.lat = location.latitude
-                            selectedUser.long = location.longitude
-                            prefMap[Constants.OBJECT_STRING] = gson.toJson(selectedUser)
-                            navigateToAnotherActivityWithExtras(
-                                requireActivity(),
-                                ScanActivity::class.java,
-                                prefMap
-                            )
+                            HashMap<String, String>().apply {
+                                selectedUser.lat = location.latitude
+                                selectedUser.long = location.longitude
+                                this[Constants.OBJECT_STRING] = gson.toJson(selectedUser)
+                                navigateToAnotherActivityWithExtras(
+                                    requireActivity(),
+                                    ScanActivity::class.java,
+                                    this
+                                )
+                            }
                         }
 
                         override fun onError(error: String) {
@@ -196,18 +222,18 @@ class HomeFragment : Fragment() {
                 override fun generate(item: User) {
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
-                            val gson = Gson()
-                            val prefMap = HashMap<String, String>()
-                            item.lat = location.latitude
-                            item.long = location.longitude
-                            val encryptedValue = encrypt(SECURE_KEY, gson.toJson(item))
-                            prefMap[Constants.OBJECT_STRING] = encryptedValue as String
+                            HashMap<String, String>().apply {
+                                item.lat = location.latitude
+                                item.long = location.longitude
+                                val encryptedValue = encrypt(SECURE_KEY, gson.toJson(item))
+                                this[Constants.OBJECT_STRING] = encryptedValue as String
 
-                            navigateToAnotherActivityWithExtras(
-                                requireActivity(),
-                                AttendanceQRActivity::class.java,
-                                prefMap
-                            )
+                                navigateToAnotherActivityWithExtras(
+                                    requireActivity(),
+                                    AttendanceQRActivity::class.java,
+                                    this
+                                )
+                            }
                         }
 
                         override fun onError(error: String) {
@@ -279,20 +305,24 @@ class HomeFragment : Fragment() {
                     super.onAuthenticationSucceeded(result)
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
-                            val gson = Gson()
-                            val prefMap = HashMap<String, String>()
-                            val loggedInUserString =
-                                getObjectFromSharedPref(requireContext(), Constants.LOGGED_IN_USER)
-                            val loggedInUser = gson.fromJson(loggedInUserString, User::class.java)
-                            loggedInUser.lat = location.latitude
-                            loggedInUser.long = location.longitude
-                            prefMap[Constants.OBJECT_STRING] = gson.toJson(loggedInUser)
-                            prefMap[Constants.ATTENDANCE_TYPE] = attendanceType
-                            navigateToAnotherActivityWithExtras(
-                                requireActivity(),
-                                ScanActivity::class.java,
-                                prefMap
-                            )
+                            gson.fromJson(
+                                getObjectFromSharedPref(
+                                    requireContext(),
+                                    Constants.LOGGED_IN_USER
+                                ), User::class.java
+                            ).apply {
+                                lat = location.latitude
+                                long = location.longitude
+                                HashMap<String, String>().apply {
+                                    this[Constants.OBJECT_STRING] = gson.toJson(this)
+                                    this[Constants.ATTENDANCE_TYPE] = attendanceType
+                                    navigateToAnotherActivityWithExtras(
+                                        requireActivity(),
+                                        ScanActivity::class.java,
+                                        this
+                                    )
+                                }
+                            }
                         }
 
                         override fun onError(error: String) {

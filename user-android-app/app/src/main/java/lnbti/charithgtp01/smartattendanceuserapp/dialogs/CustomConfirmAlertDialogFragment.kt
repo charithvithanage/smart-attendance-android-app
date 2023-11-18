@@ -49,7 +49,7 @@ class CustomConfirmAlertDialogFragment : DialogFragment() {
         //Disable back button pressed dialog dismiss event
         isCancelable = false;
         binding = FragmentCustomConfirmAlertDialogBinding.inflate(inflater, container, false).apply {
-            binding.lifecycleOwner = this@CustomConfirmAlertDialogFragment
+            lifecycleOwner = this@CustomConfirmAlertDialogFragment
         }
         return binding.root
     }

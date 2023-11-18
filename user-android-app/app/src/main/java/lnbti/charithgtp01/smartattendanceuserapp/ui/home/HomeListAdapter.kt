@@ -6,14 +6,10 @@ import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import kotlinx.coroutines.withContext
 import lnbti.charithgtp01.smartattendanceuserapp.R
-import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.ANDROID_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.OTHER
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutHomeListBinding
-import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutUserListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import javax.inject.Inject
 
@@ -31,19 +27,21 @@ class HomeListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: HomeListViewHolder, position: Int) {
-        val user = getItem(position)
-        //QR generate and should scan from the Employee
-        if (user.userType == ANDROID_USER) {
-            holder.binding.btnProceed.text =
-                holder.binding.root.context.getString(R.string.generate)
-        } else if (user.userType == OTHER){
-            //Other devices users has printed QR
-            //Office User cam scan printed QR
-            holder.binding.btnProceed.text =
-                holder.binding.root.context.getString(R.string.scan)
+        holder.apply {
+            getItem(position).apply {
+                //QR generate and should scan from the Employee
+                if (userType == ANDROID_USER) {
+                    binding.btnProceed.text =
+                        holder.binding.root.context.getString(R.string.generate)
+                } else if (userType == OTHER) {
+                    //Other devices users has printed QR
+                    //Office User cam scan printed QR
+                    binding.btnProceed.text =
+                        holder.binding.root.context.getString(R.string.scan)
+                }
+                bind(this)
+            }
         }
-
-        holder.bind(user)
     }
 
     /**
@@ -57,21 +55,20 @@ class HomeListAdapter @Inject constructor(
     inner class HomeListViewHolder(val binding: LayoutHomeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
-            binding.setVariable(BR.item, user)
-            //QR generate and should scan from the Employee
-            binding.btnProceed.setOnClickListener {
-                if (user.userType == ANDROID_USER) {
-                    itemClickListener.generate(user)
-                } else {
+            binding.apply {
+                setVariable(BR.item, user)
+                //QR generate and should scan from the Employee
+                btnProceed.setOnClickListener {
+                    when (user.userType) {
+                        ANDROID_USER -> itemClickListener.generate(user)
+                        else -> itemClickListener.scan(user)
+                    }
                     //Other devices users has printed QR
                     //Office User cam scan printed QR
-                    itemClickListener.scan(user)
                 }
 
+                executePendingBindings()
             }
-
-            binding.executePendingBindings()
-
         }
     }
 }

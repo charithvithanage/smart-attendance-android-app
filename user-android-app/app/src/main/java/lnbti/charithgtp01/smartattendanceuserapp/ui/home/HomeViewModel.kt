@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +14,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -27,31 +27,30 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
-    val usersList: LiveData<List<User>> get() = _usersList
+    val usersList get() = _usersList
 
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+    val isDialogVisible get() = _isDialogVisible
 
     //Error Message Live Data
     private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
+    val errorMessage get() = _errorMessage
 
-    lateinit var allUsersList: List<User>
+    private var allUsersList: List<User>? = null
 
     private var today: Date = Date()
 
     private val _dateString = MutableLiveData<String>()
-    val dateString: LiveData<String> get() = _dateString
+    val dateString get() = _dateString
 
     //Live data for Get Attendance Response
     private val _attendanceResult = MutableLiveData<ApiCallResponse?>()
-    val attendanceResult: MutableLiveData<ApiCallResponse?> = _attendanceResult
+    val attendanceResult = _attendanceResult
 
     var name: String? = null
-    var attendanceDataString: String? = null
     private val _attendanceData = MutableLiveData<AttendanceData?>()
-    val attendanceData: MutableLiveData<AttendanceData?> = _attendanceData
+    val attendanceData = _attendanceData
 
     /**
      * This will call when the View Model Created
@@ -66,37 +65,30 @@ class HomeViewModel @Inject constructor(
      */
     fun onSearchViewTextChanged(searchString: CharSequence?) {
         val value = searchString.toString()
-        if (value.isNullOrBlank()) {
-            _usersList.value = allUsersList
-        } else {
-            _usersList.value = filterApprovalList(value)
-        }
+        _usersList.value = value.takeIf { it.isBlank() }?.let {
+            allUsersList
+        } ?: filterApprovalList(value)
     }
 
     /**
      * Get Server Response and Set values to live data
      */
     fun getUsersList() {
-        if (NetworkUtils.isNetworkAvailable()) {
-//Show Progress Dialog when click on the search view submit button
-            _isDialogVisible.value = true
-            /* View Model Scope - Coroutine */
-            viewModelScope.launch {
-                val resource = userRepository.getUsersFromDataSource()
-
-                if (resource?.data != null) {
-                    allUsersList = resource.data.data
-                    _usersList.value = allUsersList
-                } else
-                    _errorMessage.value = resource?.error?.error
-
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                _isDialogVisible.value = false
+        _isDialogVisible.value = true
+        /* View Model Scope - Coroutine */
+        viewModelScope.launch {
+            userRepository.getUsersFromDataSource().run {
+                data?.let { result ->
+                    allUsersList = result.data
+                    _usersList.value = result.data
+                } ?: run {
+                    _errorMessage.value = error?.error
+                }
             }
-        } else {
-            _errorMessage.value = NO_INTERNET
-        }
 
+            /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
+            _isDialogVisible.value = false
+        }
     }
 
     /**
@@ -104,11 +96,14 @@ class HomeViewModel @Inject constructor(
      * @return Data list filtered by user's full name
      */
     private fun filterApprovalList(searchString: String): List<User>? {
-        // to get the result as list
-        return allUsersList?.filter { s ->
-            (s.firstName + " " + s.lastName).contains(
-                searchString
-            )
+        return allUsersList?.filter { user ->
+            with(user) {
+                ("$firstName $lastName").lowercase(Locale.getDefault()).contains(
+                    searchString.lowercase(
+                        Locale.getDefault()
+                    )
+                )
+            }
         }
     }
 
@@ -131,6 +126,10 @@ class HomeViewModel @Inject constructor(
 
     fun setAttendanceData(attendanceData: AttendanceData?) {
         _attendanceData.value = attendanceData
+    }
+
+    fun setErrorMessage(errorMessage: String?) {
+        _errorMessage.value = errorMessage
     }
 
 }
