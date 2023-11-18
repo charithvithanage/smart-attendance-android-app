@@ -14,15 +14,15 @@ import javax.inject.Inject
 class UserDetailsViewModel @Inject constructor() : ViewModel() {
 
     private val _pendingApprovalUser = MutableLiveData<User>()
-    val pendingApprovalUser: LiveData<User> get() = _pendingApprovalUser
+    val pendingApprovalUser get() = _pendingApprovalUser
 
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+    val isDialogVisible get() = _isDialogVisible
 
     //Error Message Live Data
     private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
+    val errorMessage get() = _errorMessage
 
     /**
      * Set Pending Approval User Object to Live Data

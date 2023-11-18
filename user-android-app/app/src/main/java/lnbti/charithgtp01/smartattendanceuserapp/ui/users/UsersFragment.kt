@@ -15,6 +15,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentUsersBindin
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 /**
@@ -22,7 +23,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateT
  */
 @AndroidEntryPoint
 class UsersFragment : Fragment() {
-    private var binding: FragmentUsersBinding? = null
+    private lateinit var binding: FragmentUsersBinding
     private lateinit var viewModel: UsersViewModel
     private lateinit var usersListAdapter: UsersListAdapter
     private var dialog: DialogFragment? = null
@@ -35,11 +36,13 @@ class UsersFragment : Fragment() {
         /*
          * Initiate Data Binding and View Model
         */
-        binding = FragmentUsersBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[UsersViewModel::class.java]
-        binding?.vm = viewModel
-        binding?.lifecycleOwner = this
-        return binding?.root
+        binding = FragmentUsersBinding.inflate(inflater, container, false).apply {
+            viewModel = ViewModelProvider(requireActivity())[UsersViewModel::class.java]
+            vm = viewModel
+            lifecycleOwner = this@UsersFragment
+        }
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,32 +55,37 @@ class UsersFragment : Fragment() {
      * Live Data Updates
      */
     private fun viewModelObservers() {
-        /* Show error message in the custom error dialog */
-        viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialogInFragment(
-                this@UsersFragment,
-                it)
-        }
+        viewModel.apply {
+            /* Show error message in the custom error dialog */
+            errorMessage.observe(requireActivity()) {
+                showErrorDialogInFragment(
+                    this@UsersFragment,
+                    it
+                )
+            }
 
-        viewModel.isDialogVisible.observe(requireActivity()) {
-            if (it) {
+            isDialogVisible.observe(requireActivity()) {
+                when {
+                    it -> dialog = DialogUtils.showProgressDialogInFragment(
+                        this@UsersFragment,
+                        getString(R.string.wait)
+                    )
+
+                    else -> dialog?.dismiss()
+                }
                 /* Show dialog when calling the API */
-                dialog = DialogUtils.showProgressDialogInFragment(this@UsersFragment, getString(R.string.wait))
-            } else {
                 /* Dismiss dialog after updating the data list to recycle view */
-                dialog?.dismiss()
+            }
+
+            /* Observer to catch list data
+           * Update Recycle View Items using Diff Utils
+           */
+            usersList.observe(requireActivity()) { it ->
+                //Get Active users
+                usersListAdapter.submitList(it.filter { it.userStatus })
             }
         }
 
-        /* Observer to catch list data
-       * Update Recycle View Items using Diff Utils
-       */
-        viewModel.usersList.observe(requireActivity()) {
-                it ->
-            //Get Active users
-            val filteredList = it.filter { it.userStatus }
-            usersListAdapter.submitList(filteredList)
-        }
     }
 
     /**
@@ -88,26 +96,21 @@ class UsersFragment : Fragment() {
         usersListAdapter =
             UsersListAdapter(object : UsersListAdapter.OnItemClickListener {
                 override fun itemClick(item: User) {
-                    val gson = Gson()
-                    val prefMap = HashMap<String, String>()
-                    prefMap[Constants.OBJECT_STRING] = gson.toJson(item)
-                    navigateToAnotherActivityWithExtras(
-                        requireActivity(),
-                        UserDetailsActivity::class.java,
-                        prefMap
-                    )
+                    HashMap<String, String>().apply {
+                        this[Constants.OBJECT_STRING] = Gson().toJson(item)
+                        navigateToAnotherActivityWithExtras(
+                            requireActivity(),
+                            UserDetailsActivity::class.java,
+                            this
+                        )
+                    }
+
                 }
             })
 
         /* Set Adapter to Recycle View */
-        binding?.recyclerView.also { it2 ->
+        binding.recyclerView.also { it2 ->
             it2?.adapter = usersListAdapter
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
-
 }

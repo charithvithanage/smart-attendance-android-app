@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.users
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,15 +21,15 @@ class UsersViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _usersList = MutableLiveData<List<User>>()
-    val usersList: LiveData<List<User>> get() = _usersList
+    val usersList get() = _usersList
 
     //Dialog Visibility Live Data
     private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+    val isDialogVisible get() = _isDialogVisible
 
     //Error Message Live Data
     private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
+    val errorMessage get() = _errorMessage
 
     lateinit var allUsersList: List<User>
 
@@ -46,11 +45,10 @@ class UsersViewModel @Inject constructor(
      * @param searchString Entering value
      */
     fun onSearchViewTextChanged(searchString: CharSequence?) {
-        val value = searchString.toString()
-        if (value.isNullOrBlank()) {
-            _usersList.value = allUsersList
-        } else {
+        searchString?.toString()?.takeIf { it.isNotBlank() }?.let { value ->
             _usersList.value = filterApprovalList(value)
+        } ?: run {
+            _usersList.value = allUsersList
         }
     }
 
@@ -84,13 +82,12 @@ class UsersViewModel @Inject constructor(
      * @param searchString Search View entered value
      * @return Data list filtered by user's full name
      */
-    private fun filterApprovalList(searchString: String): List<User>? {
-        // to get the result as list
-        return allUsersList?.filter { s ->
-            (s.firstName + " " + s.lastName).contains(
-                searchString
-            )
+    private fun filterApprovalList(searchString: String): List<User> {
+        return allUsersList.run {
+            filter { user ->
+                val fullName = "${user.firstName} ${user.lastName}"
+                fullName.lowercase().contains(searchString.lowercase())
+            }
         }
     }
-
 }

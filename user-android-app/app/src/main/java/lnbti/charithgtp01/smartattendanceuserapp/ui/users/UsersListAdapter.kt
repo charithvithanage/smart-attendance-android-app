@@ -24,11 +24,15 @@ class UsersListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
-        val user = getItem(position)
-        holder.bind(user)
-        holder.binding.root.setOnClickListener {
-            itemClickListener.itemClick(user)
+        holder.apply {
+            getItem(position).apply {
+                bind(this)
+                binding.root.setOnClickListener {
+                    itemClickListener.itemClick(this)
+                }
+            }
         }
+
     }
 
     /**
@@ -41,8 +45,10 @@ class UsersListAdapter @Inject constructor(
     inner class UsersListViewHolder(val binding: LayoutUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
-            binding.setVariable(BR.item, user)
-            binding.executePendingBindings()
+            binding.apply {
+                setVariable(BR.item, user)
+                executePendingBindings()
+            }
         }
     }
 }
