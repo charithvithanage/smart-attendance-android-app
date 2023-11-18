@@ -11,18 +11,15 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.LayoutAttendanceReportListBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceDate
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceStatus
-import lnbti.charithgtp01.smartattendanceuserapp.model.CalendarDate
-import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import javax.inject.Inject
 
 /**
  * User Fragment List Adapter
  */
-class AttendanceReportsListAdapter @Inject constructor(
-    private val itemClickListener: OnItemClickListener
-) : ListAdapter<AttendanceDate, AttendanceReportsListAdapter.AttendanceReportsListViewHolder>(
-    diffUtil
-) {
+class AttendanceReportsListAdapter @Inject constructor() :
+    ListAdapter<AttendanceDate, AttendanceReportsListAdapter.AttendanceReportsListViewHolder>(
+        diffUtil
+    ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,52 +31,49 @@ class AttendanceReportsListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: AttendanceReportsListViewHolder, position: Int) {
-        val attendanceDate = getItem(position)
-        val calendarDate = attendanceDate.date
-        val dateString = "${calendarDate.dayOfMonth}/${calendarDate.month}/${calendarDate.year}"
-        holder.binding.tvDate.text = dateString
-        // Highlight weekends
-        if (calendarDate.isWeekend) {
-            holder.binding.mainLayout.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    holder.itemView.context,
-                    R.color.weekend_highlighted_color
-                )
-            )
-        } else {
-            holder.binding.mainLayout.setCardBackgroundColor(Color.WHITE)
+        getItem(position).apply {
+            holder.binding.apply {
+                date.apply {
+                    val dateString =
+                        "${dayOfMonth}/${month}/${year}"
+                    tvDate.text = dateString
+                    // Highlight weekends
+                    when {
+                        isWeekend -> mainLayout.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                holder.itemView.context,
+                                R.color.weekend_highlighted_color
+                            )
+                        )
+                        else -> mainLayout.setCardBackgroundColor(Color.WHITE)
+                    }
+                }
+
+
+                when (status) {
+                    AttendanceStatus.PRESENT -> {
+                        tvStatus.text = "Present"
+                        tvStatus.setBackgroundResource(R.drawable.green_button_bg)
+                    }
+
+                    AttendanceStatus.ABSENT -> {
+                        tvStatus.text = "Absent"
+                        tvStatus.setBackgroundResource(R.drawable.red_button_bg)
+                    }
+
+                    AttendanceStatus.UNKNOWN -> {
+                        tvStatus.text = "Unknown"
+                        tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    }
+                }
+            }
         }
 
-        when (attendanceDate.status) {
-            AttendanceStatus.PRESENT -> {
-                holder.binding.tvStatus.text = "Present"
-                holder.binding.tvStatus.setBackgroundResource(R.drawable.green_button_bg)
-            }
-
-            AttendanceStatus.ABSENT -> {
-                holder.binding.tvStatus.text = "Absent"
-                holder.binding.tvStatus.setBackgroundResource(R.drawable.red_button_bg)
-            }
-
-            AttendanceStatus.UNKNOWN -> {
-                holder.binding.tvStatus.text = "Unknown"
-                holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-            }
-        }
-    }
-
-    /**
-     * On Item Click Listener
-     */
-    interface OnItemClickListener {
-        fun itemClick(item: AttendanceDate)
     }
 
     inner class AttendanceReportsListViewHolder(val binding: LayoutAttendanceReportListBinding) :
         RecyclerView.ViewHolder(binding.root) {
     }
-
-
 }
 
 /**

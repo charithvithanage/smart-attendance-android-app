@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -15,6 +17,9 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
 import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
@@ -459,6 +464,30 @@ class Utils {
                 editor.putBoolean(BIO_METRIC_ENABLE_STATUS, savedPref2)
                 editor.apply()
                 listener.onFinished()
+            }
+        }
+
+        /**
+         * Converts the provided [text] into a QR code represented as a [Bitmap].
+         *
+         * @param text The value to be encoded into the QR code.
+         * @return The generated QR code as a [Bitmap].
+         */
+        fun generateQRCodeBitmap(text: String): Bitmap {
+            try {
+                QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 512, 512).apply {
+                    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+                    for (x in 0 until width) {
+                        for (y in 0 until height) {
+                            bitmap.setPixel(x, y, if (get(x, y)) Color.BLACK else Color.WHITE)
+                        }
+                    }
+                    return bitmap
+                }
+            } catch (e: WriterException) {
+                // Handle the exception if QR code generation fails
+                e.printStackTrace()
+                return Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
             }
         }
     }

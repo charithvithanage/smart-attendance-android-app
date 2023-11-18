@@ -29,8 +29,7 @@ class AttendanceDataReportsListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: AttendanceDataReportsListViewHolder, position: Int) {
-        val attendanceDate = getItem(position)
-        holder.bind(attendanceDate)
+        holder.bind(getItem(position))
     }
 
     /**
@@ -43,11 +42,12 @@ class AttendanceDataReportsListAdapter @Inject constructor(
     inner class AttendanceDataReportsListViewHolder(val binding: LayoutAttendanceDataReportListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(attendanceData: AttendanceData) {
-            binding.setVariable(BR.item, attendanceData)
-            binding.executePendingBindings()
+            binding.apply {
+                setVariable(BR.item, attendanceData)
+                executePendingBindings()
+            }
         }
     }
-
 
 }
 

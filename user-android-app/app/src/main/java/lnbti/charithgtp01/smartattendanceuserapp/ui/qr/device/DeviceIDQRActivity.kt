@@ -9,10 +9,11 @@ import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityDeviceIdQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getAndroidId
 
 @AndroidEntryPoint
 class DeviceIDQRActivity : AppCompatActivity() {
-    private var binding: ActivityDeviceIdQrBinding? = null
+    private lateinit var binding: ActivityDeviceIdQrBinding
     private lateinit var viewModel: DeviceIDQRViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +42,21 @@ class DeviceIDQRActivity : AppCompatActivity() {
     }
 
     private fun initiateDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_device_id_qr)
-        viewModel = ViewModelProvider(this)[DeviceIDQRViewModel::class.java]
-        binding?.vm = viewModel
-        binding?.lifecycleOwner = this
+
+        ViewModelProvider(this)[DeviceIDQRViewModel::class.java].apply {
+            viewModel = this
+            DataBindingUtil.setContentView<ActivityDeviceIdQrBinding?>(
+                this@DeviceIDQRActivity,
+                R.layout.activity_device_id_qr
+            ).apply {
+                binding = this
+                vm = viewModel
+                lifecycleOwner = this@DeviceIDQRActivity
+
+                getAndroidId(this@DeviceIDQRActivity).apply {
+                    generateQRCode(this)
+                }
+            }
+        }
     }
 }
