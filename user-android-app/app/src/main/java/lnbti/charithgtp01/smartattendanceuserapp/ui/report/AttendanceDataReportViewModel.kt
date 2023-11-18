@@ -26,9 +26,6 @@ class AttendanceDataReportViewModel @Inject constructor(
     private val _dataCountString = MutableLiveData("0")
     val dataCountString get() = _dataCountString
 
-    private val _usersList = MutableLiveData<List<User>>()
-    val usersList get() = _usersList
-
     val selectedUser = MutableLiveData<User>()
 
     fun onUserSelected(user: User) {
@@ -87,6 +84,6 @@ class AttendanceDataReportViewModel @Inject constructor(
     }
 
     fun setErrorMessage(errorMessage: String) {
-        _errorMessage.value = errorMessage.toString()
+        _errorMessage.value = errorMessage
     }
 }

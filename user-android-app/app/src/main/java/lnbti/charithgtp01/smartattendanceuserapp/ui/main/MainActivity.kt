@@ -36,7 +36,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateW
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    var locationPermissionGranted = false
+    private var locationPermissionGranted = false
     private lateinit var sharedViewModel: MainActivityViewModel
     private var dialog: DialogFragment? = null
 
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
          */
         if (checkPermissions(this)) {
             if (isLocationEnabled(this)) {
-                locationPermissionGranted = true;
+                locationPermissionGranted = true
             } else {
                 Toast.makeText(this, "Please turn on location", Toast.LENGTH_LONG).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

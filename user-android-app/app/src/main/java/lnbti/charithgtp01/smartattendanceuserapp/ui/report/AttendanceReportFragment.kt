@@ -18,12 +18,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentAttendanceR
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
-import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getObjectFromSharedPref
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.parseStringToUserList
 import java.util.Calendar
 
@@ -51,7 +49,7 @@ class AttendanceReportFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         /*
          * Initiate Data Binding and View Model
         */
@@ -213,20 +211,7 @@ class AttendanceReportFragment : Fragment() {
 
         /* Initiate Adapter */
         attendanceReportsListAdapter =
-            AttendanceDataReportsListAdapter(object :
-                AttendanceDataReportsListAdapter.OnItemClickListener {
-                override fun itemClick(item: AttendanceData) {
-                    HashMap<String, String>().apply {
-                        this[Constants.OBJECT_STRING] = gson.toJson(item)
-                        navigateToAnotherActivityWithExtras(
-                            requireActivity(),
-                            UserDetailsActivity::class.java,
-                            this
-                        )
-                    }
-
-                }
-            })
+            AttendanceDataReportsListAdapter()
 
         /* Set Adapter to Recycle View */
         binding.recyclerView.also { it2 ->

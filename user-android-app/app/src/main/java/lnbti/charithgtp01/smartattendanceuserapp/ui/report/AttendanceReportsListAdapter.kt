@@ -72,8 +72,7 @@ class AttendanceReportsListAdapter @Inject constructor() :
     }
 
     inner class AttendanceReportsListViewHolder(val binding: LayoutAttendanceReportListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 }
 
 /**

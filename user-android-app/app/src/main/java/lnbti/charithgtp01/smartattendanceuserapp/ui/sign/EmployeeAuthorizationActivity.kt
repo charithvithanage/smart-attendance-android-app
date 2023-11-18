@@ -21,13 +21,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogLis
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkInRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkOutRequest
-import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.FileUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import java.io.File
@@ -39,8 +36,8 @@ import java.util.Locale
 @AndroidEntryPoint
 class EmployeeAuthorizationActivity : AppCompatActivity() {
     private var binding: ActivityEmployeeAuthorizationBinding? = null
-    var drawingView: SignatureView? = null
-    var mediaFile: File? = null
+    private var drawingView: SignatureView? = null
+    private var mediaFile: File? = null
     lateinit var nic: String
     private lateinit var employeeAuthorizationViewModel: EmployeeAuthorizationViewModel
     private var dialog: DialogFragment? = null
@@ -142,9 +139,7 @@ class EmployeeAuthorizationActivity : AppCompatActivity() {
 
             if (attendanceType == "in") {
                 val attendanceMarkInRequest = AttendanceMarkInRequest(
-                    userID = nic,
-                    date = formattedDate,
-                    inTime = formattedTime
+                    date = formattedDate
                 )
 
                 Log.d(Constants.TAG, "Attendance Type: In " + gson.toJson(attendanceMarkInRequest))

@@ -64,7 +64,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                     lifecycleOwner = this@ChangePasswordActivity
 
                     initiateActionBar(
-                        actionBar?.mainLayout!!,
+                        actionBar.mainLayout,
                         CHANGE_PASSWORD,
                         object : ActionBarListener {
                             override fun backPressed() {

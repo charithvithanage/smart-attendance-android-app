@@ -109,7 +109,7 @@ class RegisterViewModel @Inject constructor(
                     )
                 )
 
-            result?.run {
+            result.run {
                 when {
                     success == true -> _isSuccess.value = true
                     data != null -> _errorMessage.value = data.toString()

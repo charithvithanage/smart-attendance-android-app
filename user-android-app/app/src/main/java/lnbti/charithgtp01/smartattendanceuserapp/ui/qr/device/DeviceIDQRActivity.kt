@@ -30,13 +30,13 @@ class DeviceIDQRActivity : AppCompatActivity() {
         // Observe the LiveData to receive the generated QR code data
         viewModel.generatedQRCodeData.observe(this) { qrCodeBitmap ->
             // Use the generated QR code Bitmap here (e.g., display it in an ImageView)
-            binding?.qrCodeView?.setImageBitmap(qrCodeBitmap)
+            binding.qrCodeView.setImageBitmap(qrCodeBitmap)
         }
     }
 
     private fun initView() {
         initiateActionBarWithoutHomeButton(
-            binding?.actionBar?.mainLayout!!,
+            binding.actionBar.mainLayout,
             getString(R.string.device_id),
             ActionBarWithoutHomeListener { onBackPressed() })
     }

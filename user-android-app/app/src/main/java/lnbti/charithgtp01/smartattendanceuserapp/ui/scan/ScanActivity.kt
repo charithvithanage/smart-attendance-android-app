@@ -47,7 +47,7 @@ import java.util.Calendar.getInstance
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     private var binding: ActivityScanBinding? = null
-    var contentFrame: ViewGroup? = null
+    private var contentFrame: ViewGroup? = null
     private var mScannerView: ZXingScannerView? = null
     val gson = Gson()
     private lateinit var scanViewModel: ScanViewModel
@@ -131,9 +131,8 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         stopCamera()
 
         val barCodeString = rawResult.text
-        val userRole = getObjectFromSharedPref(this, USER_ROLE)
 
-        when (userRole) {
+        when (getObjectFromSharedPref(this, USER_ROLE)) {
             getString(R.string.employee) -> {
                 handleEmployeeRole(barCodeString)
             }
@@ -172,9 +171,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                                         intent.getStringExtra(Constants.ATTENDANCE_TYPE) == "in" -> {
                                             markIn(
                                                 AttendanceMarkInRequest(
-                                                    userID = loggedInUser.nic,
-                                                    date = formattedDate,
-                                                    inTime = formattedTime
+                                                    date = formattedDate
                                                 )
                                             )
                                         }

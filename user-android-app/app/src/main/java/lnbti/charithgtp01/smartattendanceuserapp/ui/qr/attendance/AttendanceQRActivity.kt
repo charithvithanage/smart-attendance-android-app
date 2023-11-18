@@ -49,7 +49,7 @@ class AttendanceQRActivity : AppCompatActivity() {
 
                 // Set up action bar without home button
                 initiateActionBarWithoutHomeButton(
-                    actionBar?.mainLayout!!,
+                    actionBar.mainLayout,
                     getString(R.string.attendance_qr),
                     ActionBarWithoutHomeListener { onBackPressed() })
             }

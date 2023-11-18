@@ -59,7 +59,6 @@ import java.util.concurrent.Executor
  * @property binding View Binding for the Fragment
  * @property viewModel ViewModel for managing data and business logic
  * @property usersListAdapter Adapter for displaying the list of users
- * @property dialog Dialog for displaying loading or error messages
  * @property executor Executor for handling asynchronous tasks
  * @property biometricPrompt BiometricPrompt for fingerprint authentication
  * @property promptInfo PromptInfo for configuring the BiometricPrompt
@@ -249,7 +248,7 @@ class HomeFragment : Fragment() {
                                 item.lat = location.latitude
                                 item.long = location.longitude
                                 val encryptedValue = encrypt(SECURE_KEY, gson.toJson(item))
-                                this[Constants.OBJECT_STRING] = encryptedValue as String
+                                this[Constants.OBJECT_STRING] = encryptedValue
 
                                 navigateToAnotherActivityWithExtras(
                                     requireActivity(),

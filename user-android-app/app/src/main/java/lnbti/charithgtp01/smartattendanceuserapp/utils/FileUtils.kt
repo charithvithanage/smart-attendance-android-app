@@ -22,7 +22,7 @@ class FileUtils {
 // Check that the SDCard is mounted
             var mediaStorageDir: File? = null
             var mediaFile: File? = null
-            var directoryStartPath = uuid
+            val directoryStartPath = uuid
 
             if ((type == MEDIA_TYPE_EMPLOYEE_SIGNATURE)) {
 //            mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(

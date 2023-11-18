@@ -31,7 +31,7 @@ class UsersViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage get() = _errorMessage
 
-    lateinit var allUsersList: List<User>
+    private lateinit var allUsersList: List<User>
 
     /**
      * This will call when the View Model Created
@@ -67,7 +67,7 @@ class UsersViewModel @Inject constructor(
                     allUsersList = resource.data.data
                     _usersList.value = allUsersList
                 } else
-                    _errorMessage.value = resource?.error?.error
+                    _errorMessage.value = resource.error?.error
 
                 /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
                 delay(1000L)

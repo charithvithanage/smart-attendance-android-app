@@ -79,7 +79,9 @@
         <shape>
             <corners android:radius="@dimen/shadowBorderRadius" />
             <solid android:color="@color/white" />
-            <stroke android:color="@color/color_primary" android:width="0.5dp"></stroke>
+            <stroke
+                android:color="@color/color_primary"
+                android:width="0.5dp" />
 
         </shape>
     </item>

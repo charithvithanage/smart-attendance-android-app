@@ -2,7 +2,6 @@ package lnbti.charithgtp01.smartattendanceuserapp.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDateToDayOfWeek
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDateWithMonth
 

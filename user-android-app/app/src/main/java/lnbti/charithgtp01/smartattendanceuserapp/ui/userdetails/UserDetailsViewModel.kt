@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +25,7 @@ class UserDetailsViewModel @Inject constructor() : ViewModel() {
 
     /**
      * Set Pending Approval User Object to Live Data
-     * @param Selected Pending Approval User Object
+     * @param pendingApprovalUser Pending Approval User Object
      */
     fun setPendingApprovalUserData(pendingApprovalUser: User) {
         _pendingApprovalUser.value = pendingApprovalUser

@@ -54,7 +54,7 @@ object BindingAdapters {
      * Return Hex Color code of text color according to the first letter of the name
      */
     private fun getTextColor(firstLetter: String?): String {
-        var colorCode: String
+        val colorCode: String
         when (firstLetter?.uppercase(Locale.getDefault())) {
             "A" -> colorCode = "#FFFF0000"
             "B" -> colorCode = "#FF9000FF"
@@ -91,7 +91,7 @@ object BindingAdapters {
      * Return Hex Color code bg color according to the first letter of the name
      */
     private fun getBgColor(firstLetter: String?): String {
-        var colorCode: String
+        val colorCode: String
         when (firstLetter?.uppercase(Locale.getDefault())) {
             "A" -> colorCode = "#32FF0000"
             "B" -> colorCode = "#329000FF"
@@ -124,9 +124,4 @@ object BindingAdapters {
         return colorCode
     }
 
-    //User status binding adapter
-    @BindingAdapter("booleanToString")
-    fun setBooleanToString(textView: TextView, isTrue: Boolean) {
-        textView.text = if (isTrue) "True String" else "False String"
-    }
 }

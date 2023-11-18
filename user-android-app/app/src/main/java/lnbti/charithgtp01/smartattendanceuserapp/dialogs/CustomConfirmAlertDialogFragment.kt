@@ -37,7 +37,7 @@ class CustomConfirmAlertDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
       return Dialog(requireContext(), theme).apply {
           //Remove dialog unwanted bg color in the corners
-          window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+          window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
           //Disable outside click dialog dismiss event
           setCanceledOnTouchOutside(false)
       }
@@ -45,9 +45,9 @@ class CustomConfirmAlertDialogFragment : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         //Disable back button pressed dialog dismiss event
-        isCancelable = false;
+        isCancelable = false
         binding = FragmentCustomConfirmAlertDialogBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = this@CustomConfirmAlertDialogFragment
         }

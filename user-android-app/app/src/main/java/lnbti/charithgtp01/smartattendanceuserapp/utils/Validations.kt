@@ -66,7 +66,7 @@ class Validations {
          */
         fun isNICValid(userNIC: String?): Boolean {
             val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
-            var valid: Boolean = if (userNIC.isNullOrBlank()) {
+            val valid: Boolean = if (userNIC.isNullOrBlank()) {
                 false
             } else {
                 if (userNIC.length == 12) {

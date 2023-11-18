@@ -1,6 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.other
 
-import android.os.Build
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory

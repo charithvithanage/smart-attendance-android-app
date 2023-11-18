@@ -40,7 +40,6 @@ class DialogUtils {
         /**
          * Custom Alert Dialog with icon
          * @param message Message body
-         * @param type Type of the Dialog Success,Fail or Warn Alert
          */
         fun showErrorDialog(
             context: Context, message: String?
@@ -57,7 +56,7 @@ class DialogUtils {
         fun showErrorDialogInFragment(
             fragment: Fragment, message: String?
         ) {
-            fragment?.parentFragmentManager?.let { fragmentManager ->
+            fragment.parentFragmentManager.let { fragmentManager ->
                 CustomAlertDialogFragment.newInstance(message).apply {
                     show(fragmentManager, ALERT_DIALOG_FRAGMENT_TAG)
                 }
@@ -89,7 +88,7 @@ class DialogUtils {
         /**
          * Show a progress dialog inside a fragment.
          *
-         * @param activity The fragment in which the progress dialog should be shown.
+         * @param context The fragment in which the progress dialog should be shown.
          * @param message The progress message to be displayed.
          * @return The created progress dialog fragment.
          */

@@ -16,7 +16,6 @@ import lnbti.charithgtp01.smartattendanceuserapp.R;
 import me.dm7.barcodescanner.core.DisplayUtils;
 import me.dm7.barcodescanner.core.IViewFinder;
 public class CustomZXingScannerView extends View implements IViewFinder {
-    private static final String TAG = "ViewFinderView";
 
     private Rect mFramingRect;
 

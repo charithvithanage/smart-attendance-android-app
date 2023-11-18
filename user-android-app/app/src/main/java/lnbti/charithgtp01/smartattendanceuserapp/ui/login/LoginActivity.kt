@@ -12,10 +12,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.other.BiometricAuthenticationHelper
-import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.decrypt
-import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.encrypt
-import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.LOGGED_IN_USER
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.OBJECT_STRING
@@ -26,6 +22,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityLoginBindin
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.Credential
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
+import lnbti.charithgtp01.smartattendanceuserapp.other.BiometricAuthenticationHelper
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.decrypt
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.encrypt
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.device.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.searchcompany.SearchCompanyActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
@@ -39,6 +39,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateT
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.saveMultipleObjectsInSharedPref
 import java.util.concurrent.atomic.AtomicInteger
+
 /**
  * Activity for user login and authentication.
  *
@@ -49,7 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger
  *
  * @constructor Creates an instance of LoginActivity.
  *
- * @property ViewModel responsible for handling login-related data and actions.
+ * @property loginViewModel responsible for handling login-related data and actions.
  * @property binding Data binding instance for the activity.
  * @property dialog DialogFragment used to display progress dialogs during login.
  * @property username EditText for entering the username.
@@ -94,7 +95,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
 
     }
 
@@ -158,7 +158,6 @@ class LoginActivity : AppCompatActivity() {
                                         // Biometric authentication successful
                                         // You can perform your actions here
 
-
                                         var decryptedCredential: String? = null
                                         try {
                                             decryptedCredential =
@@ -198,7 +197,6 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             showErrorDialog(this@LoginActivity, getString(R.string.no_internet))
                         }
-
 
                     }
 
@@ -284,27 +282,28 @@ class LoginActivity : AppCompatActivity() {
 
                         val encryptedCredential = encrypt(SECURE_KEY, gson.toJson(credential))
                         hashMap[ResourceConstants.LAST_LOGGED_IN_CREDENTIAL] =
-                            encryptedCredential.toString()
+                            encryptedCredential
 
+                        if (loggedInUser.userType == ResourceConstants.ANDROID_USER) {
+                            saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,
+                                SuccessListener {
+                                    navigateToAnotherActivity(
+                                        this@LoginActivity,
+                                        MainActivity::class.java
+                                    )
+                                })
+                        } else {
+                            showErrorDialog(
+                                this@LoginActivity,
+                                getString(R.string.no_permission_to_use)
+                            )
+                        }
                     } catch (e: Exception) {
-
-                    }
-
-                    if (loggedInUser.userType == ResourceConstants.ANDROID_USER) {
-                        saveMultipleObjectsInSharedPref(this@LoginActivity, hashMap,
-                            SuccessListener {
-                                navigateToAnotherActivity(
-                                    this@LoginActivity,
-                                    MainActivity::class.java
-                                )
-                            })
-                    } else {
                         showErrorDialog(
                             this@LoginActivity,
-                            getString(R.string.no_permission_to_use)
+                            e.toString()
                         )
                     }
-
                 } else {
                     showErrorDialog(this@LoginActivity, loginResult.message)
                 }

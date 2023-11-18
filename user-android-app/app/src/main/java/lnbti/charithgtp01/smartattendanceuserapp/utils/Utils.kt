@@ -100,7 +100,7 @@ class Utils {
             // Define the input date format
             val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
-            try {
+            return try {
                 // Parse the input date string
                 val date = inputFormat.parse(dateString)
 
@@ -108,10 +108,10 @@ class Utils {
                 val outputFormat = SimpleDateFormat("EEEE", Locale.US)
 
                 // Format the date to get the day of the week
-                return outputFormat.format(date)
+                outputFormat.format(date)
             } catch (e: Exception) {
                 e.printStackTrace()
-                return "Invalid Date"
+                "Invalid Date"
             }
         }
 
@@ -120,13 +120,6 @@ class Utils {
             val dateFormat =
                 SimpleDateFormat(context.getString(R.string.date_format), Locale.getDefault())
             return dateFormat.format(calendar.time)
-        }
-
-        fun formatNowTime(context: Context): String {
-            val calendar = Calendar.getInstance()
-            val timeFormat =
-                SimpleDateFormat(context.getString(R.string.time_format), Locale.getDefault())
-            return timeFormat.format(calendar.time)
         }
 
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
@@ -341,25 +334,6 @@ class Utils {
 
         /**
          * Navigate to another activity with data extras
-         * Activity wait for a Result
-         */
-        fun navigateToAnotherActivityForResultWithExtras(
-            context: Activity,
-            activity: Class<*>?,
-            requestCode: Int,
-            map: java.util.HashMap<String, String>
-        ) {
-            val intent = Intent(context, activity)
-
-            map.keys.forEach { key ->
-                val value = map[key]
-                intent.putExtra(key, value)
-            }
-            context.startActivityForResult(intent, requestCode)
-        }
-
-        /**
-         * Navigate to another activity with data extras
          */
         fun navigateToAnotherActivityWithExtras(
             context: Context,
@@ -371,24 +345,6 @@ class Utils {
                 val value = map[key]
                 intent.putExtra(key, value)
             }
-            context.startActivity(intent)
-        }
-
-        /**
-         * Navigate to another activity with data extras
-         * Clear all previous Activities
-         */
-        fun navigateToAnotherActivityWithExtrasWithoutHistory(
-            context: Context,
-            activity: Class<*>?,
-            map: java.util.HashMap<String, String>
-        ) {
-            val intent = Intent(context, activity)
-            map.keys.forEach { key ->
-                val value = map[key]
-                intent.putExtra(key, value)
-            }
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
         }
 
@@ -449,7 +405,7 @@ class Utils {
         /**
          * Clear all preference values
          */
-        fun clearAllPref(context: Context, listener: SuccessListener) {
+        private fun clearAllPref(context: Context, listener: SuccessListener) {
             val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
             )

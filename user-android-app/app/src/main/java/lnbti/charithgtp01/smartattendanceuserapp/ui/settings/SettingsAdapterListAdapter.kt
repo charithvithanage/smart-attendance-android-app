@@ -55,8 +55,7 @@ class SettingsAdapterListAdapter @Inject constructor(
     }
 
     inner class UserSettingsAdapterListViewHolder(val binding: LayoutSettingsListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 }
 
 /**

@@ -17,11 +17,11 @@ class Keystore {
 
     companion object {
 
-        const val ENCRYPTION_ALGORITHM = "AES/CBC/PKCS7Padding"
-        const val PROVIDER = "BC"
+        private const val ENCRYPTION_ALGORITHM = "AES/CBC/PKCS7Padding"
+        private const val PROVIDER = "BC"
 
         @Throws(Exception::class)
-        fun encrypt(key: String, value: String): String? {
+        fun encrypt(key: String, value: String): String {
             val provider: Provider = BouncyCastleProvider()
             Security.addProvider(provider)
 //            val secretKeySpec = SecretKeySpec(key.toByteArray(), "AES")
@@ -35,7 +35,7 @@ class Keystore {
         }
 
         @Throws(java.lang.Exception::class)
-        fun generateKey(pwd: String): SecretKeySpec? {
+        fun generateKey(pwd: String): SecretKeySpec {
             val digest =
                 MessageDigest.getInstance("SHA-256")
             val bytes = pwd.toByteArray(charset("UTF-8"))
@@ -45,7 +45,7 @@ class Keystore {
         }
 
         @Throws(java.lang.Exception::class)
-        fun decrypt(key: String, data: String): String? {
+        fun decrypt(key: String, data: String): String {
             val provider: Provider = BouncyCastleProvider()
             Security.addProvider(provider)
             val parts = data.split(":".toRegex()).dropLastWhile { it.isEmpty() }
