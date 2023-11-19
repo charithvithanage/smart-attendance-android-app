@@ -92,4 +92,5 @@
     <string name="bio_metric_disabled">Finger Print Authentication Disabled. Enable finger print authentication from Settings</string>
     <string name="attendancealreadymarked">Already Attendance Marked</string>
     <string name="decrypt_error">Decryption Error. Please try again</string>
+    <string name="no_signature_found">No Signature Found</string>
 </resources>

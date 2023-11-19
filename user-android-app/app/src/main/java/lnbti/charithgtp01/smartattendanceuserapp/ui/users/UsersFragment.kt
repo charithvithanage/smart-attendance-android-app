@@ -8,12 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.FragmentUsersBinding
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.userdetails.UserDetailsActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialogInFragment
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
 /**
@@ -44,6 +45,11 @@ class UsersFragment : Fragment() {
         ViewModelProvider(requireActivity())[MainActivityViewModel::class.java].apply {
             sharedViewModel = this
             setDialogVisibility(true)
+
+
+            when {
+                !NetworkUtils.isNetworkAvailable() -> setErrorMessage(getString(R.string.no_internet))
+            }
         }
 
         return binding.root
@@ -60,22 +66,14 @@ class UsersFragment : Fragment() {
      */
     private fun viewModelObservers() {
         viewModel.apply {
-            /* Show error message in the custom error dialog */
-            errorMessage.observe(requireActivity()) {
-                showErrorDialogInFragment(
-                    this@UsersFragment,
-                    it
-                )
-            }
-
-            /* Observer to catch list data
-           * Update Recycle View Items using Diff Utils
-           */
-            usersList.observe(requireActivity()) { it ->
-                it.run {
-                    //Get Active users
-                    usersListAdapter.submitList(it.filter { it.userStatus })
-                    sharedViewModel.setDialogVisibility(false)
+            apiResult.observe(requireActivity()) {
+                it?.let { result ->
+                    result.data?.data?.let { it ->
+                        usersListAdapter.submitList(it.filter { it.userStatus })
+                        sharedViewModel.setDialogVisibility(false)
+                    }
+                } ?: run {
+                    sharedViewModel.setErrorMessage(it?.error?.error)
                 }
             }
         }

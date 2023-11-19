@@ -23,15 +23,17 @@ import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkInRequest
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceMarkOutRequest
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showAlertDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.FileUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTime
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.goToHomeActivity
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 @AndroidEntryPoint
 class EmployeeAuthorizationActivity : AppCompatActivity() {
@@ -60,7 +62,6 @@ class EmployeeAuthorizationActivity : AppCompatActivity() {
         )
     }
 
-
     private fun initView() {
         val nicString = intent.getStringExtra(Constants.OBJECT_STRING)
         if (nicString != null)
@@ -84,9 +85,19 @@ class EmployeeAuthorizationActivity : AppCompatActivity() {
         )).toInt()
         gestureOverlayView.layoutParams = params
         buttonConfirm.setOnClickListener { v: View? ->
-            if (drawingView!!.isDraw) {
-                saveDrawing()
+            if (NetworkUtils.isNetworkAvailable()) {
+                if (drawingView!!.isDraw) {
+                    saveDrawing()
+                } else {
+                    showErrorDialog(
+                        this@EmployeeAuthorizationActivity,
+                        getString(R.string.no_signature_found)
+                    )
+                }
+            } else {
+                showErrorDialog(this@EmployeeAuthorizationActivity, getString(R.string.no_internet))
             }
+
         }
         findViewById<View>(R.id.btnRemove).setOnClickListener { v: View? ->
             onBackPressed()
@@ -130,16 +141,14 @@ class EmployeeAuthorizationActivity : AppCompatActivity() {
             fileOutputStream.close()
 
             val calendar = Calendar.getInstance()
-            val dateFormat =
-                SimpleDateFormat(getString(R.string.date_format), Locale.getDefault())
-            val formattedDate = dateFormat.format(calendar.time)
-
-            val timeFormat = SimpleDateFormat("hh:mm:ss a", Locale.getDefault())
-            val formattedTime = timeFormat.format(calendar.time)
+            val formattedDate = formatDate(calendar.time)
+            val formattedTime = formatTime(calendar.time)
 
             if (attendanceType == "in") {
                 val attendanceMarkInRequest = AttendanceMarkInRequest(
-                    date = formattedDate
+                    userID = nic,
+                    date = formattedDate,
+                    inTime = formattedTime
                 )
 
                 Log.d(Constants.TAG, "Attendance Type: In " + gson.toJson(attendanceMarkInRequest))

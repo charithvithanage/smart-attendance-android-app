@@ -1,9 +1,7 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.home
 
-import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +19,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.encrypt
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.SECURE_KEY
@@ -32,12 +29,10 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.QRHandshakeListener
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.SuccessListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
-import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore.Companion.encrypt
 import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivityViewModel
 import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.scan.ScanActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatTodayDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getCurrentLocation
@@ -95,8 +90,6 @@ class HomeFragment : Fragment() {
         // Initializing and setting up MainActivityViewModel
         ViewModelProvider(requireActivity())[MainActivityViewModel::class.java].apply {
             sharedViewModel = this
-            setDialogVisibility(true)
-            Log.d("DIALOG TEST", "Home Fragment Show Dialog")
         }
 
         return binding.root
@@ -136,9 +129,10 @@ class HomeFragment : Fragment() {
                         userLayout.isVisible = false
                         businessUserLayout.isVisible = true
                         if (NetworkUtils.isNetworkAvailable()) {
+                            sharedViewModel.setDialogVisibility(true)
                             getUsersList()
                         } else {
-                            viewModel.setErrorMessage(getString(R.string.no_internet))
+                            sharedViewModel.setErrorMessage(getString(R.string.no_internet))
                         }
                     }
                 }
@@ -157,27 +151,27 @@ class HomeFragment : Fragment() {
      */
     private fun viewModelObservers() {
         viewModel.apply {
-            // Observe error messages and display them in a dialog
-            errorMessage.observe(requireActivity()) {
-                DialogUtils.showErrorDialogInFragment(
-                    this@HomeFragment,
-                    it
-                )
-            }
-
             // Observe the list of users and update the RecyclerView
-            usersList.observe(requireActivity()) {
-                Log.d("DIALOG TEST", "Home Fragment Show Dismiss")
+            apiResult.observe(requireActivity()) {
 
-                // Save users list locally for later use
-                saveObjectInSharedPref(
-                    requireActivity(),
-                    USERS_LIST,
-                    gson.toJson(it),
-                    SuccessListener {
-                        usersListAdapter.submitList(it)
-                        sharedViewModel.setDialogVisibility(false)
-                    })
+                it?.let { result ->
+
+                    result.data?.data?.let { it ->
+                        setUsers(it)
+                        // Save users list locally for later use
+                        saveObjectInSharedPref(
+                            requireActivity(),
+                            USERS_LIST,
+                            gson.toJson(it),
+                            SuccessListener {
+                                usersListAdapter.submitList(it)
+                                sharedViewModel.setDialogVisibility(false)
+                            })
+                    }
+
+                } ?: run {
+                    sharedViewModel.setErrorMessage(it?.error?.error)
+                }
             }
 
             // Observe API response for attendance and update UI
@@ -218,6 +212,7 @@ class HomeFragment : Fragment() {
         usersListAdapter =
             HomeListAdapter(object : HomeListAdapter.OnItemClickListener {
                 override fun scan(selectedUser: User) {
+                    sharedViewModel.setDialogVisibility(true)
                     // Logic for handling user scan action
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
@@ -225,6 +220,7 @@ class HomeFragment : Fragment() {
                                 selectedUser.lat = location.latitude
                                 selectedUser.long = location.longitude
                                 this[Constants.OBJECT_STRING] = gson.toJson(selectedUser)
+                                sharedViewModel.setDialogVisibility(false)
                                 navigateToAnotherActivityWithExtras(
                                     requireActivity(),
                                     ScanActivity::class.java,
@@ -234,13 +230,16 @@ class HomeFragment : Fragment() {
                         }
 
                         override fun onError(error: String) {
-                            TODO("Not yet implemented")
+                            sharedViewModel.setDialogVisibility(false)
+                            sharedViewModel.setErrorMessage(error)
                         }
                     })
 
                 }
 
                 override fun generate(item: User) {
+                    sharedViewModel.setDialogVisibility(true)
+
                     // Logic for handling QR code generation action
                     qrHandshake(object : QRHandshakeListener {
                         override fun onSuccess(location: Location) {
@@ -249,7 +248,7 @@ class HomeFragment : Fragment() {
                                 item.long = location.longitude
                                 val encryptedValue = encrypt(SECURE_KEY, gson.toJson(item))
                                 this[Constants.OBJECT_STRING] = encryptedValue
-
+                                sharedViewModel.setDialogVisibility(false)
                                 navigateToAnotherActivityWithExtras(
                                     requireActivity(),
                                     AttendanceQRActivity::class.java,
@@ -259,7 +258,8 @@ class HomeFragment : Fragment() {
                         }
 
                         override fun onError(error: String) {
-                            Log.d(Constants.TAG, error)
+                            sharedViewModel.setDialogVisibility(false)
+                            sharedViewModel.setErrorMessage(error)
                         }
                     })
                 }
@@ -285,17 +285,17 @@ class HomeFragment : Fragment() {
             }
 
             override fun requestPermission() {
-                (activity as? MainActivity)?.getLocationPermissionAvailability()
+                sharedViewModel.setDialogVisibility(false)
+                sharedViewModel.checkPermission()
             }
 
             override fun onError(error: String) {
-                showErrorDialog(requireActivity(), error)
+                qrHandshakeListener.onError(error)
             }
 
             override fun openSettings() {
-                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).run {
-                    startActivity(this)
-                }
+                sharedViewModel.setDialogVisibility(false)
+                sharedViewModel.openSettings()
             }
 
         })

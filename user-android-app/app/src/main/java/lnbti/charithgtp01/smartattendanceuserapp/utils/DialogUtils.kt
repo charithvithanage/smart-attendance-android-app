@@ -53,16 +53,6 @@ class DialogUtils {
             }
         }
 
-        fun showErrorDialogInFragment(
-            fragment: Fragment, message: String?
-        ) {
-            fragment.parentFragmentManager.let { fragmentManager ->
-                CustomAlertDialogFragment.newInstance(message).apply {
-                    show(fragmentManager, ALERT_DIALOG_FRAGMENT_TAG)
-                }
-            }
-        }
-
         /**
          * Show a custom confirm alert dialog with an icon inside an activity.
          *

@@ -47,10 +47,6 @@ class AttendanceDataReportViewModel @Inject constructor(
     private val _endDateString = MutableLiveData(formatDate(getLastDayOfMonth(Date())))
     val endDateString: LiveData<String> get() = _endDateString
 
-    //Error Message Live Data
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
-
     //Server response live data
     private val _responseResult = MutableLiveData<ResponseWithJSONArray?>()
     val responseResult: MutableLiveData<ResponseWithJSONArray?> = _responseResult
@@ -81,9 +77,5 @@ class AttendanceDataReportViewModel @Inject constructor(
 
     fun setCount(count: Int) {
         _dataCountString.value = count.toString()
-    }
-
-    fun setErrorMessage(errorMessage: String) {
-        _errorMessage.value = errorMessage
     }
 }

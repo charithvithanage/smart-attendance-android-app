@@ -142,14 +142,6 @@ class AttendanceReportFragment : Fragment() {
      */
     private fun viewModelObservers() {
         viewModel.apply {
-            /* Show error message in the custom error dialog */
-            errorMessage.observe(requireActivity()) {
-                showErrorDialogInFragment(
-                    this@AttendanceReportFragment,
-                    it
-                )
-            }
-
             /* Observer to catch list data
             * Update Recycle View Items using Diff Utils
             */
@@ -220,17 +212,18 @@ class AttendanceReportFragment : Fragment() {
     }
 
     private fun getDataFromServer() {
-        if (NetworkUtils.isNetworkAvailable()) {
-            sharedViewModel.setDialogVisibility(true)
-            when (userRole) {
-                getString(R.string.employee) -> viewModel.getAttendancesByUser(
-                    loggedInUser.nic
-                )
+        when {
+            NetworkUtils.isNetworkAvailable() -> {
+                sharedViewModel.setDialogVisibility(true)
+                when (userRole) {
+                    getString(R.string.employee) -> viewModel.getAttendancesByUser(
+                        loggedInUser.nic
+                    )
 
-                else -> viewModel.getAttendancesFromAllUsers()
+                    else -> viewModel.getAttendancesFromAllUsers()
+                }
             }
-        } else {
-            viewModel.setErrorMessage(getString(R.string.no_internet))
+            else -> sharedViewModel.setErrorMessage(getString(R.string.no_internet))
         }
 
     }

@@ -22,8 +22,36 @@ class MainActivityViewModel @Inject constructor() :
     private val _isDialogVisible = MutableLiveData<Boolean>()
     val isDialogVisible get() = _isDialogVisible
 
+    private val _shouldOpenSettings = MutableLiveData(false)
+    val shouldOpenSettings get() = _shouldOpenSettings
+
+    private val _checkPermission = MutableLiveData(false)
+    val checkPermission get() = _checkPermission
+
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage get() = _errorMessage
+
     fun setDialogVisibility(status: Boolean) {
         Log.d("DIALOG TEST", status.toString())
         _isDialogVisible.value = status
+    }
+
+    fun openSettings() {
+        _shouldOpenSettings.value = true
+    }
+
+    fun checkPermission() {
+        _checkPermission.value = true
+    }
+
+
+    /**
+     * Sets the error message for the ViewModel.
+     *
+     * @param errorMessage The error message to be set.
+     */
+    fun setErrorMessage(errorMessage: String?) {
+        _errorMessage.value = errorMessage
     }
 }

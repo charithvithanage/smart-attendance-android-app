@@ -23,6 +23,7 @@ import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ConfirmDialogButtonC
 import lnbti.charithgtp01.smartattendanceuserapp.ui.login.LoginActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.settings.SettingsActivity
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showConfirmAlertDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.LOCATION_PERMISSION_REQUEST_CODE
@@ -57,24 +58,48 @@ class MainActivity : AppCompatActivity() {
                     // Hide a menu item by ID
                     bottomNavigationUser.menu.findItem(R.id.nav_users).isVisible = false
                 }
-                getLocationPermissionAvailability()
 
             }
 
         sharedViewModel =
             ViewModelProvider(this@MainActivity)[MainActivityViewModel::class.java].apply {
+                checkPermission()
+
                 // Observe loading state and show/hide a progress dialog
                 isDialogVisible.observe(this@MainActivity) {
                     if (it) {
-                        Log.d("DIALOG TEST","Show Dialog")
+                        Log.d("DIALOG TEST", "Show Dialog")
                         dialog = showProgressDialog(this@MainActivity, getString(R.string.wait))
                     } else {
                         /* Dismiss dialog after updating the data list to recycle view */
-                        Log.d("DIALOG TEST","Dismiss Dialog")
+                        Log.d("DIALOG TEST", "Dismiss Dialog")
                         dialog?.dismiss()
                     }
                 }
 
+                shouldOpenSettings.observe(this@MainActivity) {
+                    when {
+                        it -> {
+                            Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).run {
+                                startActivity(this)
+                            }
+                        }
+                    }
+                }
+
+                checkPermission.observe(this@MainActivity) {
+                    when {
+                        it -> {
+                            getLocationPermissionAvailability()
+                        }
+                    }
+                }
+
+                errorMessage.observe(this@MainActivity) {
+                    it?.let {
+                        showErrorDialog(this@MainActivity, it)
+                    }
+                }
             }
     }
 

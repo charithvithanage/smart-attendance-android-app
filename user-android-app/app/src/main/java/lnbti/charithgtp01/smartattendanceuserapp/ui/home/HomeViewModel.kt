@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceuserapp.model.AttendanceData
+import lnbti.charithgtp01.smartattendanceuserapp.model.Resource
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
@@ -30,16 +31,15 @@ class HomeViewModel @Inject constructor(
     private val _usersList = MutableLiveData<List<User>>()
     val usersList get() = _usersList
 
-    //Error Message Live Data
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage get() = _errorMessage
-
     private var allUsersList: List<User>? = null
 
     private var today: Date = Date()
 
     private val _dateString = MutableLiveData<String>()
     val dateString get() = _dateString
+
+    private val _apiResult = MutableLiveData<Resource?>()
+    val apiResult = _apiResult
 
     //Live data for Get Attendance Response
     private val _attendanceResult = MutableLiveData<ApiCallResponse?>()
@@ -74,14 +74,7 @@ class HomeViewModel @Inject constructor(
     fun getUsersList() {
         /* View Model Scope - Coroutine */
         viewModelScope.launch {
-            userRepository.getUsersFromDataSource().run {
-                data?.let { result ->
-                    allUsersList = result.data
-                    _usersList.value = result.data
-                } ?: run {
-                    _errorMessage.value = error?.error
-                }
-            }
+            _apiResult.value = userRepository.getUsersFromDataSource()
         }
     }
 
@@ -129,12 +122,9 @@ class HomeViewModel @Inject constructor(
         _attendanceData.value = attendanceData
     }
 
-    /**
-     * Sets the error message for the ViewModel.
-     *
-     * @param errorMessage The error message to be set.
-     */
-    fun setErrorMessage(errorMessage: String?) {
-        _errorMessage.value = errorMessage
+    fun setUsers(list: List<User>) {
+        allUsersList = list
+        _usersList.value = list
     }
+
 }

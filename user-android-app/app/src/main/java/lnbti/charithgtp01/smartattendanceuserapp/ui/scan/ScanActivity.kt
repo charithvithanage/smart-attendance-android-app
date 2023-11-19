@@ -171,7 +171,9 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                                         intent.getStringExtra(Constants.ATTENDANCE_TYPE) == "in" -> {
                                             markIn(
                                                 AttendanceMarkInRequest(
-                                                    date = formattedDate
+                                                    userID = loggedInUser.nic,
+                                                    date = formattedDate,
+                                                    inTime = formattedTime
                                                 )
                                             )
                                         }

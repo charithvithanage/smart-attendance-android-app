@@ -7,9 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.NO_INTERNET
+import lnbti.charithgtp01.smartattendanceuserapp.model.Resource
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
 import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -23,13 +25,8 @@ class UsersViewModel @Inject constructor(
     private val _usersList = MutableLiveData<List<User>>()
     val usersList get() = _usersList
 
-    //Dialog Visibility Live Data
-    private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible get() = _isDialogVisible
-
-    //Error Message Live Data
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage get() = _errorMessage
+    private val _apiResult = MutableLiveData<Resource?>()
+    val apiResult = _apiResult
 
     private lateinit var allUsersList: List<User>
 
@@ -56,38 +53,32 @@ class UsersViewModel @Inject constructor(
      * Get Server Response and Set values to live data
      */
     private fun getUsersList() {
-        if (NetworkUtils.isNetworkAvailable()) {
-            //Show Progress Dialog when click on the search view submit button
-            _isDialogVisible.value = true
-            /* View Model Scope - Coroutine */
-            viewModelScope.launch {
-                val resource = userRepository.getUsersFromDataSource()
-
-                if (resource.data != null) {
-                    allUsersList = resource.data.data
-                    _usersList.value = allUsersList
-                } else
-                    _errorMessage.value = resource.error?.error
-
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
-                _isDialogVisible.value = false
-            }
-        } else {
-            _errorMessage.value = NO_INTERNET
+        /* View Model Scope - Coroutine */
+        viewModelScope.launch {
+            _apiResult.value = userRepository.getUsersFromDataSource()
         }
+
     }
 
     /**
-     * @param searchString Search View entered value
-     * @return Data list filtered by user's full name
+     * Filters the list of users based on the provided search string.
+     *
+     * @param searchString The search string entered in the search view.
+     * @return The filtered list of users.
      */
-    private fun filterApprovalList(searchString: String): List<User> {
-        return allUsersList.run {
-            filter { user ->
-                val fullName = "${user.firstName} ${user.lastName}"
-                fullName.lowercase().contains(searchString.lowercase())
+    private fun filterApprovalList(searchString: String): List<User>? {
+        return allUsersList?.filter { user ->
+            with(user) {
+                ("$firstName $lastName").lowercase(Locale.getDefault()).contains(
+                    searchString.lowercase(
+                        Locale.getDefault()
+                    )
+                )
             }
         }
+    }
+    fun setUsers(list: List<User>) {
+        allUsersList = list
+        _usersList.value = list
     }
 }

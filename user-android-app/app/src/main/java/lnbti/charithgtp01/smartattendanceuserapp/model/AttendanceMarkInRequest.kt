@@ -1,5 +1,5 @@
 package lnbti.charithgtp01.smartattendanceuserapp.model
 
 class AttendanceMarkInRequest(
-    val date: String?
+    val userID: String, val date: String?, val inTime: String?
 )
