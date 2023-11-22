@@ -69,12 +69,20 @@ class UsersFragment : Fragment() {
             apiResult.observe(requireActivity()) {
                 it?.let { result ->
                     result.data?.data?.let { it ->
-                        usersListAdapter.submitList(it.filter { it.userStatus })
-                        sharedViewModel.setDialogVisibility(false)
+                        setUsers(it)
                     }
                 } ?: run {
                     sharedViewModel.setErrorMessage(it?.error?.error)
                 }
+            }
+
+            /* Observer to catch list data
+          * Update Recycle View Items using Diff Utils
+          */
+            usersList.observe(requireActivity()) { it ->
+                //Get Active users
+                usersListAdapter.submitList(it.filter { it.userStatus })
+                sharedViewModel.setDialogVisibility(false)
             }
         }
 

@@ -22,11 +22,11 @@ class UsersViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _usersList = MutableLiveData<List<User>>()
-    val usersList get() = _usersList
-
     private val _apiResult = MutableLiveData<Resource?>()
     val apiResult = _apiResult
+
+    private val _usersList = MutableLiveData<List<User>>()
+    val usersList get() = _usersList
 
     private lateinit var allUsersList: List<User>
 
@@ -66,8 +66,8 @@ class UsersViewModel @Inject constructor(
      * @param searchString The search string entered in the search view.
      * @return The filtered list of users.
      */
-    private fun filterApprovalList(searchString: String): List<User>? {
-        return allUsersList?.filter { user ->
+    private fun filterApprovalList(searchString: String): List<User> {
+        return allUsersList.filter { user ->
             with(user) {
                 ("$firstName $lastName").lowercase(Locale.getDefault()).contains(
                     searchString.lowercase(
@@ -77,6 +77,7 @@ class UsersViewModel @Inject constructor(
             }
         }
     }
+
     fun setUsers(list: List<User>) {
         allUsersList = list
         _usersList.value = list

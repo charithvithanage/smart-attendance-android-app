@@ -158,20 +158,24 @@ class HomeFragment : Fragment() {
 
                     result.data?.data?.let { it ->
                         setUsers(it)
-                        // Save users list locally for later use
-                        saveObjectInSharedPref(
-                            requireActivity(),
-                            USERS_LIST,
-                            gson.toJson(it),
-                            SuccessListener {
-                                usersListAdapter.submitList(it)
-                                sharedViewModel.setDialogVisibility(false)
-                            })
                     }
 
                 } ?: run {
                     sharedViewModel.setErrorMessage(it?.error?.error)
                 }
+            }
+
+            // Observe the list of users and update the RecyclerView
+            usersList.observe(requireActivity()) {
+                // Save users list locally for later use
+                saveObjectInSharedPref(
+                    requireActivity(),
+                    USERS_LIST,
+                    gson.toJson(it),
+                    SuccessListener {
+                        usersListAdapter.submitList(it)
+                        sharedViewModel.setDialogVisibility(false)
+                    })
             }
 
             // Observe API response for attendance and update UI
