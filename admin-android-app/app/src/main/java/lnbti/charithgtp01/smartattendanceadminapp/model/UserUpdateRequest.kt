@@ -16,7 +16,8 @@ data class UserUpdateRequest(
     var userRole: String?,
     var dob: String?,
     var userStatus: Boolean?,
-    var deviceID: String?
+    var deviceID: String?,
+    var userType:String?
 ) : Parcelable{
 
 }

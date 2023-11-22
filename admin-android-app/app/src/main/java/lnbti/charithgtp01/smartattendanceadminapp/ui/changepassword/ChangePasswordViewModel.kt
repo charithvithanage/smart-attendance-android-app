@@ -1,21 +1,19 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword
 
-import androidx.databinding.Bindable
-import androidx.databinding.ObservableField
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
 import lnbti.charithgtp01.smartattendanceadminapp.model.ChangePasswordRequest
-import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
-import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
-import lnbti.charithgtp01.smartattendanceadminapp.ui.login.LoginFormState
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Validations
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject
 
@@ -38,18 +36,32 @@ class ChangePasswordViewModel @Inject constructor(private val userRepository: Us
     private val _changePasswordResult = MutableLiveData<ApiCallResponse?>()
     val changePasswordResult: MutableLiveData<ApiCallResponse?> = _changePasswordResult
 
+    //Dialog Visibility Live Data
+    private val _isDialogVisible = MutableLiveData<Boolean>()
+    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
     fun changePassword(id: String) {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result =
-                userRepository.changePassword(
-                    ChangePasswordRequest(
-                        id,
-                        currentPassword,
-                        newPassword
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result =
+                    userRepository.changePassword(
+                        ChangePasswordRequest(
+                            id,
+                            currentPassword,
+                            newPassword
+                        )
                     )
-                )
-            changePasswordResult.value = result
+                changePasswordResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
     }
 
@@ -71,6 +83,18 @@ class ChangePasswordViewModel @Inject constructor(private val userRepository: Us
                 ChangePasswordFormState(confirmPasswordError = R.string.invalid_confirm_password)
         } else {
             _changePasswordForm.value = ChangePasswordFormState(isDataValid = true)
+        }
+    }
+
+    /**
+     * Common function to set the OnFocusChangeListener
+     * And attach it to the TextInputEditText fields:
+     */
+    fun setFocusChangeListener(editText: TextInputEditText) {
+        editText.onFocusChangeListener = View.OnFocusChangeListener { _, _ ->
+            run {
+                validateFields()
+            }
         }
     }
 

@@ -17,12 +17,8 @@ import javax.inject.Inject
  * User Repository
  */
 class ApprovalRepository @Inject constructor(
-    context: Context,
     private val apiService: ApiService
 ) {
-
-    val context: Context = context
-
 
     /**
      * Approve User Request Coroutines

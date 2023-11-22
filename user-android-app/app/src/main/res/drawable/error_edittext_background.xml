@@ -2,9 +2,11 @@
     <!-- Background -->
     <item android:bottom="2dp" android:top="8dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/white"></solid>
+            <solid android:color="@color/white" />
             <corners android:radius="@dimen/edittext_shadow_border_radius" />
-            <stroke android:color="@color/red_button_color" android:width="1dp"></stroke>
+            <stroke
+                android:color="@color/red_button_color"
+                android:width="1dp" />
         </shape>
     </item>
 </layer-list>

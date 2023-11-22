@@ -1,6 +1,7 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapporvaldetails
 
 import android.os.Bundle
+import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -22,7 +23,7 @@ import lnbti.charithgtp01.smartattendanceadminapp.utils.DialogUtils.Companion.sh
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.goToHomeActivity
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.spinnerItems
+import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.userRoles
 
 /**
  * Pending Approval Details View/Approve/Reject page
@@ -55,14 +56,32 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val selectedItem = spinnerItems[position]
-                viewModel.updateSelectedItem(selectedItem)
+                val selectedItem = viewModel.userRoleSpinnerItems[position]
+                viewModel.selectUserRole(selectedItem)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Handle when nothing is selected (optional)
             }
         }
+
+        binding.spinnerUserType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = viewModel.userTypeSpinnerItems[position]
+                    viewModel.selectUserType(selectedItem)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Handle nothing selected if needed
+                }
+            }
+
 
         binding.btnApprove.setOnClickListener {
             if (binding.deviceIDLayout.editText?.text.isNullOrBlank()) {
@@ -71,7 +90,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                     getString(R.string.device_id_mandatory)
                 )
             } else {
-                dialog = showProgressDialog(this, getString(R.string.wait))
                 viewModel.submitApproval(
                     pendingApprovalUser.nic,
                     viewModel.deviceID,
@@ -87,10 +105,6 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
                 getString(R.string.confirm_reject_message),
                 object : ConfirmDialogButtonClickListener {
                     override fun onPositiveButtonClick() {
-                        dialog = showProgressDialog(
-                            this@PendingApprovalDetailsActivity,
-                            getString(R.string.wait)
-                        )
                         viewModel.rejectApproval(pendingApprovalUser.nic)
                     }
 
@@ -117,11 +131,20 @@ class PendingApprovalDetailsActivity : AppCompatActivity() {
         pendingApprovalUser = gson.fromJson(objectString, User::class.java)
         viewModel.setPendingApprovalUserData(pendingApprovalUser)
     }
+
     private fun viewModelObservers() {
-        viewModel.selectedItem.observe(this) { selectedItem ->
-            // Handle the selected item here
-            if (selectedItem != null) {
-                pendingApprovalUser.userRole = selectedItem
+        /* Show error message in the custom error dialog */
+        viewModel.errorMessage.observe(this@PendingApprovalDetailsActivity) {
+            showErrorDialog(this@PendingApprovalDetailsActivity, it)
+        }
+
+        viewModel.isDialogVisible.observe(this@PendingApprovalDetailsActivity) {
+            if (it) {
+                /* Show dialog when calling the API */
+                dialog = showProgressDialog(this@PendingApprovalDetailsActivity, getString(R.string.wait))
+            } else {
+                /* Dismiss dialog after updating the data list to recycle view */
+                dialog?.dismiss()
             }
         }
 

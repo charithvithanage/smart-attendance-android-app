@@ -57,13 +57,16 @@ class UsersFragment : Fragment() {
     private fun viewModelObservers() {
         /* Show error message in the custom error dialog */
         viewModel.errorMessage.observe(requireActivity()) {
-            DialogUtils.showErrorDialog( requireContext(), it)
+            DialogUtils.showErrorDialogInFragment(this@UsersFragment, it)
         }
 
         viewModel.isDialogVisible.observe(requireActivity()) {
             if (it) {
                 /* Show dialog when calling the API */
-                dialog = DialogUtils.showProgressDialog(context, context?.getString(R.string.wait))
+                dialog = DialogUtils.showProgressDialogInFragment(
+                    this@UsersFragment,
+                    context?.getString(R.string.wait)
+                )
             } else {
                 /* Dismiss dialog after updating the data list to recycle view */
                 dialog?.dismiss()
@@ -73,10 +76,9 @@ class UsersFragment : Fragment() {
         /* Observer to catch list data
         * Update Recycle View Items using Diff Utils
         */
-        viewModel.usersList.observe(requireActivity()) {
-                it ->
+        viewModel.usersList.observe(requireActivity()) { it ->
             //Get Active users
-            val filteredList = it.filter { it.userStatus == true }
+            val filteredList = it.filter { it.userStatus }
             usersListAdapter.submitList(filteredList)
         }
     }

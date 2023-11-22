@@ -1,19 +1,15 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.users
 
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.isOnline
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 import javax.inject.Inject
 
 /**
@@ -33,7 +29,7 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    lateinit var allUsersList: List<User>
+    private lateinit var allUsersList: List<User>
 
     /**
      * This will call when the View Model Created
@@ -59,11 +55,8 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
      * Get Server Response and Set values to live data
      */
     private fun getUsersList() {
-
-        val isNetworkAvailable = isOnline(userRepository.context.applicationContext)
-
         //If Network available call to backend API
-        if (isNetworkAvailable) {
+        if (NetworkUtils.isNetworkAvailable()) {
             //Show Progress Dialog when click on the search view submit button
             _isDialogVisible.value = true
             /* View Model Scope - Coroutine */
@@ -76,13 +69,10 @@ class UsersViewModel @Inject constructor(private val userRepository: UserReposit
                 } else
                     _errorMessage.value = resource?.error?.error
 
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
                 _isDialogVisible.value = false
             }
         } else {
-            //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
 
     }

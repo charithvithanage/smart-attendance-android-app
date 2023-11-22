@@ -1,18 +1,15 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.pendingapprovals
 
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 import javax.inject.Inject
 
 /**
@@ -60,11 +57,8 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
      * @param inputText Pass entered value
      */
     private fun getPendingApprovalList() {
-
-        val isNetworkAvailable = Utils.isOnline(userRepository.context.applicationContext)
-
         //If Network available call to backend API
-        if (isNetworkAvailable) {
+        if (NetworkUtils.isNetworkAvailable()) {
             //Show Progress Dialog when click on the search view submit button
             _isDialogVisible.value = true
             /* View Model Scope - Coroutine */
@@ -72,18 +66,16 @@ class PendingApprovalsViewModel @Inject constructor(private val userRepository: 
                 val resource = userRepository.getPendingApprovalsFromDataSource()
 
                 if (resource?.data != null) {
-                     allUsersList = resource.data.data
+                    allUsersList = resource.data.data
                     _pendingApprovalList.value = allUsersList
                 } else
                     _errorMessage.value = resource?.error?.error
 
-                /* Hide Progress Dialog with 1 Second delay after fetching the data list from the server */
-                delay(1000L)
                 _isDialogVisible.value = false
             }
         } else {
             //Show Error Alert
-            _errorMessage.value = userRepository.context.getString(R.string.no_internet)
+            _errorMessage.value = ResourceConstants.NO_INTERNET
         }
 
     }

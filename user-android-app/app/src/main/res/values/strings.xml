@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SA User</string>
+    <string name="app_name">SA User App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -29,10 +29,7 @@
     <string name="action_approve">Approve</string>
     <string name="action_reject">Reject</string>
     <string name="fingerprint_login">FINGERPRINT LOGIN</string>
-    <string name="other_settings">Other Settings</string>
-    <string name="get_device_id">Get Device ID</string>
-    <string name="change_password">Change Password</string>
-    <string name="device_id">Device ID</string>
+       <string name="device_id">Device ID</string>
     <string name="password_changed_successfully">Password Changed Successfully</string>
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
@@ -54,14 +51,14 @@
     <string name="enter_employee_id">Enter Employee ID</string>
     <string name="enter_dob">Select Date Of Birth</string>
     <string name="select_gender">Select Gender</string>
-    <string name="enter_contact">Enter Contact Number</string>
-    <string name="enter_email">Enter Email</string>
+    <string name="enter_contact">Invalid Contact Number</string>
+    <string name="enter_email">Invalid Email</string>
     <string name="enter_user_name">Enter Username</string>
     <string name="register">Register</string>
     <string name="user_registration">User Registration</string>
     <string name="gender">Gender</string>
     <string name="date_format">dd.MM.yyyy</string>
-    <string name="user_registered_successfully">User Registered Successfully</string>
+    <string name="time_format">hh:mm:ss a</string>
     <string name="password">Password</string>
     <string name="confirm_passoword">Confirm Password</string>
     <string name="menu_home">HOME</string>
@@ -83,4 +80,17 @@
     <string name="confirm_logout_message">Do you want to sign out?</string>
     <string name="search">Search</string>
     <string name="search_company">Search Company</string>
+
+    //Dialog Messages
+    <string name="markin">Mark In</string>
+    <string name="markout">Mark Out</string>
+    <string name="total_count">Total Count</string>
+    <string name="invalid_company_id">Invalid Company ID</string>
+    <string name="confirm_registration">Are you sure you want to create an account?</string>
+    <string name="change_password">Change Password</string>
+    <string name="no_permission_to_use">You are not an Android User. Please contact Admin</string>
+    <string name="bio_metric_disabled">Finger Print Authentication Disabled. Enable finger print authentication from Settings</string>
+    <string name="attendancealreadymarked">Already Attendance Marked</string>
+    <string name="decrypt_error">Decryption Error. Please try again</string>
+    <string name="no_signature_found">No Signature Found</string>
 </resources>

@@ -1,16 +1,20 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.login
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
-import lnbti.charithgtp01.smartattendanceadminapp.model.ApiCallResponse
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.NO_INTERNET
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginRequest
 import lnbti.charithgtp01.smartattendanceadminapp.model.LoginResponse
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
+import lnbti.charithgtp01.smartattendanceadminapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Validations
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Validations.Companion.isPasswordValid
 import javax.inject.Inject
@@ -24,11 +28,25 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     private val _loginResult = MutableLiveData<LoginResponse?>()
     val loginResult: MutableLiveData<LoginResponse?> = _loginResult
 
+    //Error Message Live Data
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
+    //Dialog Visibility Live Data
+    private val _isDialogVisible = MutableLiveData<Boolean>()
+    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
+
     fun login(email: String, password: String) {
-        viewModelScope.launch {
-            // can be launched in a separate asynchronous job
-            val result = userRepository.login(LoginRequest(email, password))
-            _loginResult.value = result
+        if (NetworkUtils.isNetworkAvailable()) {
+            _isDialogVisible.value = true
+            viewModelScope.launch {
+                // can be launched in a separate asynchronous job
+                val result = userRepository.login(LoginRequest(email, password))
+                _loginResult.value = result
+                _isDialogVisible.value = false
+            }
+        } else {
+            _errorMessage.value = NO_INTERNET
         }
     }
 
@@ -41,5 +59,21 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }
+
+    /**
+     * When focus on the edit text error state changed to normal state
+     */
+    fun setFocusChangeListener(editText: TextInputEditText,inputLayout: TextInputLayout) {
+        editText.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            run {
+                if(hasFocus){
+                    val textInputLayout = view.parent as? TextInputLayout
+                    textInputLayout?.error = null
+                    textInputLayout?.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+                }
+            }
+        }
+    }
+
 
 }

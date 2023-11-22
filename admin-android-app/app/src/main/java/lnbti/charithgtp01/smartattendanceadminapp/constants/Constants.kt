@@ -4,7 +4,8 @@ object Constants {
     const val TAG="Smart Attendance Admin App"
 
     //Application Base Url
-    const val BASE_URL = "http://192.168.1.22:3000/"
+//    const val BASE_URL = "http://192.168.1.22:3000/"
+    const val BASE_URL = "https://ob297ofh21.execute-api.us-east-1.amazonaws.com/"
 
     /**
      * Endpoints
@@ -44,5 +45,8 @@ object Constants {
     const val WARN = "warn"
     const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
 
-
+    /**
+     * Encryption Secure Key
+     */
+    const val SECURE_KEY = "12345"
 }

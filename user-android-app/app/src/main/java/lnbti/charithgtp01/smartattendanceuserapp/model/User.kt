@@ -17,11 +17,12 @@ data class User(
     val dob: String,
     val userStatus: Boolean,
     val employeeID:String,
+    val userType:String,
     var lat: Double,
     var long: Double
 ) : Parcelable{
     fun getUserStatusString(): String {
-        val isActive = userStatus ?: false // Default to false if null
+        val isActive = userStatus // Default to false if null
         return if (isActive) "Active" else "Inactive"
     }
 }

@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
+        <import type="lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants" />
+
+        <!--Gender Selection Radio Buttons-->
         <variable
-            name="isLeftRadioCheck"
-            type="Boolean" />
-        <variable
-            name="isRightRadioCheck"
+            name="isMaleRadioCheck"
             type="Boolean" />
 
         <variable
-            name="leftButtonValue"
-            type="String" />
+            name="isFemaleRadioCheck"
+            type="Boolean" />
+
+        <!--User Status Selection Radio Buttons-->
         <variable
-            name="rightButtonValue"
-            type="String" />
+            name="isActiveRadioCheck"
+            type="Boolean" />
+
+        <variable
+            name="isDeactivateRadioCheck"
+            type="Boolean" />
+
+        <!--Radio Button Section Hint Value-->
         <variable
             name="layoutLabel"
             type="String" />
+
+        <!--Visible or Hide layout according to this value-->
         <variable
-            name="selectedGender"
+            name="buttonType"
             type="String" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,20 +75,40 @@
                     android:paddingEnd="@dimen/content_horizontal_margin">
 
                     <RadioButton
-                        android:id="@+id/radioButton1"
+                        android:id="@+id/maleButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@{leftButtonValue}"
-                        android:checked='@{selectedGender == "Male"}'/>
+                        android:checked="@{isMaleRadioCheck}"
+                        android:text="@string/male"
+                        app:visibility='@{buttonType.equals(`gender`)}' />
+
+                    <RadioButton
+                        android:id="@+id/femaleButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@{isFemaleRadioCheck}"
+                        android:text="@string/female"
+                        app:visibility='@{buttonType.equals(`gender`)}' />
+
+                    <RadioButton
+                        android:id="@+id/activateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@{isActiveRadioCheck}"
+                        android:text="@{ResourceConstants.ACTIVE}"
+                        app:visibility='@{buttonType.equals(`userStatus`)}' />
 
                     <RadioButton
                         android:id="@+id/radioButton2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@{rightButtonValue}"
-                        android:checked='@{selectedGender == "Female"}'/>
+                        android:checked="@{isDeactivateRadioCheck}"
+                        android:text="@{ResourceConstants.INACTIVE}"
+                        app:visibility='@{buttonType.equals(`userStatus`)}' />
 
                 </RadioGroup>
 
@@ -108,6 +141,6 @@
             android:gravity="center"
             android:paddingLeft="@dimen/input_layout_custom_label_padding"
             android:paddingRight="@dimen/input_layout_custom_label_padding"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 </layout>

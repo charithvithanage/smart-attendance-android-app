@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Attendance Admin App</string>
+    <string name="app_name">SA Admin App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -29,8 +29,7 @@
     <string name="action_approve">Approve</string>
     <string name="action_reject">Reject</string>
     <string name="fingerprint_login">FINGERPRINT LOGIN</string>
-    <string name="other_settings">Other Settings</string>
-    <string name="get_device_id">Get Device ID</string>
+
     <string name="change_password">Change Password</string>
     <string name="device_id">Device ID</string>
     <string name="password_changed_successfully">Password Changed Successfully</string>
@@ -50,13 +49,16 @@
     <string name="confirm_reject_message">Do you want to reject this approval</string>
     <string name="device_id_mandatory">Incorrect device ID</string>
     <string name="userstatus">User Status</string>
-    <string name="activate">Activate</string>
-    <string name="deactivate">Deactivate</string>
     <string name="gender">Gender</string>
     <string name="dob">Date of Birth</string>
     <string name="date_format">dd.MM.yyyy</string>
     <string name="firstname">First Name</string>
     <string name="lastname">Last Name</string>
     <string name="email">Email</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="bio_metric_disabled">Finger Print Authentication Disabled. Enable finger print authentication from Settings</string>
+    <string name="generate_qr">Generate QR</string>
+    <string name="employee_qr">Employee QR</string>
 
 </resources>

@@ -1,88 +1,80 @@
 package lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import lnbti.charithgtp01.smartattendanceuserapp.Keystore
-import lnbti.charithgtp01.smartattendanceuserapp.Keystore.Companion.compress
+import lnbti.charithgtp01.smartattendanceuserapp.other.Keystore
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivityAttendanceQrBinding
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.ActionBarWithoutHomeListener
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
-import java.io.IOException
-import java.nio.charset.StandardCharsets
 
 /**
- * Business User Attendance Handshake QR Page
+ * Activity responsible for displaying the QR code for Business User Attendance Handshake purposes.
+ *
+ * This activity uses View Binding and Android ViewModel to manage UI components and data.
+ *
+ * @constructor Creates an [AttendanceQRActivity].
  */
 @AndroidEntryPoint
 class AttendanceQRActivity : AppCompatActivity() {
-    private var binding: ActivityAttendanceQrBinding? = null
+    private lateinit var binding: ActivityAttendanceQrBinding
     private lateinit var viewModel: AttendanceQRViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
-        initView()
-        setData()
         viewModelObservers()
     }
 
-    private fun setData() {
-        val gson = Gson()
-        val selectedUserString = intent.getStringExtra(Constants.OBJECT_STRING)
-        var selectedUser = gson.fromJson(selectedUserString, User::class.java)
-        viewModel.generateQRCode(selectedUserString, selectedUser)
+    /**
+     * Initializes View Binding and sets up data binding for the activity.
+     * Also initiates the generation of the QR code based on the intent data.
+     */
+    private fun initiateDataBinding() {
+        ViewModelProvider(this)[AttendanceQRViewModel::class.java].apply {
+            viewModel = this
+            binding = DataBindingUtil.setContentView<ActivityAttendanceQrBinding?>(
+                this@AttendanceQRActivity,
+                R.layout.activity_attendance_qr
+            ).apply {
+                binding = this
+                vm = viewModel
+                lifecycleOwner = this@AttendanceQRActivity
+
+                // Set up action bar without home button
+                initiateActionBarWithoutHomeButton(
+                    actionBar.mainLayout,
+                    getString(R.string.attendance_qr),
+                    ActionBarWithoutHomeListener { onBackPressed() })
+            }
+
+            // Extract data from intent, decrypt it, and generate QR code
+            intent.getStringExtra(Constants.OBJECT_STRING)?.let {
+                try {
+                    Gson().apply {
+                        generateQRCode(it, fromJson(Keystore.decrypt(Constants.SECURE_KEY, it), User::class.java))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     /**
-     * Live Data Updates
+     * Observes the ViewModel's LiveData to receive updates when the QR code is generated.
      */
     private fun viewModelObservers() {
         // Observe the LiveData to receive the generated QR code data
         viewModel.generatedQRCodeData.observe(this) { qrCodeBitmap ->
             // Use the generated QR code Bitmap here (e.g., display it in an ImageView)
-            binding?.qrCodeView?.setImageBitmap(qrCodeBitmap)
+            binding.qrCodeView.setImageBitmap(qrCodeBitmap)
         }
     }
-
-    private fun initView() {
-        initiateActionBarWithoutHomeButton(
-            binding?.actionBar?.mainLayout!!,
-            getString(R.string.attendance_qr),
-            ActionBarWithoutHomeListener { onBackPressed() })
-    }
-
-    private fun initiateDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_attendance_qr)
-        viewModel = ViewModelProvider(this)[AttendanceQRViewModel::class.java]
-        binding?.vm = viewModel
-        binding?.lifecycleOwner = this
-    }
-
-    fun encryptString(value: String): String? {
-        var encryptedCredential: String? = null
-        try {
-            val compressed: ByteArray = compress(value)!!
-            val decoded = String(compressed, StandardCharsets.ISO_8859_1)
-            val secureKey: String = Constants.SECURE_KEY
-            try {
-                encryptedCredential = Keystore.encrypt(decoded, secureKey)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            Log.d(Constants.TAG, "Compressed string $encryptedCredential")
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return encryptedCredential
-    }
-
 }

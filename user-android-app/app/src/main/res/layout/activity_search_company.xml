@@ -52,7 +52,11 @@
                 android:id="@+id/etCompanyID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={vm.companyID}" />
+                android:text="@={vm.companyID}"
+                android:inputType="textCapCharacters"
+                android:textAllCaps="true"
+                android:importantForAccessibility="yes"
+                android:maxLength="7"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

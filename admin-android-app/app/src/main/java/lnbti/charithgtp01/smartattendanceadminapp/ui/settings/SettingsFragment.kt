@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.FragmentSettingsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
 import lnbti.charithgtp01.smartattendanceadminapp.ui.changepassword.ChangePasswordActivity
 import lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings.OtherSettingsActivity
-import lnbti.charithgtp01.smartattendanceadminapp.ui.qr.DeviceIDQRActivity
 import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils.Companion.navigateToAnotherActivity
 
 class SettingsFragment : Fragment() {
@@ -62,17 +61,14 @@ class SettingsFragment : Fragment() {
             SettingsAdapterListAdapter(object : SettingsAdapterListAdapter.OnItemClickListener {
                 override fun itemClick(item: SettingsObject) {
                     when (item.name) {
-                        getString(R.string.get_device_id) -> navigateToAnotherActivity(
-                            requireActivity(),
-                            DeviceIDQRActivity::class.java
-                        )
-                        getString(R.string.other_settings) -> {
+                        ResourceConstants.OTHER_SETTINGS -> {
                             navigateToAnotherActivity(
                                 requireActivity(),
                                 OtherSettingsActivity::class.java
                             )
                         }
-                        getString(R.string.change_password) -> {
+
+                        ResourceConstants.CHANGE_PASSWORD -> {
                             navigateToAnotherActivity(
                                 requireActivity(),
                                 ChangePasswordActivity::class.java

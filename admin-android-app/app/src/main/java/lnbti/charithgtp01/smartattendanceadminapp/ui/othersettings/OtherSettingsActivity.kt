@@ -1,11 +1,14 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.othersettings
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.BIO_METRIC_ENABLE_STATUS
 import lnbti.charithgtp01.smartattendanceadminapp.databinding.ActivityOtherSettingsBinding
 import lnbti.charithgtp01.smartattendanceadminapp.interfaces.ActionBarListener
 import lnbti.charithgtp01.smartattendanceadminapp.utils.UIUtils.Companion.initiateActionBar
@@ -19,12 +22,14 @@ class OtherSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initiateDataBinding()
         initView()
+        viewModelObservers()
+
     }
 
     private fun initView() {
         initiateActionBar(
             binding?.actionBar?.mainLayout!!,
-            getString(R.string.other_settings),
+            ResourceConstants.OTHER_SETTINGS,
             object : ActionBarListener {
                 override fun backPressed() {
                     onBackPressed()
@@ -34,6 +39,21 @@ class OtherSettingsActivity : AppCompatActivity() {
                     goToHomeActivity(this@OtherSettingsActivity)
                 }
             })
+
+        val sharedPref = getSharedPreferences(
+            getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
+
+
+        // Set an OnCheckedChangeListener to update the LiveData
+        binding?.switchFinger?.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setBiometricEnabled(isChecked)
+        }
+
+        viewModel.setBiometricEnabled(sharedPref.getBoolean(BIO_METRIC_ENABLE_STATUS, false))
+
+
     }
 
     private fun initiateDataBinding() {
@@ -41,5 +61,17 @@ class OtherSettingsActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[OtherSettingsViewModel::class.java]
         binding?.vm = viewModel
         binding?.lifecycleOwner = this
+    }
+
+    private fun viewModelObservers() {
+        viewModel.getBiometricEnabledLiveData().observe(this) { enabled ->
+            binding?.switchFinger?.isChecked = enabled
+            val sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+            val editor = sharedPref.edit()
+            editor.putBoolean(BIO_METRIC_ENABLE_STATUS, enabled)
+            editor.apply()
+        }
     }
 }

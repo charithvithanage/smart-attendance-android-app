@@ -1,19 +1,14 @@
 package lnbti.charithgtp01.smartattendanceadminapp.ui.settings
 
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import lnbti.charithgtp01.smartattendanceadminapp.R
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.CHANGE_PASSWORD
+import lnbti.charithgtp01.smartattendanceadminapp.constants.ResourceConstants.OTHER_SETTINGS
 import lnbti.charithgtp01.smartattendanceadminapp.model.SettingsObject
-import lnbti.charithgtp01.smartattendanceadminapp.model.User
 import lnbti.charithgtp01.smartattendanceadminapp.repositories.UserRepository
-import lnbti.charithgtp01.smartattendanceadminapp.utils.Utils
 import javax.inject.Inject
 
 /**
@@ -34,7 +29,7 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    lateinit var allUsersList: List<SettingsObject>
+    lateinit var allSettings: List<SettingsObject>
 
     /**
      * This will call when the View Model Created
@@ -49,21 +44,17 @@ class SettingsListViewModel @Inject constructor(private val userRepository: User
      */
     private fun getSettingsList() {
 
-        allUsersList = listOf(
+        allSettings = listOf(
             SettingsObject(
-                R.mipmap.device_id,
-                userRepository.context.getString(R.string.get_device_id)
+                R.mipmap.admin_settings,
+                OTHER_SETTINGS
             ),
             SettingsObject(
-                R.mipmap.other_settings,
-                userRepository.context.getString(R.string.other_settings)
-            ),
-            SettingsObject(
-                R.mipmap.change_password,
-                userRepository.context.getString(R.string.change_password)
+                R.mipmap.admin_password,
+                CHANGE_PASSWORD
             )
         )
-        _settingsList.value = allUsersList
+        _settingsList.value = allSettings
 
     }
 }

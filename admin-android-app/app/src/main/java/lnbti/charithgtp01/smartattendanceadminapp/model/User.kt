@@ -14,13 +14,14 @@ data class User(
     val firstName: String,
     val lastName: String,
     val gender: String,
-    var userRole: String,
+    var userRole: String?,
     val dob: String,
     val userStatus: Boolean,
-    val deviceID: String,
+    val deviceID: String?,
     val employeeID:String,
     var lat: Double,
-    var long: Double
+    var long: Double,
+    var userType:String?
 ) : Parcelable{
     fun getUserStatusString(): String {
         val isActive = userStatus ?: false // Default to false if null

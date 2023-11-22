@@ -11,14 +11,23 @@ import dagger.hilt.android.AndroidEntryPoint
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActivitySearchCompanyBinding
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.CustomAlertDialogListener
-import lnbti.charithgtp01.smartattendanceuserapp.ui.qr.attendance.AttendanceQRActivity
 import lnbti.charithgtp01.smartattendanceuserapp.ui.register.RegisterActivity
-import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils
-import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showErrorDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.DialogUtils.Companion.showProgressDialog
+import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.initiateActionBarWithoutHomeButton
 import lnbti.charithgtp01.smartattendanceuserapp.utils.UIUtils.Companion.validState
-import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils
+import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.navigateToAnotherActivityWithExtras
 
+/**
+ * Activity for searching companies.
+ *
+ * This activity is responsible for allowing users to search for companies.
+ *
+ * @property searchCompanyViewModel ViewModel for managing data related to company search.
+ * @property binding Data binding for the activity.
+ * @property dialog Dialog fragment for showing progress or error messages.
+ */
 @AndroidEntryPoint
 class SearchCompanyActivity : AppCompatActivity() {
 
@@ -28,69 +37,98 @@ class SearchCompanyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initiateDataBinding()
-        initiateView()
         viewModelObservers()
     }
 
+    /**
+     * Initializes data binding for the activity.
+     */
     private fun initiateDataBinding() {
-        binding =
-            DataBindingUtil.setContentView(this, R.layout.activity_search_company)
 
         //Data binding
-        searchCompanyViewModel = ViewModelProvider(this)[SearchCompanyViewModel::class.java]
-        binding.vm = searchCompanyViewModel
-        binding.lifecycleOwner = this
-    }
+        ViewModelProvider(this)[SearchCompanyViewModel::class.java].apply {
+            searchCompanyViewModel =this
+            binding =
+                DataBindingUtil.setContentView<ActivitySearchCompanyBinding?>(this@SearchCompanyActivity, R.layout.activity_search_company).apply {
+                    vm = searchCompanyViewModel
+                    lifecycleOwner = this@SearchCompanyActivity
 
-    private fun initiateView() {
-        UIUtils.initiateActionBarWithoutHomeButton(
-            binding?.actionBar?.mainLayout!!,
-            getString(R.string.search_company)
-        ) { onBackPressed() }
+                    initiateActionBarWithoutHomeButton(
+                        actionBar.mainLayout,
+                        getString(R.string.search_company)
+                    ) { onBackPressed() }
 
-        binding.btnSubmit.setOnClickListener {
-            searchCompanyViewModel.searchCompanyDataChanged()
+                    btnSubmit.setOnClickListener {
+                        searchCompanyDataChanged()
+                    }
+                }
         }
+
     }
 
+    /**
+     * Observes changes in the ViewModel and takes appropriate actions.
+     */
     private fun viewModelObservers() {
-        searchCompanyViewModel.searchCompanyForm.observe(this@SearchCompanyActivity, Observer {
-            val formState = it ?: return@Observer
-            if (formState.companyIDError != null) {
-                binding.etCompanyID?.error =
-                    getString(formState.companyIDError)
-            } else
-                validState(binding.companyIDInputText, R.drawable.ic_check)
-
-            if (formState.isDataValid) {
-                dialog = DialogUtils.showProgressDialog(this, getString(R.string.wait))
-                searchCompanyViewModel.searchCompany()
-            }
-        })
-
-
-        //Waiting for Api response
-        searchCompanyViewModel.searchCompanyResult.observe(this@SearchCompanyActivity) {
-            val apiResult = it
-
-            dialog?.dismiss()
-
-            if (apiResult?.success == true) {
-                val gson = Gson()
-                val prefMap = HashMap<String, String>()
-                prefMap[Constants.OBJECT_STRING] = gson.toJson(apiResult.data)
-                Utils.navigateToAnotherActivityWithExtras(
-                    this,
-                    RegisterActivity::class.java,
-                    prefMap
+        searchCompanyViewModel.apply {
+            // Handle error messages
+            errorMessage.observe(this@SearchCompanyActivity) {
+                showErrorDialog(
+                    this@SearchCompanyActivity,
+                    it
                 )
-            } else {
-                DialogUtils.showErrorDialog(this, apiResult?.message)
             }
 
+            // Show or dismiss progress dialog
+            isDialogVisible.observe(this@SearchCompanyActivity) {
+                when {
+                    it -> dialog = showProgressDialog(
+                        this@SearchCompanyActivity,
+                        getString(R.string.wait)
+                    )
+                    else -> dialog?.dismiss()
+                }
+                // Show dialog when calling the API
+                // Dismiss dialog after updating the data list to recycle view
+            }
+
+            // Observe form state for searchCompanyForm
+            searchCompanyForm.observe(this@SearchCompanyActivity, Observer {
+                val formState = it ?: return@Observer
+
+                formState.apply {
+                    if (companyIDError != null) binding.etCompanyID.error =
+                        getString(companyIDError) else
+                        validState(binding.companyIDInputText, R.drawable.ic_check)
+
+                    isDataValid.let {
+                        // If Network available, call the backend API
+                        when {
+                            NetworkUtils.isNetworkAvailable() -> searchCompany()
+                            else -> setErrorMessage(getString(R.string.no_internet))
+                        }
+                    }
+                }
+
+            })
+
+
+            // Waiting for API response
+            searchCompanyResult.observe(this@SearchCompanyActivity) {
+                Gson().apply {
+                    HashMap<String, String>().apply {
+                        this[Constants.OBJECT_STRING] = toJson(it?.data)
+                        navigateToAnotherActivityWithExtras(
+                            this@SearchCompanyActivity,
+                            RegisterActivity::class.java,
+                            this
+                        )
+                    }
+                }
+            }
         }
+
     }
 }
 

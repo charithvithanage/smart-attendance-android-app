@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import lnbti.charithgtp01.smartattendanceuserapp.other.SSLSocketFactoryCompat
+import lnbti.charithgtp01.smartattendanceuserapp.apiservice.AttendanceService
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.CompanyService
 import lnbti.charithgtp01.smartattendanceuserapp.apiservice.UserService
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.BASE_URL
@@ -43,7 +45,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideConverterFactory(): Converter.Factory {
-        return GsonConverterFactory.create();
+        return GsonConverterFactory.create()
     }
 
     /**
@@ -55,6 +57,11 @@ object NetworkModule {
     fun provideHttpClient(): OkHttpClient {
         val okHttpClient =
             OkHttpClient.Builder()
+                .sslSocketFactory(
+                    SSLSocketFactoryCompat.createSSLSocketFactory(),
+                    SSLSocketFactoryCompat.trustManager
+                ) // Use custom SSLSocketFactory and TrustManager
+
         return okHttpClient.build()
     }
 
@@ -89,5 +96,11 @@ object NetworkModule {
     @Provides
     fun provideCompanyApiService(retrofit: Retrofit): CompanyService {
         return retrofit.create(CompanyService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAttendanceApiService(retrofit: Retrofit): AttendanceService {
+        return retrofit.create(AttendanceService::class.java)
     }
 }

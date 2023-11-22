@@ -11,7 +11,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/content_mini_horizontal_margin"
+        android:layout_marginEnd="@dimen/content_mini_horizontal_margin">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchBar"
@@ -63,7 +65,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchBar" />
+            app:layout_constraintTop_toBottomOf="@id/searchBar"
+            android:layout_marginTop="@dimen/recycle_view_margin"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

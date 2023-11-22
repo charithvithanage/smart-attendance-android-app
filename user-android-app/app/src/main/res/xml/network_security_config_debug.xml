@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<network-security-config>
-    <base-config>
-        <trust-anchors>
-            <!-- Include any necessary trust anchors -->
-        </trust-anchors>
-    </base-config>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
     <domain-config cleartextTrafficPermitted="true">
-        <domain>192.168.1.22</domain>
+        <domain tools:ignore="NetworkSecurityConfig">192.168.115.120</domain>
+        <domain tools:ignore="NetworkSecurityConfig">https://ob297ofh21.execute-api.us-east-1.amazonaws.com</domain>
     </domain-config>
 </network-security-config>
