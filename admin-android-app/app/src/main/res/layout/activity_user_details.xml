@@ -180,6 +180,21 @@
                     app:layout_constraintTop_toBottomOf="@+id/include7"
                     bind:label='@{ResourceConstants.USERTYPE}'
                     bind:value='@{vm.pendingApprovalUser.userType}' />
+
+                <Button
+                    android:id="@+id/qrBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/generate_qr"
+                    android:layout_marginStart="@dimen/content_horizontal_margin"
+                    android:layout_marginTop="@dimen/content_margin_top"
+                    android:layout_marginEnd="@dimen/content_horizontal_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/include8"
+                    android:visibility="gone"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

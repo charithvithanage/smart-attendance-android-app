@@ -58,5 +58,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="bio_metric_disabled">Finger Print Authentication Disabled. Enable finger print authentication from Settings</string>
+    <string name="generate_qr">Generate QR</string>
+    <string name="employee_qr">Employee QR</string>
 
 </resources>

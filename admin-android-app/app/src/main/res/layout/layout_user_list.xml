@@ -38,18 +38,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/nameView"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
-                android:text="@{item.firstName+' '+item.lastName}"
-                style="@style/list_item_content_text_style"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/forwardArrowIcon"
                 app:layout_constraintStart_toEndOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/nameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.firstName+' '+item.lastName}"
+                    style="@style/list_item_content_text_style"
+                    />
+
+                <TextView
+                    android:id="@+id/userRole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.userRole}"
+                    style="@style/list_item_user_role_text_style"
+                    />
+
+                <TextView
+                    android:id="@+id/userType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.userType}"
+                    style="@style/list_item_user_type_text_style"
+                    />
+            </LinearLayout>
+
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"

@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/color_primary"></solid>
+            <solid android:color="@color/color_primary" />
             <size
                 android:width="@dimen/logout_button_size"
                 android:height="@dimen/logout_button_size" />
@@ -16,6 +16,6 @@
         android:width="20dp"
         android:height="20dp"
         android:drawable="@drawable/qr_scan_icon"
-        android:gravity="center"></item>
+        android:gravity="center" />
 </layer-list>
 

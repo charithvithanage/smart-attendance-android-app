@@ -28,7 +28,7 @@ class SettingsListViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    lateinit var allUsersList: List<SettingsObject>
+    private lateinit var allUsersList: List<SettingsObject>
 
     /**
      * This will call when the View Model Created
@@ -39,7 +39,6 @@ class SettingsListViewModel @Inject constructor(
 
     /**
      * Get Server Response and Set values to live data
-     * @param inputText Pass entered value
      */
     private fun getSettingsList() {
 

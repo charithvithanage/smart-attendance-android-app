@@ -1,7 +1,10 @@
 package lnbti.charithgtp01.smartattendanceadminapp.constants
 
 object  ResourceConstants {
+    //Messages
     const val NO_INTERNET = "No Internet"
+    const val ENCRYPTION_ERROR = "Encryption Error. Please try again"
+
     const val OTHER_SETTINGS = "Other Settings"
     const val GET_DEVICE_ID = "Get Device ID"
     const val CHANGE_PASSWORD = "Change Password"

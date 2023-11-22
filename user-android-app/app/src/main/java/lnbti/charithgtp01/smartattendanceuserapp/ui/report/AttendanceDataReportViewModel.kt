@@ -6,12 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.model.ResponseWithJSONArray
 import lnbti.charithgtp01.smartattendanceuserapp.model.User
 import lnbti.charithgtp01.smartattendanceuserapp.repositories.AttendanceRepository
-import lnbti.charithgtp01.smartattendanceuserapp.repositories.UserRepository
-import lnbti.charithgtp01.smartattendanceuserapp.utils.NetworkUtils
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.formatDate
 import lnbti.charithgtp01.smartattendanceuserapp.utils.Utils.Companion.getLastDayOfMonth
 import java.util.Date
@@ -22,17 +19,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AttendanceDataReportViewModel @Inject constructor(
-    private val attendanceRepository: AttendanceRepository,
-    private val userRepository: UserRepository
-) :
-    ViewModel() {
+    private val attendanceRepository: AttendanceRepository
+) : ViewModel() {
 
     //Date Count Live Date
     private val _dataCountString = MutableLiveData("0")
-    val dataCountString: LiveData<String> get() = _dataCountString
-
-    private val _usersList = MutableLiveData<List<User>>()
-    val usersList: LiveData<List<User>> get() = _usersList
+    val dataCountString get() = _dataCountString
 
     val selectedUser = MutableLiveData<User>()
 
@@ -41,72 +33,47 @@ class AttendanceDataReportViewModel @Inject constructor(
     }
 
     //Start Date Live Date
-    private val _startDateString = MutableLiveData<String>()
+    private val _startDate = MutableLiveData(Date())
+    val startDate: LiveData<Date> get() = _startDate
+
+    //End Date Live Date
+    private val _endDate = MutableLiveData(getLastDayOfMonth(Date()))
+    val endDate: LiveData<Date> get() = _endDate
+
+    private val _startDateString = MutableLiveData(formatDate(Date()))
     val startDateString: LiveData<String> get() = _startDateString
 
     //End Date Live Date
-    private val _endDateString = MutableLiveData<String>()
+    private val _endDateString = MutableLiveData(formatDate(getLastDayOfMonth(Date())))
     val endDateString: LiveData<String> get() = _endDateString
-
-    //Dialog Visibility Live Data
-    private val _isDialogVisible = MutableLiveData<Boolean>()
-    val isDialogVisible: LiveData<Boolean> get() = _isDialogVisible
-
-    //Error Message Live Data
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
-
 
     //Server response live data
     private val _responseResult = MutableLiveData<ResponseWithJSONArray?>()
     val responseResult: MutableLiveData<ResponseWithJSONArray?> = _responseResult
 
-
-    /**
-     * This will call when the View Model Created
-     */
-    init {
-        val startDate = Date()
-        val endDate: Date = getLastDayOfMonth(startDate)
+    fun setStartDate(startDate: Date) {
+        _startDate.value = startDate
         _startDateString.value = formatDate(startDate)
-        _endDateString.value = formatDate(endDate)
-
     }
 
-
-    fun setDate(startDate: Date, endDate: Date) {
-        _startDateString.value = formatDate(startDate)
+    fun setEndDate(endDate: Date) {
+        _endDate.value = endDate
         _endDateString.value = formatDate(endDate)
     }
 
-
-    fun getAttendancesByUser(nic: String, from: String, to: String) {
-        if (NetworkUtils.isNetworkAvailable()) {
-            _isDialogVisible.value = true
-            viewModelScope.launch {
-                val result = attendanceRepository.getAttendanceDataByUser(nic, from, to)
-                _responseResult.value = result
-                _isDialogVisible.value = false
-            }
-        } else {
-            _errorMessage.value = ResourceConstants.NO_INTERNET
+    fun getAttendancesByUser(nic: String) {
+        viewModelScope.launch {
+            _responseResult.value =
+                attendanceRepository.getAttendanceDataByUser(nic, startDateString.value, endDateString.value)
         }
     }
 
-    fun getAttendancesFromAllUsers(from: String, to: String) {
-        if (NetworkUtils.isNetworkAvailable()) {
-
-            _isDialogVisible.value = true
-            viewModelScope.launch {
-                val result = attendanceRepository.getAttendances(from, to)
-                _responseResult.value = result
-                _isDialogVisible.value = false
-            }
-        } else {
-            _errorMessage.value = ResourceConstants.NO_INTERNET
+    fun getAttendancesFromAllUsers() {
+        viewModelScope.launch {
+            _responseResult.value =
+                attendanceRepository.getAttendances(startDateString.value, endDateString.value)
         }
     }
-
 
     fun setCount(count: Int) {
         _dataCountString.value = count.toString()

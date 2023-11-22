@@ -19,9 +19,6 @@ object Constants {
     //Login endpoint
     const val LOGIN_ENDPOINT = "user/login"
 
-    //Get Pending Approval endpoint
-    const val GET_PENDING_APPROVALS_ENDPOINT = "users"
-
     //Get Users endpoint
     const val GET_USERS_ENDPOINT = "user/users"
 
@@ -30,9 +27,6 @@ object Constants {
 
     //User Register endpoint
     const val REGISTER_ENDPOINT = "user/register"
-
-    //Get User endpoint
-    const val GET_USER_ENDPOINT = "users/5"
 
     //Mark In Attendance Endpoint
     const val MARK_IN_ATTENDANCE_ENDPOINT = "attendance/in"
@@ -59,7 +53,6 @@ object Constants {
      * Preference Keys
      */
     const val LOGGED_IN_USER = "logged in user"
-    const val ACCESS_TOKEN = "access_token"
     const val USER_ROLE = "user_role"
     const val USERS_LIST = "users_list"
 
@@ -87,8 +80,9 @@ object Constants {
      */
     const val SUCCESS = "success"
     const val FAIL = "fail"
-    const val WARN = "warn"
     const val PROGRESS_DIALOG_FRAGMENT_TAG = "CustomProgressDialogFragmentTag"
+    const val ALERT_DIALOG_FRAGMENT_TAG = "CustomAlertDialogFragmentTag"
+    const val CONFIRM_DIALOG_FRAGMENT_TAG = "CustomConfirmDialogFragmentTag"
 
     /**
      * Encryption Secure Key

@@ -1,11 +1,6 @@
 package lnbti.charithgtp01.smartattendanceuserapp.utils
 
-import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.net.NetworkRequest
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import javax.inject.Inject
 
 /**

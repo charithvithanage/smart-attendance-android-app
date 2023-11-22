@@ -13,11 +13,10 @@ import javax.inject.Inject
 /**
  * User Fragment List Adapter
  */
-class AttendanceDataReportsListAdapter @Inject constructor(
-    private val itemClickListener: OnItemClickListener
-) : ListAdapter<AttendanceData, AttendanceDataReportsListAdapter.AttendanceDataReportsListViewHolder>(
-    attendanceDataReportDiffUtil
-) {
+class AttendanceDataReportsListAdapter @Inject constructor() :
+    ListAdapter<AttendanceData, AttendanceDataReportsListAdapter.AttendanceDataReportsListViewHolder>(
+        attendanceDataReportDiffUtil
+    ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,25 +28,18 @@ class AttendanceDataReportsListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: AttendanceDataReportsListViewHolder, position: Int) {
-        val attendanceDate = getItem(position)
-        holder.bind(attendanceDate)
-    }
-
-    /**
-     * On Item Click Listener
-     */
-    interface OnItemClickListener {
-        fun itemClick(item: AttendanceData)
+        holder.bind(getItem(position))
     }
 
     inner class AttendanceDataReportsListViewHolder(val binding: LayoutAttendanceDataReportListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(attendanceData: AttendanceData) {
-            binding.setVariable(BR.item, attendanceData)
-            binding.executePendingBindings()
+            binding.apply {
+                setVariable(BR.item, attendanceData)
+                executePendingBindings()
+            }
         }
     }
-
 
 }
 

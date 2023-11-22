@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -15,10 +17,12 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import lnbti.charithgtp01.smartattendanceuserapp.MainActivity
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
+import lnbti.charithgtp01.smartattendanceuserapp.ui.main.MainActivity
 import lnbti.charithgtp01.smartattendanceuserapp.R
 import lnbti.charithgtp01.smartattendanceuserapp.constants.Constants.TAG
-import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.BIO_METRIC_ENABLE_STATUS
 import lnbti.charithgtp01.smartattendanceuserapp.constants.ResourceConstants.LAST_LOGGED_IN_CREDENTIAL
 import lnbti.charithgtp01.smartattendanceuserapp.interfaces.GetCurrentLocationListener
@@ -36,7 +40,6 @@ import java.util.Locale
  */
 class Utils {
     companion object {
-
         /**
          * Parse the string containing the list into a user object list
          */
@@ -69,6 +72,17 @@ class Utils {
             return format.format(date)
         }
 
+       /**
+         * Format time to string
+         */
+        fun formatTime(date: Date): String {
+            val format = SimpleDateFormat(
+                "hh:mm:ss a",
+                Locale.getDefault()
+            )
+            return format.format(date)
+        }
+
         fun formatDateWithMonth(inputDate: String): String {
             val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val outputFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
@@ -86,7 +100,7 @@ class Utils {
             // Define the input date format
             val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
-            try {
+            return try {
                 // Parse the input date string
                 val date = inputFormat.parse(dateString)
 
@@ -94,10 +108,10 @@ class Utils {
                 val outputFormat = SimpleDateFormat("EEEE", Locale.US)
 
                 // Format the date to get the day of the week
-                return outputFormat.format(date)
+                outputFormat.format(date)
             } catch (e: Exception) {
                 e.printStackTrace()
-                return "Invalid Date"
+                "Invalid Date"
             }
         }
 
@@ -106,13 +120,6 @@ class Utils {
             val dateFormat =
                 SimpleDateFormat(context.getString(R.string.date_format), Locale.getDefault())
             return dateFormat.format(calendar.time)
-        }
-
-        fun formatNowTime(context: Context): String {
-            val calendar = Calendar.getInstance()
-            val timeFormat =
-                SimpleDateFormat(context.getString(R.string.time_format), Locale.getDefault())
-            return timeFormat.format(calendar.time)
         }
 
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 100
@@ -327,25 +334,6 @@ class Utils {
 
         /**
          * Navigate to another activity with data extras
-         * Activity wait for a Result
-         */
-        fun navigateToAnotherActivityForResultWithExtras(
-            context: Activity,
-            activity: Class<*>?,
-            requestCode: Int,
-            map: java.util.HashMap<String, String>
-        ) {
-            val intent = Intent(context, activity)
-
-            map.keys.forEach { key ->
-                val value = map[key]
-                intent.putExtra(key, value)
-            }
-            context.startActivityForResult(intent, requestCode)
-        }
-
-        /**
-         * Navigate to another activity with data extras
          */
         fun navigateToAnotherActivityWithExtras(
             context: Context,
@@ -357,24 +345,6 @@ class Utils {
                 val value = map[key]
                 intent.putExtra(key, value)
             }
-            context.startActivity(intent)
-        }
-
-        /**
-         * Navigate to another activity with data extras
-         * Clear all previous Activities
-         */
-        fun navigateToAnotherActivityWithExtrasWithoutHistory(
-            context: Context,
-            activity: Class<*>?,
-            map: java.util.HashMap<String, String>
-        ) {
-            val intent = Intent(context, activity)
-            map.keys.forEach { key ->
-                val value = map[key]
-                intent.putExtra(key, value)
-            }
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
         }
 
@@ -435,7 +405,7 @@ class Utils {
         /**
          * Clear all preference values
          */
-        fun clearAllPref(context: Context, listener: SuccessListener) {
+        private fun clearAllPref(context: Context, listener: SuccessListener) {
             val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE
             )
@@ -459,6 +429,30 @@ class Utils {
                 editor.putBoolean(BIO_METRIC_ENABLE_STATUS, savedPref2)
                 editor.apply()
                 listener.onFinished()
+            }
+        }
+
+        /**
+         * Converts the provided [text] into a QR code represented as a [Bitmap].
+         *
+         * @param text The value to be encoded into the QR code.
+         * @return The generated QR code as a [Bitmap].
+         */
+        fun generateQRCodeBitmap(text: String): Bitmap {
+            try {
+                QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 512, 512).apply {
+                    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+                    for (x in 0 until width) {
+                        for (y in 0 until height) {
+                            bitmap.setPixel(x, y, if (get(x, y)) Color.BLACK else Color.WHITE)
+                        }
+                    }
+                    return bitmap
+                }
+            } catch (e: WriterException) {
+                // Handle the exception if QR code generation fails
+                e.printStackTrace()
+                return Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
             }
         }
     }

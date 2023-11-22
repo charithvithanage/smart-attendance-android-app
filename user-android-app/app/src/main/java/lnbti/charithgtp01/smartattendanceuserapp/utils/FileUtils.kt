@@ -18,11 +18,11 @@ class FileUtils {
          * @param uuid Unique ID for identify the Image
          * @param type Type of the Image (Ex: Employee Signature, Profile Image)
          */
-        fun getOutputMediaFile(context: Context, uuid: String, type: String): File? {
+        fun getOutputMediaFile(context: Context, uuid: String?, type: String): File? {
 // Check that the SDCard is mounted
             var mediaStorageDir: File? = null
             var mediaFile: File? = null
-            var directoryStartPath = uuid
+            val directoryStartPath = uuid
 
             if ((type == MEDIA_TYPE_EMPLOYEE_SIGNATURE)) {
 //            mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(

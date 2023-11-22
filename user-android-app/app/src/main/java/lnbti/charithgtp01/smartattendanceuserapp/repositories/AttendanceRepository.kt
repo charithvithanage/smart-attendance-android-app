@@ -107,8 +107,8 @@ class AttendanceRepository @Inject constructor(
      */
     suspend fun getAttendanceDataByUser(
         nic: String,
-        fromData: String,
-        toDate: String
+        fromData: String?,
+        toDate: String?
     ): ResponseWithJSONArray? {
         return withContext(Dispatchers.IO) {
             return@withContext getAttendanceDataByUserFromRemoteService(nic, fromData, toDate)
@@ -120,8 +120,8 @@ class AttendanceRepository @Inject constructor(
      */
     private suspend fun getAttendanceDataByUserFromRemoteService(
         nic: String,
-        fromData: String,
-        toDate: String
+        fromData: String?,
+        toDate: String?
     ): ResponseWithJSONArray? {
 
         /* Get Server Response */
@@ -139,8 +139,8 @@ class AttendanceRepository @Inject constructor(
      * Get Attendance Data by user and date range from the server
      */
     suspend fun getAttendances(
-        fromData: String,
-        toDate: String
+        fromData: String?,
+        toDate: String?
     ): ResponseWithJSONArray? {
         return withContext(Dispatchers.IO) {
             return@withContext getAttendancesFromRemoteService(fromData, toDate)
@@ -151,8 +151,8 @@ class AttendanceRepository @Inject constructor(
      * @return ServerResponse Object
      */
     private suspend fun getAttendancesFromRemoteService(
-        fromData: String,
-        toDate: String
+        fromData: String?,
+        toDate: String?
     ): ResponseWithJSONArray? {
 
         /* Get Server Response */

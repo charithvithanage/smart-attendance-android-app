@@ -4,15 +4,11 @@ import android.R
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.provider.Settings.Global.getString
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import lnbti.charithgtp01.smartattendanceuserapp.interfaces.InputTextListener
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarLayoutBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.ActionBarWithoutHomeLayoutBinding
 import lnbti.charithgtp01.smartattendanceuserapp.databinding.GenderLayoutBinding
@@ -69,7 +65,7 @@ class UIUtils {
             binding.backBtn.setOnClickListener {
                 actionBarListener.backPressed()
             }
-            binding.btnHome?.setOnClickListener {
+            binding.btnHome.setOnClickListener {
                 actionBarListener.homePressed()
             }
         }
@@ -140,26 +136,6 @@ class UIUtils {
             inputLayout?.endIconMode = TextInputLayout.END_ICON_CUSTOM
             inputLayout?.setEndIconDrawable(icon)
             inputLayout?.setEndIconTintList(myColorStateList)
-        }
-
-        /**
-         * Common method to catch on focus listener
-         * When focus on the input text error will be removed
-         * When focus out from the layout it will validate the content of the view
-         */
-        fun inputTextInitiateMethod(
-            inputLayout: TextInputLayout?,
-            inputEditText: TextInputEditText?,
-            listener: InputTextListener
-        ) {
-            inputEditText?.onFocusChangeListener =
-                View.OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-                    if (hasFocus) {
-                        normalState(inputLayout)
-                    } else {
-                        listener.validateUI()
-                    }
-                }
         }
 
         /**

@@ -25,18 +25,18 @@ interface AttendanceService {
 
     @GET(GET_TODAY_ATTENDANCE_ENDPOINT)
     suspend fun getTodayAttendanceByUser(
-        @Query("userID") userID: String,
-        @Query("date") date: String
+        @Query("userID") userID: String?,
+        @Query("date") date: String?
     ): Response<ApiCallResponse>
 
     @GET(GET_ATTENDANCES_BY_USER_ENDPOINT)
     suspend fun getAttendanceByUser(
         @Query("userID") userID: String,
-        @Query("fromDate") fromDate: String, @Query("toDate") toDate: String
+        @Query("fromDate") fromDate: String?, @Query("toDate") toDate: String?
     ): Response<ResponseWithJSONArray>
 
     @GET(GET_ATTENDANCE_ENDPOINT)
     suspend fun getAttendances(
-        @Query("fromDate") fromDate: String, @Query("toDate") toDate: String
+        @Query("fromDate") fromDate: String?, @Query("toDate") toDate: String?
     ): Response<ResponseWithJSONArray>
 }

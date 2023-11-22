@@ -15,7 +15,9 @@ import javax.inject.Inject
  */
 class SettingsAdapterListAdapter @Inject constructor(
     private val itemClickListener: OnItemClickListener
-) : ListAdapter<SettingsObject, SettingsAdapterListAdapter.UserSettingsAdapterListViewHolder>(diffUtil) {
+) : ListAdapter<SettingsObject, SettingsAdapterListAdapter.UserSettingsAdapterListViewHolder>(
+    diffUtil
+) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,13 +30,20 @@ class SettingsAdapterListAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: UserSettingsAdapterListViewHolder, position: Int) {
         val pendingApproval = getItem(position)
-        holder.binding.nameView.text =
-            pendingApproval.name
-        /* Show profile icon using Glide */
-        Glide.with(holder.itemView.rootView).load(pendingApproval.icon)
-            .into(holder.binding.iconView)
-        holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(pendingApproval)
+        holder.apply {
+            binding.apply {
+                nameView.text = pendingApproval.name
+
+                /* Show profile icon using Glide */
+                Glide.with(itemView.rootView).load(pendingApproval.icon)
+                    .into(iconView)
+
+                /* Set click listener using 'also' */
+                itemView.setOnClickListener {
+                    itemClickListener.itemClick(pendingApproval)
+                }
+            }
+
         }
     }
 
@@ -46,8 +55,7 @@ class SettingsAdapterListAdapter @Inject constructor(
     }
 
     inner class UserSettingsAdapterListViewHolder(val binding: LayoutSettingsListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 }
 
 /**

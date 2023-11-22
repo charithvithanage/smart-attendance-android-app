@@ -24,78 +24,80 @@ class CustomAlertDialogFragment : DialogFragment() {
         private const val ARG_MESSAGE = "message"
         private const val ARG_TYPE = "type"
         lateinit var dialogButtonClickListener: CustomAlertDialogListener
+        private var hasDialogClickListener = false
         fun newInstance(
             message: String?,
             type: String,
-            dialogButtonClickListener: CustomAlertDialogListener
+            listener: CustomAlertDialogListener
         ): CustomAlertDialogFragment {
-            val fragment = CustomAlertDialogFragment()
-            this.dialogButtonClickListener = dialogButtonClickListener
-            val args = Bundle().apply {
-                putString(ARG_MESSAGE, message)
-                putString(ARG_TYPE, type)
+            return CustomAlertDialogFragment().apply {
+                dialogButtonClickListener = listener
+                hasDialogClickListener = true
+                arguments = Bundle().apply {
+                    putString(ARG_MESSAGE, message)
+                    putString(ARG_TYPE, type)
+                }
             }
-            fragment.arguments = args
-            return fragment
         }
 
         fun newInstance(
             message: String?
-        ): CustomAlertDialogFragment {
-            val fragment = CustomAlertDialogFragment()
-            val args = Bundle().apply {
+        ): CustomAlertDialogFragment = CustomAlertDialogFragment().apply {
+            hasDialogClickListener = false
+            arguments = Bundle().apply {
                 putString(ARG_MESSAGE, message)
                 putString(ARG_TYPE, Constants.FAIL)
             }
-            fragment.arguments = args
-            return fragment
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = Dialog(requireContext(), theme)
-        //Remove dialog unwanted bg color in the corners
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-        //Disable outside click dialog dismiss event
-        dialog.setCanceledOnTouchOutside(false)
-        return dialog
+        return Dialog(requireContext(), theme).apply {
+            // Remove dialog unwanted bg color in the corners
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            // Disable outside click dialog dismiss event
+            setCanceledOnTouchOutside(false)
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        //Disable back button pressed dialog dismiss event
-        isCancelable = false;
-        binding = FragmentCustomAlertDialogBinding.inflate(inflater, container, false)
-//        binding.vm = viewModel
-        binding.lifecycleOwner = this
+    ): View {
+        // Disable back button pressed dialog dismiss event
+        isCancelable = false
+        binding = FragmentCustomAlertDialogBinding.inflate(inflater, container, false).apply {
+            // vm = viewModel
+            lifecycleOwner = this@CustomAlertDialogFragment
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val message = arguments?.getString(ARG_MESSAGE)
-        val type = arguments?.getString(ARG_TYPE)
-        //Dialog Width with horizontal margin
-        changeUiSize(context, binding.dialogMainLayout, 1, 1, 30)
-        //Icon width=(Device Width/5)
-        changeUiSize(context, binding.icon, 1, 5)
-        // Set data to the data binding variables
-        binding.dialogMessage = message
-        if (type == Constants.SUCCESS)
-            binding.imageResId = R.mipmap.done
-        else if (type == Constants.FAIL)
-            binding.imageResId = R.mipmap.cancel
+        binding.apply {
+            //Dialog Width with horizontal margin
+            changeUiSize(context, dialogMainLayout, 1, 1, 30)
+            //Icon width=(Device Width/5)
+            changeUiSize(context, icon, 1, 5)
+            // Set data to the data binding variables
+            dialogMessage = arguments?.getString(ARG_MESSAGE)
+            arguments?.getString(ARG_TYPE).apply {
 
-        binding.button.setOnClickListener {
-            //Error Dialog should not want to return button click listener
-            try{
-                dialogButtonClickListener.onDialogButtonClicked()
-            }catch (e:Exception){
-
+                when {
+                    this == Constants.SUCCESS -> imageResId = R.mipmap.done
+                    this == Constants.FAIL -> imageResId = R.mipmap.cancel
+                }
             }
-            dismiss()
+
+            button.setOnClickListener {
+                //Error Dialog should not want to return button click listener
+                when {
+                    hasDialogClickListener -> dialogButtonClickListener.onDialogButtonClicked()
+                }
+                dismiss()
+            }
+
         }
 
     }

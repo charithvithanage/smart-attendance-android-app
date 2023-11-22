@@ -61,7 +61,7 @@ class UserRepository @Inject constructor(
      */
     suspend fun register(
         registerRequest: RegisterRequest
-    ): ApiCallResponse? {
+    ): ApiCallResponse {
         return withContext(Dispatchers.IO) {
             return@withContext registerServer(registerRequest)
         }
